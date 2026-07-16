@@ -7,11 +7,14 @@
       name="description"
       content="Andy Zhang is a University of Waterloo Computer Science student building infrastructure, data systems, developer tools, and applied AI products."
     />
-    <meta name="theme-color" content="#0b55e5" />
+    <meta name="theme-color" content="#eef6ff" />
     <title>Andy Zhang</title>
     <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260712-5" />
-    <script src="script.js?v=20260712-5" defer></script>
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260716-1" />
+    <script src="script.js?v=20260716-1" defer></script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -58,6 +61,9 @@
               <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#mail"></use></svg>
             </a>
           </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch colour theme">
+            <span aria-hidden="true"></span>
+          </button>
         </nav>
       </div>
     </header>

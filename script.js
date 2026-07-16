@@ -1,5 +1,30 @@
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const themeButtons = document.querySelectorAll("[data-theme-toggle]");
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+function applyTheme(theme, persist = true) {
+  document.documentElement.dataset.theme = theme;
+  if (persist) localStorage.setItem("theme", theme);
+  if (themeMeta) themeMeta.content = theme === "dark" ? "#07101d" : "#eef6ff";
+
+  themeButtons.forEach((button) => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    button.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    button.title = `Switch to ${nextTheme} mode`;
+  });
+
+  window.dispatchEvent(new CustomEvent("themechange", { detail: { theme } }));
+}
+
+applyTheme(document.documentElement.dataset.theme || "light", false);
+
+themeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+  });
+});
+
 const clock = document.querySelector("[data-local-time]");
 
 if (clock) {
@@ -24,24 +49,25 @@ const canvas = document.querySelector("[data-system-field]");
 if (canvas) {
   const context = canvas.getContext("2d");
   const routes = [
-    [[0.03, 0.2], [0.22, 0.2], [0.22, 0.34], [0.52, 0.34], [0.52, 0.18], [0.81, 0.18], [0.81, 0.45], [0.96, 0.45]],
-    [[0.08, 0.76], [0.28, 0.76], [0.28, 0.64], [0.62, 0.64], [0.62, 0.8], [0.91, 0.8]],
-    [[0.71, 0.08], [0.71, 0.28], [0.91, 0.28], [0.91, 0.66], [0.76, 0.66], [0.76, 0.91]],
-    [[0.42, 0.09], [0.42, 0.27], [0.34, 0.27], [0.34, 0.86], [0.54, 0.86]],
-    [[0.59, 0.5], [0.69, 0.5], [0.69, 0.39], [0.86, 0.39], [0.86, 0.57], [0.98, 0.57]],
+    [[0.55, 0.16], [0.7, 0.16], [0.7, 0.27], [0.91, 0.27], [0.91, 0.43], [0.98, 0.43]],
+    [[0.61, 0.63], [0.77, 0.63], [0.77, 0.52], [0.94, 0.52], [0.94, 0.78]],
+    [[0.68, 0.9], [0.68, 0.74], [0.84, 0.74], [0.84, 0.89], [0.98, 0.89]],
+    [[0.49, 0.06], [0.49, 0.18], [0.59, 0.18], [0.59, 0.31]],
+    [[0.84, 0.07], [0.84, 0.17], [0.98, 0.17]],
   ];
-  const routeLabels = ["UPLOAD", "COLMAP", "FASTGS", "UNITY", "DEPLOY"];
-  const packetColors = ["#6ff2c1", "#73dcff", "#ff7a68", "#fbfdff", "#6ff2c1"];
+  const routeLabels = ["INPUT", "TRANSFORM", "COMPOSE", "VERIFY", "OUTPUT"];
+  let fieldPalette = {};
+  let packetColors = [];
   const hubs = [
-    { x: 0.79, y: 0.56, radius: 62, color: "#6ff2c1", label: "VR / GPU" },
-    { x: 0.92, y: 0.18, radius: 34, color: "#73dcff", label: "MCTS / 1024" },
-    { x: 0.64, y: 0.79, radius: 28, color: "#ff7a68", label: "RAG / 1842" },
+    { x: 0.79, y: 0.56, radius: 62, tone: 0, label: "NODE / A1" },
+    { x: 0.92, y: 0.18, radius: 34, tone: 1, label: "CACHE / B4" },
+    { x: 0.64, y: 0.79, radius: 28, tone: 2, label: "SIGNAL / C8" },
   ];
   const eventMessages = [
-    "VR      video > splats > OpenXR",
-    "HEX     state > MCTS > policy",
-    "LEGAL   OCR > vectors > citations",
-    "POKER   face > cues > score",
+    "INGEST  source > parse > queue",
+    "MODEL   state > evaluate > update",
+    "RENDER  tokens > layout > frame",
+    "VERIFY  input > tests > release",
   ];
   const pulseBursts = [];
   const pointer = { x: 0, y: 0, active: false };
@@ -49,6 +75,23 @@ if (canvas) {
   let height = 0;
   let frame = 0;
   let particles = [];
+
+  function refreshPalette() {
+    const dark = document.documentElement.dataset.theme === "dark";
+    fieldPalette = {
+      grid: "rgba(248, 252, 255, 0.08)",
+      faint: "rgba(248, 252, 255, 0.14)",
+      line: "rgba(248, 252, 255, 0.24)",
+      orbit: "rgba(248, 252, 255, 0.34)",
+      muted: "rgba(248, 252, 255, 0.5)",
+      text: "rgba(248, 252, 255, 0.78)",
+      accent: dark ? "#9cc9ff" : "#d2e8ff",
+      accentTwo: "#8dd6ff",
+      accentThree: "#b9c3ff",
+      deep: dark ? "rgba(2, 8, 18, 0.82)" : "rgba(6, 28, 58, 0.78)",
+    };
+    packetColors = [fieldPalette.accent, fieldPalette.accentTwo, fieldPalette.accentThree, "#ffffff", fieldPalette.accent];
+  }
 
   function resizeCanvas() {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -106,7 +149,7 @@ if (canvas) {
   function drawGrid() {
     const gridSize = width < 620 ? 32 : 48;
     context.beginPath();
-    context.strokeStyle = "rgba(251, 253, 255, 0.075)";
+    context.strokeStyle = fieldPalette.grid;
     context.lineWidth = 1;
 
     for (let x = 0.5; x < width; x += gridSize) {
@@ -130,18 +173,18 @@ if (canvas) {
       context.beginPath();
       context.moveTo(points[0][0], points[0][1]);
       points.slice(1).forEach(([x, y]) => context.lineTo(x, y));
-      context.strokeStyle = "rgba(251, 253, 255, 0.22)";
+      context.strokeStyle = fieldPalette.line;
       context.lineWidth = 1;
       context.stroke();
 
       points.forEach(([x, y], nodeIndex) => {
         const size = nodeIndex === 0 || nodeIndex === points.length - 1 ? 7 : 4;
-        context.fillStyle = nodeIndex % 3 === 0 ? "#73dcff" : "rgba(251, 253, 255, 0.62)";
+        context.fillStyle = nodeIndex % 3 === 0 ? fieldPalette.accentTwo : fieldPalette.text;
         context.fillRect(Math.round(x - size / 2), Math.round(y - size / 2), size, size);
       });
 
       const labelPoint = points[Math.min(2, points.length - 1)];
-      context.fillStyle = "rgba(251, 253, 255, 0.52)";
+      context.fillStyle = fieldPalette.muted;
       context.font = "700 9px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
       context.fillText(`${String(routeIndex + 1).padStart(2, "0")} / ${routeLabels[routeIndex]}`, labelPoint[0] + 9, labelPoint[1] - 9);
 
@@ -173,24 +216,25 @@ if (canvas) {
     const y = hub.y * height;
     const radius = hub.radius * mobileScale;
     const angle = time * (0.00018 + index * 0.00005);
+    const hubColor = packetColors[hub.tone];
 
     context.save();
     context.translate(x, y);
     context.rotate(angle * (index % 2 ? -1 : 1));
     context.setLineDash([3, 8]);
-    context.strokeStyle = "rgba(251, 253, 255, 0.34)";
+    context.strokeStyle = fieldPalette.orbit;
     context.lineWidth = 1;
     context.beginPath();
     context.arc(0, 0, radius, 0, Math.PI * 2);
     context.stroke();
     context.setLineDash([]);
-    context.strokeStyle = hub.color;
+    context.strokeStyle = hubColor;
     context.lineWidth = 2;
     context.beginPath();
     context.arc(0, 0, radius * 0.72, 0.2, 1.65);
     context.arc(0, 0, radius * 0.72, 3.35, 5.1);
     context.stroke();
-    context.fillStyle = hub.color;
+    context.fillStyle = hubColor;
     context.fillRect(radius - 4, -4, 8, 8);
     context.fillRect(-4, -radius - 4, 8, 8);
     context.restore();
@@ -198,36 +242,36 @@ if (canvas) {
     const orbitAngle = -angle * 1.8;
     const orbitX = x + Math.cos(orbitAngle) * radius * 0.72;
     const orbitY = y + Math.sin(orbitAngle) * radius * 0.72;
-    context.fillStyle = hub.color;
+    context.fillStyle = hubColor;
     context.fillRect(orbitX - 3, orbitY - 3, 6, 6);
-    context.strokeStyle = "rgba(251, 253, 255, 0.42)";
+    context.strokeStyle = fieldPalette.orbit;
     context.strokeRect(x - 5, y - 5, 10, 10);
-    context.fillStyle = "rgba(251, 253, 255, 0.5)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
     context.fillText(hub.label, x + radius + 10, y + 3);
   }
 
   function drawProjectIndex() {
-    const projects = [
-      { name: "VR", stages: 4, color: "#6ff2c1" },
-      { name: "HEX", stages: 3, color: "#73dcff" },
-      { name: "LEGAL", stages: 3, color: "#fbfdff" },
-      { name: "POKER", stages: 4, color: "#ff7a68" },
+    const stages = [
+      { name: "INPUT", stages: 4, color: packetColors[0] },
+      { name: "STATE", stages: 3, color: packetColors[1] },
+      { name: "LOGIC", stages: 3, color: packetColors[3] },
+      { name: "OUTPUT", stages: 4, color: packetColors[2] },
     ];
     const startX = width * (width < 620 ? 0.72 : 0.74);
     const startY = height * 0.32;
 
-    context.fillStyle = "rgba(251, 253, 255, 0.48)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("PROJECT_INDEX / 04", startX, startY - 14);
+    context.fillText("SYSTEM_INDEX / 04", startX, startY - 14);
 
-    projects.forEach((project, row) => {
+    stages.forEach((stageGroup, row) => {
       const y = startY + row * 20;
-      context.fillStyle = "rgba(251, 253, 255, 0.58)";
-      context.fillText(project.name, startX, y + 6);
+      context.fillStyle = fieldPalette.text;
+      context.fillText(stageGroup.name, startX, y + 6);
 
       for (let stage = 0; stage < 4; stage += 1) {
-        context.fillStyle = stage < project.stages ? project.color : "rgba(251, 253, 255, 0.14)";
+        context.fillStyle = stage < stageGroup.stages ? stageGroup.color : fieldPalette.faint;
         context.fillRect(startX + 48 + stage * 15, y, 7, 7);
       }
     });
@@ -239,7 +283,7 @@ if (canvas) {
     const centerY = height * 0.72;
     const span = Math.max(100, endX - startX);
 
-    context.strokeStyle = "rgba(251, 253, 255, 0.16)";
+    context.strokeStyle = fieldPalette.faint;
     context.beginPath();
     context.moveTo(startX, centerY - 24);
     context.lineTo(endX, centerY - 24);
@@ -258,13 +302,13 @@ if (canvas) {
       if (step === 0) context.moveTo(x, y);
       else context.lineTo(x, y);
     }
-    context.strokeStyle = "#73dcff";
+    context.strokeStyle = fieldPalette.accentTwo;
     context.lineWidth = 1.5;
     context.stroke();
-    context.fillStyle = "rgba(251, 253, 255, 0.48)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("POKER / BEHAVIOR SIGNAL", startX, centerY - 34);
-    context.fillText("blink    lip    head    emotion", startX, centerY + 42);
+    context.fillText("SIGNAL / LIVE INPUT", startX, centerY - 34);
+    context.fillText("read    map    verify    emit", startX, centerY + 42);
   }
 
   function drawPointerReticle() {
@@ -272,7 +316,7 @@ if (canvas) {
     const x = (pointer.x + 0.5) * width;
     const y = (pointer.y + 0.5) * height;
 
-    context.strokeStyle = "rgba(111, 242, 193, 0.52)";
+    context.strokeStyle = fieldPalette.accent;
     context.beginPath();
     context.arc(x, y, 14, 0, Math.PI * 2);
     context.moveTo(x - 24, y);
@@ -285,7 +329,7 @@ if (canvas) {
     context.lineTo(x, y + 24);
     context.stroke();
 
-    context.fillStyle = "rgba(7, 20, 38, 0.78)";
+    context.fillStyle = fieldPalette.deep;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
     context.fillText(`${Math.round((pointer.x + 0.5) * 999)}:${Math.round((pointer.y + 0.5) * 999)}`, x + 20, y - 18);
   }
@@ -311,7 +355,7 @@ if (canvas) {
           const influence = (1 - distance / 170) * 0.09;
           drawX += (pointerX - particle.x) * influence;
           drawY += (pointerY - particle.y) * influence;
-          context.strokeStyle = "rgba(111, 242, 193, 0.16)";
+          context.strokeStyle = fieldPalette.faint;
           context.beginPath();
           context.moveTo(drawX, drawY);
           context.lineTo(pointerX, pointerY);
@@ -335,7 +379,7 @@ if (canvas) {
         );
         if (distance > 72) continue;
         context.globalAlpha = (1 - distance / 72) * 0.11;
-        context.strokeStyle = "#fbfdff";
+        context.strokeStyle = fieldPalette.text;
         context.beginPath();
         context.moveTo(particles[first].x, particles[first].y);
         context.lineTo(particles[second].x, particles[second].y);
@@ -350,13 +394,13 @@ if (canvas) {
     const x = width * 0.735;
     const y = height * 0.82;
 
-    context.fillStyle = "rgba(251, 253, 255, 0.46)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("PROJECT_PIPELINES", x, y - 16);
+    context.fillText("EVENT_STREAM / LIVE", x, y - 16);
 
     for (let row = 0; row < 4; row += 1) {
       const message = eventMessages[row];
-      context.fillStyle = row === 0 ? "#6ff2c1" : "rgba(251, 253, 255, 0.48)";
+      context.fillStyle = row === 0 ? fieldPalette.accent : fieldPalette.muted;
       context.fillText(message, x, y + row * 16);
     }
   }
@@ -366,21 +410,21 @@ if (canvas) {
     const x = width * 0.58;
     const y = height * 0.115;
     const stats = [
-      { value: "6.9x", label: "XML > Parquet" },
-      { value: "-75%", label: "analysis runtime" },
-      { value: "100+", label: "internal users" },
+      { value: "00.24", label: "frame delta" },
+      { value: "99.9", label: "signal health" },
+      { value: "0128", label: "active nodes" },
     ];
 
-    context.fillStyle = "rgba(251, 253, 255, 0.48)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("IMPACT / EXPERIENCE", x, y - 14);
+    context.fillText("RUNTIME / NOMINAL", x, y - 14);
 
     stats.forEach((stat, index) => {
       const rowY = y + index * 25;
       context.fillStyle = packetColors[index];
       context.font = "800 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
       context.fillText(stat.value, x, rowY + 9);
-      context.fillStyle = "rgba(251, 253, 255, 0.58)";
+      context.fillStyle = fieldPalette.text;
       context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
       context.fillText(stat.label, x + 48, rowY + 8);
     });
@@ -388,19 +432,19 @@ if (canvas) {
 
   function drawTechnologyIndex() {
     if (width < 900) return;
-    const x = 300;
-    const y = 108;
+    const x = width * 0.72;
+    const y = 102;
     const rows = [
-      ["backend", "Python / FastAPI"],
-      ["infra", "K8s / Azure / GitLab"],
-      ["ml + cv", "PyTorch / OpenCV"],
-      ["clients", "React / Swift"],
+      ["capture", "read / normalize"],
+      ["process", "map / transform"],
+      ["evaluate", "compare / verify"],
+      ["deliver", "emit / observe"],
     ];
 
-    context.fillStyle = "rgba(251, 253, 255, 0.46)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("TECHNOLOGY_INDEX", x, y);
-    context.strokeStyle = "rgba(251, 253, 255, 0.24)";
+    context.fillText("SYSTEM_MODEL", x, y);
+    context.strokeStyle = fieldPalette.line;
     context.beginPath();
     context.moveTo(x, y + 12);
     context.lineTo(x + 250, y + 12);
@@ -408,67 +452,63 @@ if (canvas) {
 
     rows.forEach(([label, value], index) => {
       const rowY = y + 34 + index * 20;
-      context.fillStyle = "rgba(251, 253, 255, 0.48)";
+      context.fillStyle = fieldPalette.muted;
       context.fillText(label, x, rowY);
-      context.fillStyle = index === 2 ? "#73dcff" : "rgba(251, 253, 255, 0.78)";
+      context.fillStyle = index === 2 ? fieldPalette.accentTwo : fieldPalette.text;
       context.fillText(value, x + 66, rowY);
     });
   }
 
   function drawProfileIndex() {
-    const mobile = width < 620;
-    const x = mobile ? 14 : 42;
-    const y = mobile ? 90 : 108;
-    const rows = mobile ? [
-      ["education", "waterloo cs"],
-      ["experience", "2 internships"],
-      ["projects", "4 builds"],
-    ] : [
-      ["education", "waterloo cs"],
-      ["experience", "2 internships"],
-      ["projects", "4 selected builds"],
+    if (width < 620) return;
+    const x = width * 0.84;
+    const y = height * 0.48;
+    const rows = [
+      ["field", "active"],
+      ["mode", "adaptive"],
+      ["state", "synchronized"],
     ];
 
-    context.fillStyle = "rgba(251, 253, 255, 0.46)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("PROFILE_INDEX", x, y);
-    context.strokeStyle = "rgba(251, 253, 255, 0.24)";
+    context.fillText("FIELD_STATUS", x, y);
+    context.strokeStyle = fieldPalette.line;
     context.beginPath();
     context.moveTo(x, y + 12);
-    context.lineTo(x + (mobile ? 190 : 232), y + 12);
+    context.lineTo(x + 160, y + 12);
     context.stroke();
 
     rows.forEach(([label, value], index) => {
       const rowY = y + 34 + index * 20;
-      context.fillStyle = "rgba(251, 253, 255, 0.48)";
+      context.fillStyle = fieldPalette.muted;
       context.fillText(label, x, rowY);
-      context.fillStyle = index === 0 ? "#6ff2c1" : "rgba(251, 253, 255, 0.78)";
-      context.fillText(value, x + (mobile ? 76 : 88), rowY);
+      context.fillStyle = index === 0 ? fieldPalette.accent : fieldPalette.text;
+      context.fillText(value, x + 54, rowY);
     });
   }
 
   function drawWorkHistory() {
     if (width < 620) return;
-    const x = 42;
-    const y = height - 144;
+    const x = width * 0.57;
+    const y = height - 132;
 
-    context.fillStyle = "rgba(251, 253, 255, 0.46)";
+    context.fillStyle = fieldPalette.muted;
     context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("WORK_HISTORY", x, y);
-    context.strokeStyle = "rgba(251, 253, 255, 0.24)";
+    context.fillText("PROCESS_TRACE", x, y);
+    context.strokeStyle = fieldPalette.line;
     context.beginPath();
     context.moveTo(x, y + 12);
     context.lineTo(x + 336, y + 12);
     context.stroke();
 
-    context.fillStyle = "#73dcff";
-    context.fillText("2024", x, y + 36);
-    context.fillStyle = "rgba(251, 253, 255, 0.76)";
-    context.fillText("nokia / performance infrastructure", x + 44, y + 36);
-    context.fillStyle = "#6ff2c1";
-    context.fillText("2026", x, y + 56);
-    context.fillStyle = "rgba(251, 253, 255, 0.76)";
-    context.fillText("statistics canada / data platforms", x + 44, y + 56);
+    context.fillStyle = fieldPalette.accentTwo;
+    context.fillText("T-01", x, y + 36);
+    context.fillStyle = fieldPalette.text;
+    context.fillText("receive / resolve / route", x + 44, y + 36);
+    context.fillStyle = fieldPalette.accent;
+    context.fillText("T-00", x, y + 56);
+    context.fillStyle = fieldPalette.text;
+    context.fillText("verify / render / ready", x + 44, y + 56);
   }
 
   function drawPulseBursts(time) {
@@ -494,9 +534,33 @@ if (canvas) {
     }
   }
 
+  function drawScanSweep(time) {
+    const progress = (time * 0.000055) % 1;
+    const x = width * (0.54 + progress * 0.44);
+    const gradient = context.createLinearGradient(x - 36, 0, x + 36, 0);
+    gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+    gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.2)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+    context.fillStyle = gradient;
+    context.fillRect(x - 36, 0, 72, height);
+
+    const markerY = height * (0.22 + Math.sin(time * 0.0007) * 0.08);
+    context.strokeStyle = fieldPalette.accentTwo;
+    context.globalAlpha = 0.5 + Math.sin(time * 0.002) * 0.18;
+    context.strokeRect(width * 0.935 - 10, markerY - 10, 20, 20);
+    context.beginPath();
+    context.moveTo(width * 0.935 - 22, markerY);
+    context.lineTo(width * 0.935 + 22, markerY);
+    context.moveTo(width * 0.935, markerY - 22);
+    context.lineTo(width * 0.935, markerY + 22);
+    context.stroke();
+    context.globalAlpha = 1;
+  }
+
   function drawField(time = 0) {
     context.clearRect(0, 0, width, height);
     drawGrid();
+    drawScanSweep(time);
     drawProfileIndex();
     drawWorkHistory();
     drawRoutes(time);
@@ -510,9 +574,9 @@ if (canvas) {
     drawPulseBursts(time);
     drawPointerReticle();
 
-    context.fillStyle = "rgba(7, 20, 38, 0.82)";
+    context.fillStyle = fieldPalette.deep;
     context.font = "800 10px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("4 PROJECTS / 2 INTERNSHIPS", width - 218, height - 83);
+    context.fillText("SYSTEM / ONLINE / 001011", width - 218, height - 83);
   }
 
   function animate(time) {
@@ -520,8 +584,14 @@ if (canvas) {
     frame = window.requestAnimationFrame(animate);
   }
 
+  refreshPalette();
   resizeCanvas();
   drawField();
+
+  window.addEventListener("themechange", () => {
+    refreshPalette();
+    if (reducedMotion) drawField();
+  });
 
   if (!reducedMotion) {
     frame = window.requestAnimationFrame(animate);

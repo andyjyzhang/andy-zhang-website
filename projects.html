@@ -4,11 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Selected software projects by Andy Zhang." />
-    <meta name="theme-color" content="#f5f7fb" />
+    <meta name="theme-color" content="#f7faff" />
     <title>Projects | Andy Zhang</title>
     <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260712-5" />
-    <script src="script.js?v=20260712-5" defer></script>
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260716-1" />
+    <script src="script.js?v=20260716-1" defer></script>
   </head>
   <body class="sub-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -36,6 +39,9 @@
               <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#mail"></use></svg>
             </a>
           </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch colour theme">
+            <span aria-hidden="true"></span>
+          </button>
         </nav>
       </div>
     </header>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">AlphaHex search schematic</title>
+  <desc id="desc">A compact hex board connects to a Monte Carlo decision tree and evaluation bars.</desc>
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#0b55e5" stroke-opacity=".08"/>
+    </pattern>
+    <polygon id="hex" points="0,-45 39,-23 39,23 0,45 -39,23 -39,-23"/>
+  </defs>
+  <rect width="800" height="600" fill="#f5f7fb"/>
+  <rect width="800" height="600" fill="url(#grid)"/>
+  <g font-family="Consolas, monospace" font-size="14" font-weight="700">
+    <text x="42" y="52" fill="#0b55e5">STATE_31</text>
+    <text x="472" y="52" fill="#0b55e5">MCTS / 1024</text>
+  </g>
+
+  <g stroke="#071426" stroke-width="4">
+    <use href="#hex" x="218" y="160" fill="#73dcff"/>
+    <use href="#hex" x="300" y="160" fill="#6ff2c1"/>
+    <use href="#hex" x="382" y="160" fill="#ff7a68"/>
+    <use href="#hex" x="177" y="231" fill="#fbfdff"/>
+    <use href="#hex" x="259" y="231" fill="#0b55e5"/>
+    <use href="#hex" x="341" y="231" fill="#73dcff"/>
+    <use href="#hex" x="423" y="231" fill="#fbfdff"/>
+    <use href="#hex" x="218" y="302" fill="#ff7a68"/>
+    <use href="#hex" x="300" y="302" fill="#fbfdff"/>
+    <use href="#hex" x="382" y="302" fill="#6ff2c1"/>
+  </g>
+  <g fill="#071426" font-family="Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle">
+    <text x="218" y="166">6</text><text x="300" y="166">9</text><text x="382" y="166">4</text>
+    <text x="177" y="237">3</text><text x="259" y="237" fill="#fbfdff">8</text><text x="341" y="237">10</text><text x="423" y="237">5</text>
+    <text x="218" y="308">11</text><text x="300" y="308">7</text><text x="382" y="308">8</text>
+  </g>
+  <path d="M199 195 237 174M278 174l42 21M361 195l40 22M238 266l42 21M320 287l42-21" fill="none" stroke="#0b55e5" stroke-width="10" stroke-linecap="square"/>
+  <g fill="#6ff2c1" stroke="#071426" stroke-width="3"><rect x="230" y="166" width="14" height="14"/><rect x="313" y="187" width="14" height="14"/><rect x="394" y="209" width="14" height="14"/></g>
+
+  <g fill="none" stroke="#617188" stroke-width="3">
+    <path d="M568 118v54M568 172l-94 62M568 172v62M568 172l94 62M474 234l-40 66M474 234l40 66M568 234l-40 66M568 234l40 66M662 234l-40 66M662 234l40 66"/>
+  </g>
+  <g stroke="#071426" stroke-width="3">
+    <rect x="552" y="102" width="32" height="32" fill="#6ff2c1"/>
+    <rect x="458" y="218" width="32" height="32" fill="#0b55e5"/>
+    <rect x="552" y="218" width="32" height="32" fill="#73dcff"/>
+    <rect x="646" y="218" width="32" height="32" fill="#ff7a68"/>
+    <circle cx="434" cy="300" r="12" fill="#fbfdff"/><circle cx="514" cy="300" r="12" fill="#fbfdff"/><circle cx="528" cy="300" r="12" fill="#fbfdff"/><circle cx="608" cy="300" r="12" fill="#fbfdff"/><circle cx="622" cy="300" r="12" fill="#fbfdff"/><circle cx="702" cy="300" r="12" fill="#fbfdff"/>
+  </g>
+
+  <g font-family="Consolas, monospace" font-size="12">
+    <text x="472" y="350" fill="#071426">BUILD_N07</text><text x="714" y="350" fill="#0b55e5" text-anchor="end">0.382</text>
+    <rect x="472" y="362" width="242" height="10" fill="#d4dce8"/><rect x="472" y="362" width="190" height="10" fill="#0b55e5"/>
+    <text x="472" y="404" fill="#071426">TRADE_2:1</text><text x="714" y="404" fill="#0b55e5" text-anchor="end">0.244</text>
+    <rect x="472" y="416" width="242" height="10" fill="#d4dce8"/><rect x="472" y="416" width="122" height="10" fill="#73dcff"/>
+    <text x="472" y="458" fill="#071426">ROAD_E12</text><text x="714" y="458" fill="#0b55e5" text-anchor="end">0.171</text>
+    <rect x="472" y="470" width="242" height="10" fill="#d4dce8"/><rect x="472" y="470" width="86" height="10" fill="#ff7a68"/>
+  </g>
+  <rect x="42" y="424" width="350" height="104" fill="#071426"/>
+  <text x="62" y="452" fill="#73dcff" font-family="Consolas, monospace" font-size="12">best_move = BUILD_N07</text>
+  <text x="62" y="482" fill="#6ff2c1" font-family="Consolas, monospace" font-size="12">win_prob = 0.70</text>
+  <text x="62" y="512" fill="#fbfdff" font-family="Consolas, monospace" font-size="12">rank = top_500</text>
+</svg>

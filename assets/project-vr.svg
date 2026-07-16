@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc" shape-rendering="geometricPrecision">
+  <title id="title">Video to VR reconstruction schematic</title>
+  <desc id="desc">Video frames flow into a wireframe point-cloud scene and a VR headset.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#73dcff" stroke-opacity=".1"/>
+    </pattern>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0 8 4 0 8Z" fill="#6ff2c1"/>
+    </marker>
+  </defs>
+  <rect width="800" height="600" fill="#071426"/>
+  <rect width="800" height="600" fill="url(#grid)"/>
+  <g font-family="Consolas, monospace" font-size="14" font-weight="700">
+    <text x="42" y="54" fill="#73dcff">VIDEO_FRAMES</text>
+    <text x="310" y="54" fill="#73dcff">RECONSTRUCT</text>
+    <text x="668" y="54" fill="#73dcff">VR_OUT</text>
+  </g>
+
+  <g fill="#dce8ff" stroke="#73dcff" stroke-width="3">
+    <rect x="42" y="94" width="142" height="92"/>
+    <rect x="58" y="112" width="110" height="56" fill="#0b55e5"/>
+    <path d="m66 160 30-34 22 22 18-16 24 28" fill="none" stroke="#6ff2c1" stroke-width="4"/>
+    <rect x="42" y="212" width="142" height="92"/>
+    <rect x="58" y="230" width="110" height="56" fill="#0b55e5"/>
+    <path d="m66 278 24-28 24 18 20-28 26 38" fill="none" stroke="#ff7a68" stroke-width="4"/>
+    <rect x="42" y="330" width="142" height="92"/>
+    <rect x="58" y="348" width="110" height="56" fill="#0b55e5"/>
+    <path d="m66 396 34-38 20 26 18-18 22 30" fill="none" stroke="#73dcff" stroke-width="4"/>
+  </g>
+  <g fill="#6ff2c1"><rect x="32" y="122" width="8" height="8"/><rect x="32" y="240" width="8" height="8"/><rect x="32" y="358" width="8" height="8"/></g>
+
+  <path d="M204 258h78" fill="none" stroke="#6ff2c1" stroke-width="4" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+  <g fill="none" stroke="#73dcff" stroke-width="3">
+    <path d="M306 126h244l86 74v242H306z"/>
+    <path d="m306 126 72 74h258M378 200v242M550 126v316M306 442l72-72h258"/>
+    <path d="M378 370h172M430 200v170M490 200v170" stroke-opacity=".45"/>
+  </g>
+  <g stroke="#071426" stroke-width="2">
+    <g fill="#73dcff"><circle cx="410" cy="252" r="7"/><circle cx="446" cy="230" r="5"/><circle cx="486" cy="266" r="8"/><circle cx="528" cy="238" r="6"/><circle cx="570" cy="281" r="7"/><circle cx="602" cy="246" r="5"/></g>
+    <g fill="#6ff2c1"><rect x="423" y="296" width="11" height="11"/><rect x="470" y="320" width="12" height="12"/><rect x="548" y="310" width="10" height="10"/><rect x="584" y="338" width="12" height="12"/></g>
+    <g fill="#ff7a68"><circle cx="404" cy="348" r="6"/><circle cx="520" cy="358" r="7"/><circle cx="614" cy="382" r="6"/></g>
+    <g fill="#fbfdff"><rect x="455" y="278" width="8" height="8"/><rect x="505" y="286" width="8" height="8"/><rect x="558" y="354" width="8" height="8"/></g>
+  </g>
+
+  <path d="M620 320h54" fill="none" stroke="#6ff2c1" stroke-width="4" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+  <g stroke="#fbfdff" stroke-width="4" stroke-linejoin="round">
+    <path d="M638 412c10-48 38-72 72-72s62 24 72 72" fill="none"/>
+    <path d="M640 396h140v74H640z" fill="#0b55e5"/>
+    <rect x="654" y="410" width="44" height="34" fill="#071426"/>
+    <rect x="722" y="410" width="44" height="34" fill="#071426"/>
+    <circle cx="676" cy="427" r="9" fill="#73dcff"/>
+    <circle cx="744" cy="427" r="9" fill="#6ff2c1"/>
+  </g>
+
+  <g font-family="Consolas, monospace" font-size="13">
+    <text x="306" y="486" fill="#fbfdff">COLMAP</text>
+    <text x="402" y="486" fill="#6ff2c1">-&gt;</text>
+    <text x="432" y="486" fill="#fbfdff">FASTGS</text>
+    <text x="526" y="486" fill="#6ff2c1">-&gt;</text>
+    <text x="556" y="486" fill="#fbfdff">PLY</text>
+  </g>
+  <rect x="42" y="530" width="716" height="4" fill="#173461"/>
+  <rect x="42" y="530" width="572" height="4" fill="#73dcff"/>
+  <rect x="610" y="520" width="8" height="24" fill="#6ff2c1"/>
+</svg>

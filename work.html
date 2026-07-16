@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Software engineering experience for Andy Zhang." />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>Work | Andy Zhang</title>
+    <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=20260712-5" />
+    <script src="script.js?v=20260712-5" defer></script>
+  </head>
+  <body class="sub-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header site-header--paper">
+      <div class="header-inner">
+        <a class="brand brand--route" href="index.html" aria-label="Andy Zhang, home">
+          <span aria-hidden="true">az/work</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <div class="page-links">
+            <a class="is-active" href="work.html" aria-current="page">work</a>
+            <a href="projects.html">projects</a>
+          </div>
+          <span class="nav-rule" aria-hidden="true"></span>
+          <div class="social-links">
+            <a class="icon-link" href="https://github.com/andyjyzhang" target="_blank" rel="noopener" aria-label="GitHub" data-label="GitHub">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#github"></use></svg>
+            </a>
+            <a class="icon-link" href="https://www.linkedin.com/in/andyzhang12/" target="_blank" rel="noopener" aria-label="LinkedIn" data-label="LinkedIn">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#linkedin"></use></svg>
+            </a>
+            <a class="icon-link" href="mailto:andy.jy.zhang@gmail.com" aria-label="Contact Andy" data-label="Contact">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#mail"></use></svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell">
+      <section class="page-masthead" aria-labelledby="page-title">
+        <p class="page-index">01 / Work</p>
+        <h1 id="page-title">Software built under real constraints.</h1>
+        <p class="page-summary">
+          I study Computer Science at the University of Waterloo and have worked on
+          internal data platforms, cloud infrastructure, and performance tooling.
+        </p>
+      </section>
+
+      <section class="experience-list" aria-label="Work experience">
+        <article class="experience">
+          <p class="entry-index">01</p>
+          <div class="experience-meta">
+            <div class="company-line">
+              <span class="company-mark" aria-hidden="true">
+                <svg><use href="assets/icons.svg?v=20260712-5#data-grid"></use></svg>
+              </span>
+              <h2>Statistics Canada</h2>
+            </div>
+            <p>Software Engineering Intern</p>
+            <dl class="meta-list">
+              <div>
+                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#calendar"></use></svg></dt>
+                <dd>May - Aug 2026</dd>
+              </div>
+              <div>
+                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#pin"></use></svg></dt>
+                <dd>Ottawa, ON</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="experience-body">
+            <p class="entry-lede">
+              Internal data applications for survey and census workflows used by
+              more than 100 employees.
+            </p>
+            <ul class="detail-list">
+              <li>Shipped containerized Python and Shiny applications with Helm, GitLab CI, and Kubernetes.</li>
+              <li>Standardized Azure Blob Storage across five apps, including identity and permission handling.</li>
+              <li>Cut XML-to-Parquet conversion time by <strong>6.9x</strong>, saving roughly 20 hours per large run.</li>
+            </ul>
+            <p class="stack-line">Python / Shiny / DuckDB / Azure / K8s / GitLab CI</p>
+          </div>
+        </article>
+
+        <article class="experience">
+          <p class="entry-index">02</p>
+          <div class="experience-meta">
+            <div class="company-line">
+              <span class="company-mark" aria-hidden="true">
+                <svg><use href="assets/icons.svg?v=20260712-5#network"></use></svg>
+              </span>
+              <h2>Nokia</h2>
+            </div>
+            <p>Software Engineering Intern</p>
+            <dl class="meta-list">
+              <div>
+                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#calendar"></use></svg></dt>
+                <dd>Jul - Aug 2024</dd>
+              </div>
+              <div>
+                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#pin"></use></svg></dt>
+                <dd>Remote</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="experience-body">
+            <p class="entry-lede">
+              Performance infrastructure for network workflows, load testing, and
+              real-time metrics analysis.
+            </p>
+            <ul class="detail-list">
+              <li>Developed repeatable Python performance tests for Network Services Platform workflows.</li>
+              <li>Built Locust and Kubernetes test environments monitored through Grafana and Prometheus.</li>
+              <li>Reduced analysis runtime by <strong>75%</strong> with automated collection and reporting scripts.</li>
+            </ul>
+            <p class="stack-line">Python / Locust / Kubernetes / Grafana / Prometheus</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p><span>AZ</span> Waterloo Computer Science</p>
+        <div>
+          <a href="projects.html">projects</a>
+          <a href="mailto:andy.jy.zhang@gmail.com">contact</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

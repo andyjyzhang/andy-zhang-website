@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Selected software projects by Andy Zhang." />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>Projects | Andy Zhang</title>
+    <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=20260712-5" />
+    <script src="script.js?v=20260712-5" defer></script>
+  </head>
+  <body class="sub-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header site-header--paper">
+      <div class="header-inner">
+        <a class="brand brand--route" href="index.html" aria-label="Andy Zhang, home">
+          <span aria-hidden="true">az/projects</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <div class="page-links">
+            <a href="work.html">work</a>
+            <a class="is-active" href="projects.html" aria-current="page">projects</a>
+          </div>
+          <span class="nav-rule" aria-hidden="true"></span>
+          <div class="social-links">
+            <a class="icon-link" href="https://github.com/andyjyzhang" target="_blank" rel="noopener" aria-label="GitHub" data-label="GitHub">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#github"></use></svg>
+            </a>
+            <a class="icon-link" href="https://www.linkedin.com/in/andyzhang12/" target="_blank" rel="noopener" aria-label="LinkedIn" data-label="LinkedIn">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#linkedin"></use></svg>
+            </a>
+            <a class="icon-link" href="mailto:andy.jy.zhang@gmail.com" aria-label="Contact Andy" data-label="Contact">
+              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#mail"></use></svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell">
+      <section class="page-masthead" aria-labelledby="page-title">
+        <p class="page-index">02 / Projects</p>
+        <h1 id="page-title">Four systems, each built end to end.</h1>
+        <p class="page-summary">
+          Product experiments spanning spatial computing, search, game engines,
+          computer vision, and the infrastructure required to ship them.
+        </p>
+      </section>
+
+      <section class="project-list" aria-label="Selected projects">
+        <article class="project-row">
+          <figure class="project-media">
+            <img src="assets/project-vr.svg?v=20260712-5" alt="A point-cloud reconstruction viewer processing a room scene" />
+          </figure>
+          <div class="project-copy">
+            <div class="project-heading">
+              <p>01 / Spatial computing</p>
+              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#cube"></use></svg></span>
+            </div>
+            <h2>VR Memory Reconstruction</h2>
+            <p>
+              A full-stack platform that turns ordinary videos into explorable VR scenes,
+              with web and iOS upload clients and a GPU-backed reconstruction pipeline.
+            </p>
+            <dl class="project-details">
+              <div><dt>Pipeline</dt><dd>Frames -> COLMAP -> FastGS -> Unity</dd></div>
+              <div><dt>Runtime</dt><dd>FastAPI, Modal GPU, OpenXR</dd></div>
+            </dl>
+            <p class="stack-line">PyTorch / Gaussian Splatting / React / Swift / Unity</p>
+          </div>
+        </article>
+
+        <article class="project-row">
+          <figure class="project-media">
+            <img src="assets/project-alphahex.svg?v=20260712-5" alt="A Catan board beside Monte Carlo tree search evaluations" />
+          </figure>
+          <div class="project-copy">
+            <div class="project-heading">
+              <p>02 / Game engine</p>
+              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#branch"></use></svg></span>
+            </div>
+            <h2>AlphaHex</h2>
+            <p>
+              A 1v1 Catan engine that combines Monte Carlo tree search, board heuristics,
+              and self-play training to reason about long-term resource strategy.
+            </p>
+            <dl class="project-details">
+              <div><dt>Result</dt><dd>70% win rate, top 500 online</dd></div>
+              <div><dt>Training</dt><dd>Replay buffers and model checkpoints</dd></div>
+            </dl>
+            <p class="stack-line">PyTorch / MCTS / FastAPI / React / Vite</p>
+          </div>
+        </article>
+
+        <article class="project-row">
+          <figure class="project-media">
+            <img src="assets/project-legal.svg?v=20260712-5" alt="A legal document search interface with highlighted cited passages" />
+          </figure>
+          <div class="project-copy">
+            <div class="project-heading">
+              <p>03 / Retrieval system</p>
+              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#document-search"></use></svg></span>
+            </div>
+            <h2>Legal Research Assistant</h2>
+            <p>
+              A Chrome extension that reads PDFs and images, retrieves the most relevant
+              passages, and produces explanations grounded in the uploaded material.
+            </p>
+            <dl class="project-details">
+              <div><dt>Input</dt><dd>PDF and image OCR</dd></div>
+              <div><dt>Memory</dt><dd>Chunked embeddings in Pinecone</dd></div>
+            </dl>
+            <p class="stack-line">Flask / Tesseract OCR / Pinecone / Google Cloud</p>
+          </div>
+        </article>
+
+        <article class="project-row">
+          <figure class="project-media">
+            <img src="assets/project-poker.svg?v=20260712-5" alt="A face analysis viewport with behavioral signal graphs" />
+          </figure>
+          <div class="project-copy">
+            <div class="project-heading">
+              <p>04 / Computer vision</p>
+              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#scan-face"></use></svg></span>
+            </div>
+            <h2>Poker Bluff Detection</h2>
+            <p>
+              A real-time vision pipeline that combines blinking, lip movement, head
+              motion, and expression changes into a weighted behavioral signal.
+            </p>
+            <dl class="project-details">
+              <div><dt>Signals</dt><dd>Face mesh, motion, emotion</dd></div>
+              <div><dt>Output</dt><dd>Continuous weighted bluff score</dd></div>
+            </dl>
+            <p class="stack-line">Python / OpenCV / MediaPipe / DeepFace</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p><span>AZ</span> Waterloo Computer Science</p>
+        <div>
+          <a href="work.html">work</a>
+          <a href="mailto:andy.jy.zhang@gmail.com">contact</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

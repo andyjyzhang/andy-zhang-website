@@ -7,14 +7,14 @@
       name="description"
       content="Andy Zhang is a University of Waterloo Computer Science student building infrastructure, data systems, developer tools, and applied AI products."
     />
-    <meta name="theme-color" content="#eef6ff" />
+    <meta name="theme-color" content="#07101d" />
     <title>Andy Zhang</title>
     <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
     <script>
-      document.documentElement.dataset.theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260716-1" />
-    <script src="script.js?v=20260716-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260716-17" />
+    <script src="script.js?v=20260716-5" defer></script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -75,21 +75,22 @@
         <p class="hero-kicker"><span>00</span> Waterloo CS</p>
         <h1 id="hero-title"><span>Andy</span><span>Zhang</span></h1>
         <p class="hero-lede">
-          I build software where infrastructure, data, and applied AI meet.
+          I build practical software across <span>infrastructure</span>,
+          <span>data systems</span>, and <span>applied AI</span>.
         </p>
         <div class="hero-actions" aria-label="Explore the site">
           <a href="projects.html">
-            selected projects
-            <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#arrow-right"></use></svg>
+            projects
           </a>
           <a href="work.html">
             work experience
-            <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#arrow-right"></use></svg>
           </a>
         </div>
       </section>
 
       <div class="hero-baseline" aria-hidden="true">
+        <span class="field-interaction">interactive field / move + click</span>
+        <span data-system-status>nodes 030 / sync 100%</span>
         <span data-local-time>ET 00:00:00</span>
       </div>
     </main>

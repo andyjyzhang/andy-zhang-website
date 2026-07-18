@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Software engineering experience for Andy Zhang." />
-    <meta name="theme-color" content="#f7faff" />
+    <meta name="theme-color" content="#07101d" />
     <title>Work | Andy Zhang</title>
     <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
     <script>
-      document.documentElement.dataset.theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260716-1" />
-    <script src="script.js?v=20260716-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260716-17" />
+    <script src="script.js?v=20260716-5" defer></script>
   </head>
   <body class="sub-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -46,84 +46,47 @@
       </div>
     </header>
 
-    <main id="main" class="page-shell">
-      <section class="page-masthead" aria-labelledby="page-title">
-        <p class="page-index">01 / Work</p>
-        <h1 id="page-title">Software built under real constraints.</h1>
-        <p class="page-summary">
-          I study Computer Science at the University of Waterloo and have worked on
-          internal data platforms, cloud infrastructure, and performance tooling.
-        </p>
-      </section>
+    <main id="main" class="page-shell page-shell--editorial">
+      <header class="editorial-masthead">
+        <h1>Work</h1>
+      </header>
 
-      <section class="experience-list" aria-label="Work experience">
-        <article class="experience">
-          <p class="entry-index">01</p>
-          <div class="experience-meta">
-            <div class="company-line">
-              <span class="company-mark" aria-hidden="true">
-                <svg><use href="assets/icons.svg?v=20260712-5#data-grid"></use></svg>
-              </span>
+      <section class="work-list-editorial" aria-label="Work experience">
+        <article class="work-item">
+          <div class="work-title">
+            <span class="company-logo company-logo--canada" aria-hidden="true">
+              <img src="assets/logo-government-canada.svg?v=20260716-1" alt="" />
+            </span>
+            <div>
               <h2>Statistics Canada</h2>
+              <p>Software Engineering Intern</p>
             </div>
-            <p>Software Engineering Intern</p>
-            <dl class="meta-list">
-              <div>
-                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#calendar"></use></svg></dt>
-                <dd>May - Aug 2026</dd>
-              </div>
-              <div>
-                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#pin"></use></svg></dt>
-                <dd>Ottawa, ON</dd>
-              </div>
-            </dl>
           </div>
-          <div class="experience-body">
-            <p class="entry-lede">
-              Internal data applications for survey and census workflows used by
-              more than 100 employees.
-            </p>
-            <ul class="detail-list">
-              <li>Shipped containerized Python and Shiny applications with Helm, GitLab CI, and Kubernetes.</li>
-              <li>Standardized Azure Blob Storage across five apps, including identity and permission handling.</li>
-              <li>Cut XML-to-Parquet conversion time by <strong>6.9x</strong>, saving roughly 20 hours per large run.</li>
-            </ul>
-            <p class="stack-line">Python / Shiny / DuckDB / Azure / K8s / GitLab CI</p>
+          <p class="work-description">
+            Worked on internal data tools and the infrastructure supporting them.
+          </p>
+          <div class="work-meta">
+            <time datetime="2026-05">May - Aug 2026</time>
+            <span>Ottawa, ON</span>
           </div>
         </article>
 
-        <article class="experience">
-          <p class="entry-index">02</p>
-          <div class="experience-meta">
-            <div class="company-line">
-              <span class="company-mark" aria-hidden="true">
-                <svg><use href="assets/icons.svg?v=20260712-5#network"></use></svg>
-              </span>
+        <article class="work-item">
+          <div class="work-title">
+            <span class="company-logo company-logo--nokia" aria-hidden="true">
+              <img src="assets/logo-nokia.svg?v=20260716-1" alt="" />
+            </span>
+            <div>
               <h2>Nokia</h2>
+              <p>Software Engineering Intern</p>
             </div>
-            <p>Software Engineering Intern</p>
-            <dl class="meta-list">
-              <div>
-                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#calendar"></use></svg></dt>
-                <dd>Jul - Aug 2024</dd>
-              </div>
-              <div>
-                <dt><svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#pin"></use></svg></dt>
-                <dd>Remote</dd>
-              </div>
-            </dl>
           </div>
-          <div class="experience-body">
-            <p class="entry-lede">
-              Performance infrastructure for network workflows, load testing, and
-              real-time metrics analysis.
-            </p>
-            <ul class="detail-list">
-              <li>Developed repeatable Python performance tests for Network Services Platform workflows.</li>
-              <li>Built Locust and Kubernetes test environments monitored through Grafana and Prometheus.</li>
-              <li>Reduced analysis runtime by <strong>75%</strong> with automated collection and reporting scripts.</li>
-            </ul>
-            <p class="stack-line">Python / Locust / Kubernetes / Grafana / Prometheus</p>
+          <p class="work-description">
+            Worked on performance tooling for large-scale network systems.
+          </p>
+          <div class="work-meta">
+            <time datetime="2024-07">Jul - Aug 2024</time>
+            <span>Remote</span>
           </div>
         </article>
       </section>
@@ -131,7 +94,6 @@
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p><span>AZ</span> Waterloo Computer Science</p>
         <div>
           <a href="projects.html">projects</a>
           <a href="mailto:andy.jy.zhang@gmail.com">contact</a>

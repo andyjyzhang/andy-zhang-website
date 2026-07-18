@@ -17,7 +17,7 @@ function applyTheme(theme, persist = true) {
   window.dispatchEvent(new CustomEvent("themechange", { detail: { theme } }));
 }
 
-applyTheme(document.documentElement.dataset.theme || "light", false);
+applyTheme(document.documentElement.dataset.theme || "dark", false);
 
 themeButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -26,6 +26,7 @@ themeButtons.forEach((button) => {
 });
 
 const clock = document.querySelector("[data-local-time]");
+const systemStatus = document.querySelector("[data-system-status]");
 
 if (clock) {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -49,19 +50,26 @@ const canvas = document.querySelector("[data-system-field]");
 if (canvas) {
   const context = canvas.getContext("2d");
   const routes = [
-    [[0.55, 0.16], [0.7, 0.16], [0.7, 0.27], [0.91, 0.27], [0.91, 0.43], [0.98, 0.43]],
-    [[0.61, 0.63], [0.77, 0.63], [0.77, 0.52], [0.94, 0.52], [0.94, 0.78]],
-    [[0.68, 0.9], [0.68, 0.74], [0.84, 0.74], [0.84, 0.89], [0.98, 0.89]],
-    [[0.49, 0.06], [0.49, 0.18], [0.59, 0.18], [0.59, 0.31]],
-    [[0.84, 0.07], [0.84, 0.17], [0.98, 0.17]],
+    [[0.4, 0.16], [0.55, 0.16], [0.55, 0.27], [0.75, 0.27], [0.75, 0.43], [0.96, 0.43]],
+    [[0.43, 0.63], [0.61, 0.63], [0.61, 0.52], [0.84, 0.52], [0.84, 0.78]],
+    [[0.52, 0.9], [0.52, 0.74], [0.73, 0.74], [0.73, 0.89], [0.96, 0.89]],
+    [[0.41, 0.06], [0.41, 0.18], [0.49, 0.18], [0.49, 0.31]],
   ];
-  const routeLabels = ["INPUT", "TRANSFORM", "COMPOSE", "VERIFY", "OUTPUT"];
+  const routeLabels = ["INPUT", "TRANSFORM", "COMPOSE", "VERIFY"];
   let fieldPalette = {};
   let packetColors = [];
   const hubs = [
-    { x: 0.79, y: 0.56, radius: 62, tone: 0, label: "NODE / A1" },
-    { x: 0.92, y: 0.18, radius: 34, tone: 1, label: "CACHE / B4" },
-    { x: 0.64, y: 0.79, radius: 28, tone: 2, label: "SIGNAL / C8" },
+    { x: 0.84, y: 0.59, radius: 46, tone: 0, label: "NODE / A1" },
+    { x: 0.91, y: 0.2, radius: 28, tone: 1, label: "CACHE / B4" },
+  ];
+  const meshNodes = [
+    [0.4, 0.23], [0.52, 0.31], [0.65, 0.19], [0.79, 0.3], [0.93, 0.22],
+    [0.42, 0.68], [0.57, 0.57], [0.73, 0.69], [0.9, 0.59],
+    [0.54, 0.86], [0.81, 0.85],
+  ];
+  const meshLinks = [
+    [0, 1], [0, 5], [1, 2], [1, 6], [2, 3], [3, 4], [3, 7],
+    [4, 8], [5, 6], [5, 9], [6, 7], [7, 8], [7, 10], [9, 10],
   ];
   const eventMessages = [
     "INGEST  source > parse > queue",
@@ -75,22 +83,25 @@ if (canvas) {
   let height = 0;
   let frame = 0;
   let particles = [];
+  let lastStatusTick = -1;
 
   function refreshPalette() {
     const dark = document.documentElement.dataset.theme === "dark";
     fieldPalette = {
-      grid: "rgba(248, 252, 255, 0.08)",
-      faint: "rgba(248, 252, 255, 0.14)",
-      line: "rgba(248, 252, 255, 0.24)",
-      orbit: "rgba(248, 252, 255, 0.34)",
-      muted: "rgba(248, 252, 255, 0.5)",
-      text: "rgba(248, 252, 255, 0.78)",
-      accent: dark ? "#9cc9ff" : "#d2e8ff",
-      accentTwo: "#8dd6ff",
-      accentThree: "#b9c3ff",
+      grid: dark ? "rgba(248, 252, 255, 0.08)" : "rgba(8, 42, 86, 0.12)",
+      faint: dark ? "rgba(248, 252, 255, 0.14)" : "rgba(8, 42, 86, 0.18)",
+      line: dark ? "rgba(248, 252, 255, 0.24)" : "rgba(8, 42, 86, 0.32)",
+      orbit: dark ? "rgba(248, 252, 255, 0.34)" : "rgba(8, 42, 86, 0.42)",
+      muted: dark ? "rgba(248, 252, 255, 0.5)" : "rgba(6, 34, 72, 0.66)",
+      text: dark ? "rgba(248, 252, 255, 0.78)" : "rgba(4, 28, 62, 0.88)",
+      accent: dark ? "#9cc9ff" : "#174d9f",
+      accentTwo: dark ? "#8dd6ff" : "#087da8",
+      accentThree: dark ? "#b9c3ff" : "#5551a8",
       deep: dark ? "rgba(2, 8, 18, 0.82)" : "rgba(6, 28, 58, 0.78)",
+      scan: dark ? "rgba(255, 255, 255, 0.2)" : "rgba(12, 67, 130, 0.22)",
+      scanClear: dark ? "rgba(255, 255, 255, 0)" : "rgba(12, 67, 130, 0)",
     };
-    packetColors = [fieldPalette.accent, fieldPalette.accentTwo, fieldPalette.accentThree, "#ffffff", fieldPalette.accent];
+    packetColors = [fieldPalette.accent, fieldPalette.accentTwo, fieldPalette.accentThree, dark ? "#ffffff" : "#0b356c", fieldPalette.accent];
   }
 
   function resizeCanvas() {
@@ -101,9 +112,9 @@ if (canvas) {
     canvas.height = Math.floor(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    const particleCount = width < 620 ? 20 : 42;
+    const particleCount = width < 620 ? 16 : 30;
     particles = Array.from({ length: particleCount }, (_, index) => ({
-      x: width * (0.53 + ((index * 37) % 45) / 100),
+      x: width * (0.4 + ((index * 37) % 58) / 100),
       y: height * (0.1 + ((index * 53) % 78) / 100),
       vx: 0.08 + (index % 5) * 0.025,
       vy: ((index % 7) - 3) * 0.012,
@@ -188,7 +199,7 @@ if (canvas) {
       context.font = "700 9px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
       context.fillText(`${String(routeIndex + 1).padStart(2, "0")} / ${routeLabels[routeIndex]}`, labelPoint[0] + 9, labelPoint[1] - 9);
 
-      const packetCount = width < 620 ? 1 : 2;
+      const packetCount = 1;
       for (let packet = 0; packet < packetCount; packet += 1) {
         const speed = 0.000032 + routeIndex * 0.000004;
         const progress = ((time * speed + packet / packetCount + routeIndex * 0.17) % 1 + 1) % 1;
@@ -258,7 +269,7 @@ if (canvas) {
       { name: "LOGIC", stages: 3, color: packetColors[3] },
       { name: "OUTPUT", stages: 4, color: packetColors[2] },
     ];
-    const startX = width * (width < 620 ? 0.72 : 0.74);
+    const startX = width * (width < 620 ? 0.72 : 0.81);
     const startY = height * 0.32;
 
     context.fillStyle = fieldPalette.muted;
@@ -278,7 +289,7 @@ if (canvas) {
   }
 
   function drawWaveform(time) {
-    const startX = width * (width < 620 ? 0.46 : 0.7);
+    const startX = width * (width < 620 ? 0.46 : 0.77);
     const endX = width - (width < 620 ? 18 : 42);
     const centerY = height * 0.72;
     const span = Math.max(100, endX - startX);
@@ -342,7 +353,7 @@ if (canvas) {
       particle.x += particle.vx;
       particle.y += particle.vy;
 
-      if (particle.x > width + 10) particle.x = width * 0.52;
+      if (particle.x > width + 10) particle.x = width * 0.4;
       if (particle.y < height * 0.08) particle.y = height * 0.86;
       if (particle.y > height * 0.9) particle.y = height * 0.1;
 
@@ -391,7 +402,7 @@ if (canvas) {
 
   function drawProjectPipelines() {
     if (width < 620) return;
-    const x = width * 0.735;
+    const x = width * 0.79;
     const y = height * 0.82;
 
     context.fillStyle = fieldPalette.muted;
@@ -407,7 +418,7 @@ if (canvas) {
 
   function drawImpactStats() {
     if (width < 620) return;
-    const x = width * 0.58;
+    const x = width * 0.5;
     const y = height * 0.115;
     const stats = [
       { value: "00.24", label: "frame delta" },
@@ -432,7 +443,7 @@ if (canvas) {
 
   function drawTechnologyIndex() {
     if (width < 900) return;
-    const x = width * 0.72;
+    const x = width * 0.76;
     const y = 102;
     const rows = [
       ["capture", "read / normalize"],
@@ -461,7 +472,7 @@ if (canvas) {
 
   function drawProfileIndex() {
     if (width < 620) return;
-    const x = width * 0.84;
+    const x = width * 0.87;
     const y = height * 0.48;
     const rows = [
       ["field", "active"],
@@ -485,30 +496,6 @@ if (canvas) {
       context.fillStyle = index === 0 ? fieldPalette.accent : fieldPalette.text;
       context.fillText(value, x + 54, rowY);
     });
-  }
-
-  function drawWorkHistory() {
-    if (width < 620) return;
-    const x = width * 0.57;
-    const y = height - 132;
-
-    context.fillStyle = fieldPalette.muted;
-    context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-    context.fillText("PROCESS_TRACE", x, y);
-    context.strokeStyle = fieldPalette.line;
-    context.beginPath();
-    context.moveTo(x, y + 12);
-    context.lineTo(x + 336, y + 12);
-    context.stroke();
-
-    context.fillStyle = fieldPalette.accentTwo;
-    context.fillText("T-01", x, y + 36);
-    context.fillStyle = fieldPalette.text;
-    context.fillText("receive / resolve / route", x + 44, y + 36);
-    context.fillStyle = fieldPalette.accent;
-    context.fillText("T-00", x, y + 56);
-    context.fillStyle = fieldPalette.text;
-    context.fillText("verify / render / ready", x + 44, y + 56);
   }
 
   function drawPulseBursts(time) {
@@ -536,11 +523,11 @@ if (canvas) {
 
   function drawScanSweep(time) {
     const progress = (time * 0.000055) % 1;
-    const x = width * (0.54 + progress * 0.44);
+    const x = width * (0.4 + progress * 0.58);
     const gradient = context.createLinearGradient(x - 36, 0, x + 36, 0);
-    gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
-    gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.2)");
-    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+    gradient.addColorStop(0, fieldPalette.scanClear);
+    gradient.addColorStop(0.5, fieldPalette.scan);
+    gradient.addColorStop(1, fieldPalette.scanClear);
     context.fillStyle = gradient;
     context.fillRect(x - 36, 0, 72, height);
 
@@ -557,20 +544,180 @@ if (canvas) {
     context.globalAlpha = 1;
   }
 
+  function drawNodeMesh(time) {
+    if (width < 620) return;
+    const nodes = meshNodes.map(([nodeX, nodeY], index) => ({
+      x: nodeX * width + Math.sin(time * 0.00055 + index * 1.8) * 5,
+      y: nodeY * height + Math.cos(time * 0.00042 + index * 1.3) * 5,
+    }));
+
+    meshLinks.forEach(([startIndex, endIndex], linkIndex) => {
+      const start = nodes[startIndex];
+      const end = nodes[endIndex];
+      context.strokeStyle = fieldPalette.faint;
+      context.lineWidth = 1;
+      context.beginPath();
+      context.moveTo(start.x, start.y);
+      context.lineTo(end.x, end.y);
+      context.stroke();
+
+      if (linkIndex % 3 === 0) {
+        const progress = (time * (0.00012 + linkIndex * 0.0000015) + linkIndex * 0.13) % 1;
+        const packetX = start.x + (end.x - start.x) * progress;
+        const packetY = start.y + (end.y - start.y) * progress;
+        context.fillStyle = packetColors[linkIndex % packetColors.length];
+        context.fillRect(packetX - 2, packetY - 2, 4, 4);
+      }
+    });
+
+    nodes.forEach((node, index) => {
+      const pulse = 2.5 + (Math.sin(time * 0.002 + index) + 1) * 1.2;
+      context.fillStyle = packetColors[index % packetColors.length];
+      context.fillRect(node.x - 2, node.y - 2, 4, 4);
+      context.strokeStyle = fieldPalette.line;
+      context.beginPath();
+      context.arc(node.x, node.y, pulse + 3, 0, Math.PI * 2);
+      context.stroke();
+    });
+  }
+
+  function drawRadarSweep(time) {
+    if (width < 620) return;
+    const x = width * 0.58;
+    const y = height * 0.57;
+    const radius = Math.min(150, width * 0.115, height * 0.2);
+    const angle = time * 0.00032;
+
+    context.save();
+    context.translate(x, y);
+    context.strokeStyle = fieldPalette.faint;
+    context.lineWidth = 1;
+    for (let ring = 1; ring <= 4; ring += 1) {
+      context.beginPath();
+      context.arc(0, 0, (radius * ring) / 4, 0, Math.PI * 2);
+      context.stroke();
+    }
+    context.beginPath();
+    context.moveTo(-radius, 0);
+    context.lineTo(radius, 0);
+    context.moveTo(0, -radius);
+    context.lineTo(0, radius);
+    context.stroke();
+
+    context.rotate(angle);
+    context.globalAlpha = 0.28;
+    context.fillStyle = fieldPalette.accentTwo;
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.arc(0, 0, radius, -0.34, 0.03);
+    context.closePath();
+    context.fill();
+    context.globalAlpha = 0.85;
+    context.strokeStyle = fieldPalette.accentTwo;
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.lineTo(radius, 0);
+    context.stroke();
+    context.restore();
+
+    const blips = [[0.34, 0.2], [0.62, 1.8], [0.83, 3.45], [0.48, 5.18]];
+    blips.forEach(([distance, blipAngle], index) => {
+      const blipX = x + Math.cos(blipAngle) * radius * distance;
+      const blipY = y + Math.sin(blipAngle) * radius * distance;
+      const alpha = 0.45 + (Math.sin(time * 0.003 + index * 1.4) + 1) * 0.25;
+      context.globalAlpha = alpha;
+      context.fillStyle = packetColors[index % packetColors.length];
+      context.beginPath();
+      context.arc(blipX, blipY, 3.5, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.globalAlpha = 1;
+  }
+
+  function drawDataColumns(time) {
+    if (width < 900) return;
+    const glyphs = ["0", "1", "A", "C", "7", "F", "+", "/"];
+    context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+
+    for (let column = 0; column < 3; column += 1) {
+      const x = width * 0.94 + column * 22;
+      const speed = 0.012 + column * 0.003;
+      for (let row = 0; row < 9; row += 1) {
+        const travel = (row * 54 + time * speed) % (height * 0.7);
+        const y = height * 0.17 + travel;
+        const glyphIndex = (row * 3 + column * 5 + Math.floor(time * 0.0006)) % glyphs.length;
+        context.globalAlpha = 0.16 + ((row + column) % 4) * 0.12;
+        context.fillStyle = column % 2 ? fieldPalette.accentTwo : fieldPalette.text;
+        context.fillText(glyphs[glyphIndex], x, y);
+      }
+    }
+    context.globalAlpha = 1;
+  }
+
+  function drawTelemetryBands(time) {
+    if (width < 620) return;
+    const x = width * 0.41;
+    const y = height * 0.2;
+    const maxWidth = Math.min(158, width * 0.12);
+
+    context.fillStyle = fieldPalette.muted;
+    context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+    context.fillText("LIVE_CHANNELS / 04", x, y - 18);
+
+    for (let row = 0; row < 4; row += 1) {
+      const rowY = y + row * 18;
+      const wave = (Math.sin(time * (0.001 + row * 0.00007) + row * 1.37) + 1) / 2;
+      const value = maxWidth * (0.28 + wave * 0.68);
+
+      context.fillStyle = fieldPalette.faint;
+      context.fillRect(x + 34, rowY, maxWidth, 2);
+      context.fillStyle = packetColors[row % packetColors.length];
+      context.fillRect(x + 34, rowY, value, 2);
+      context.fillRect(x + 31 + value, rowY - 2, 5, 6);
+      context.fillStyle = fieldPalette.muted;
+      context.fillText(`C${String(row + 1).padStart(2, "0")}`, x, rowY + 3);
+    }
+  }
+
+  function drawDataTicker(time) {
+    if (width < 620) return;
+    const startX = width * 0.4;
+    const endX = width - 32;
+    const y = height - 92;
+    const tokens = ["01", "A4", "7F", "10", "C2", "08", "FF", "31", "B6", "00", "D9", "42"];
+    const step = 34;
+    const offset = (time * 0.018) % step;
+
+    context.save();
+    context.beginPath();
+    context.rect(startX, y - 12, endX - startX, 24);
+    context.clip();
+    context.font = "700 8px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+
+    for (let index = -1; index < Math.ceil((endX - startX) / step) + 1; index += 1) {
+      const tokenIndex = (index + Math.floor(time * 0.0005) + tokens.length * 4) % tokens.length;
+      const x = startX + index * step + offset;
+      context.fillStyle = index % 3 === 0 ? fieldPalette.accentTwo : fieldPalette.muted;
+      context.fillText(tokens[tokenIndex], x, y);
+      context.fillStyle = fieldPalette.faint;
+      context.fillRect(x + 18, y - 6, 8, 1);
+    }
+    context.restore();
+  }
+
   function drawField(time = 0) {
     context.clearRect(0, 0, width, height);
     drawGrid();
     drawScanSweep(time);
-    drawProfileIndex();
-    drawWorkHistory();
+    drawNodeMesh(time);
+    drawRadarSweep(time);
+    drawDataColumns(time);
+    drawTelemetryBands(time);
     drawRoutes(time);
     drawParticles();
-    drawProjectIndex();
     drawWaveform(time);
     hubs.forEach((hub, index) => drawHub(hub, index, time));
-    drawImpactStats();
-    drawTechnologyIndex();
-    drawProjectPipelines();
+    drawDataTicker(time);
     drawPulseBursts(time);
     drawPointerReticle();
 
@@ -581,6 +728,12 @@ if (canvas) {
 
   function animate(time) {
     drawField(time);
+    const statusTick = Math.floor(time / 850);
+    if (systemStatus && statusTick !== lastStatusTick) {
+      lastStatusTick = statusTick;
+      const sync = 96 + (statusTick % 5);
+      systemStatus.textContent = `nodes ${String(particles.length).padStart(3, "0")} / sync ${sync}%`;
+    }
     frame = window.requestAnimationFrame(animate);
   }
 
@@ -590,6 +743,9 @@ if (canvas) {
 
   window.addEventListener("themechange", () => {
     refreshPalette();
+    particles.forEach((particle, index) => {
+      particle.color = packetColors[index % packetColors.length];
+    });
     if (reducedMotion) drawField();
   });
 

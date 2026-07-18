@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Selected software projects by Andy Zhang." />
-    <meta name="theme-color" content="#f7faff" />
+    <meta name="description" content="Software projects by Andy Zhang." />
+    <meta name="theme-color" content="#07101d" />
     <title>Projects | Andy Zhang</title>
     <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
     <script>
-      document.documentElement.dataset.theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260716-1" />
-    <script src="script.js?v=20260716-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260716-17" />
+    <script src="script.js?v=20260716-5" defer></script>
   </head>
   <body class="sub-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -46,102 +46,53 @@
       </div>
     </header>
 
-    <main id="main" class="page-shell">
-      <section class="page-masthead" aria-labelledby="page-title">
-        <p class="page-index">02 / Projects</p>
-        <h1 id="page-title">Four systems, each built end to end.</h1>
-        <p class="page-summary">
-          Product experiments spanning spatial computing, search, game engines,
-          computer vision, and the infrastructure required to ship them.
-        </p>
-      </section>
+    <main id="main" class="page-shell page-shell--editorial">
+      <header class="editorial-masthead">
+        <h1>Projects</h1>
+      </header>
 
-      <section class="project-list" aria-label="Selected projects">
-        <article class="project-row">
-          <figure class="project-media">
-            <img src="assets/project-vr.svg?v=20260712-5" alt="A point-cloud reconstruction viewer processing a room scene" />
+      <section class="project-grid-editorial" aria-label="Projects">
+        <article class="project-card-editorial">
+          <figure class="project-thumb">
+            <img src="assets/project-vr-generated.jpg?v=20260716-1" alt="A point-cloud room emerging from a VR headset" />
           </figure>
-          <div class="project-copy">
-            <div class="project-heading">
-              <p>01 / Spatial computing</p>
-              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#cube"></use></svg></span>
-            </div>
+          <div class="project-card-copy">
+            <p class="project-kind">Spatial computing</p>
             <h2>VR Memory Reconstruction</h2>
-            <p>
-              A full-stack platform that turns ordinary videos into explorable VR scenes,
-              with web and iOS upload clients and a GPU-backed reconstruction pipeline.
-            </p>
-            <dl class="project-details">
-              <div><dt>Pipeline</dt><dd>Frames -> COLMAP -> FastGS -> Unity</dd></div>
-              <div><dt>Runtime</dt><dd>FastAPI, Modal GPU, OpenXR</dd></div>
-            </dl>
-            <p class="stack-line">PyTorch / Gaussian Splatting / React / Swift / Unity</p>
+            <p>Turns ordinary video into explorable VR scenes.</p>
           </div>
         </article>
 
-        <article class="project-row">
-          <figure class="project-media">
-            <img src="assets/project-alphahex.svg?v=20260712-5" alt="A Catan board beside Monte Carlo tree search evaluations" />
+        <article class="project-card-editorial">
+          <figure class="project-thumb">
+            <img src="assets/project-alphahex-generated.jpg?v=20260716-1" alt="Hexagonal board tiles beneath a branching search tree" />
           </figure>
-          <div class="project-copy">
-            <div class="project-heading">
-              <p>02 / Game engine</p>
-              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#branch"></use></svg></span>
-            </div>
+          <div class="project-card-copy">
+            <p class="project-kind">Game engine</p>
             <h2>AlphaHex</h2>
-            <p>
-              A 1v1 Catan engine that combines Monte Carlo tree search, board heuristics,
-              and self-play training to reason about long-term resource strategy.
-            </p>
-            <dl class="project-details">
-              <div><dt>Result</dt><dd>70% win rate, top 500 online</dd></div>
-              <div><dt>Training</dt><dd>Replay buffers and model checkpoints</dd></div>
-            </dl>
-            <p class="stack-line">PyTorch / MCTS / FastAPI / React / Vite</p>
+            <p>A Catan bot that learns long-term strategy through search and self-play.</p>
           </div>
         </article>
 
-        <article class="project-row">
-          <figure class="project-media">
-            <img src="assets/project-legal.svg?v=20260712-5" alt="A legal document search interface with highlighted cited passages" />
+        <article class="project-card-editorial">
+          <figure class="project-thumb">
+            <img src="assets/project-legal-generated.jpg?v=20260716-1" alt="A document with highlighted passages and a magnifying lens" />
           </figure>
-          <div class="project-copy">
-            <div class="project-heading">
-              <p>03 / Retrieval system</p>
-              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#document-search"></use></svg></span>
-            </div>
+          <div class="project-card-copy">
+            <p class="project-kind">Retrieval system</p>
             <h2>Legal Research Assistant</h2>
-            <p>
-              A Chrome extension that reads PDFs and images, retrieves the most relevant
-              passages, and produces explanations grounded in the uploaded material.
-            </p>
-            <dl class="project-details">
-              <div><dt>Input</dt><dd>PDF and image OCR</dd></div>
-              <div><dt>Memory</dt><dd>Chunked embeddings in Pinecone</dd></div>
-            </dl>
-            <p class="stack-line">Flask / Tesseract OCR / Pinecone / Google Cloud</p>
+            <p>Finds relevant passages in documents and explains them with citations.</p>
           </div>
         </article>
 
-        <article class="project-row">
-          <figure class="project-media">
-            <img src="assets/project-poker.svg?v=20260712-5" alt="A face analysis viewport with behavioral signal graphs" />
+        <article class="project-card-editorial">
+          <figure class="project-thumb">
+            <img src="assets/project-poker-generated.jpg?v=20260716-1" alt="A face scan surrounded by behavioral signal graphs" />
           </figure>
-          <div class="project-copy">
-            <div class="project-heading">
-              <p>04 / Computer vision</p>
-              <span aria-hidden="true"><svg><use href="assets/icons.svg?v=20260712-5#scan-face"></use></svg></span>
-            </div>
+          <div class="project-card-copy">
+            <p class="project-kind">Computer vision</p>
             <h2>Poker Bluff Detection</h2>
-            <p>
-              A real-time vision pipeline that combines blinking, lip movement, head
-              motion, and expression changes into a weighted behavioral signal.
-            </p>
-            <dl class="project-details">
-              <div><dt>Signals</dt><dd>Face mesh, motion, emotion</dd></div>
-              <div><dt>Output</dt><dd>Continuous weighted bluff score</dd></div>
-            </dl>
-            <p class="stack-line">Python / OpenCV / MediaPipe / DeepFace</p>
+            <p>Explores whether subtle facial cues can help model bluffing behavior.</p>
           </div>
         </article>
       </section>
@@ -149,7 +100,6 @@
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <p><span>AZ</span> Waterloo Computer Science</p>
         <div>
           <a href="work.html">work</a>
           <a href="mailto:andy.jy.zhang@gmail.com">contact</a>

@@ -2,3 +2,5 @@
 .local-server.*.log
 personalweb-sites.tar.gz
 AndyZhangResume.pdf
+
+.vercel

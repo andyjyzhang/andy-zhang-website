@@ -147,9 +147,11 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(var(--page-width), calc(100% - 48px));
+  width: 100%;
   height: 100%;
   margin: 0 auto;
+  padding-right: clamp(18px, 3vw, 52px);
+  padding-left: clamp(18px, 3vw, 52px);
 }
 
 .brand {
@@ -1232,10 +1234,15 @@ a.project-card-editorial:focus-visible .project-destination span {
     --header-height: 64px;
   }
 
-  .header-inner,
   .page-shell,
   .footer-inner {
     width: calc(100% - 28px);
+  }
+
+  .header-inner {
+    width: 100%;
+    padding-right: 14px;
+    padding-left: 14px;
   }
 
   .brand {

@@ -3,96 +3,144 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Andy Zhang is a University of Waterloo Computer Science student building infrastructure, data systems, developer tools, and applied AI products."
-    />
-    <meta name="theme-color" content="#07101d" />
-    <title>Andy Zhang</title>
-    <link rel="icon" href="assets/favicon.svg?v=20260712-5" type="image/svg+xml" />
+    <meta name="description" content="Andy Zhang is a University of Waterloo Computer Science student building infrastructure, applied AI, and useful software." />
+    <meta name="theme-color" content="#050713" />
+    <meta property="og:title" content="Andy Zhang | Software Engineer" />
+    <meta property="og:description" content="Software, systems, and experiments by Andy Zhang." />
+    <meta property="og:type" content="website" />
+    <title>Andy Zhang | Software Engineer</title>
+    <link rel="icon" href="assets/favicon.svg?v=20260821-2" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260821-2" />
     <script>
-      document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260719-2" />
-    <script src="script.js?v=20260716-5" defer></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script src="script.js?v=20260821-2" defer></script>
   </head>
-  <body class="home-page">
-    <a class="skip-link" href="#main">Skip to content</a>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
 
-    <header class="site-header site-header--hero">
-      <div class="header-inner">
-        <a class="brand brand--root" href="index.html" aria-label="Andy Zhang, home">
-          <span aria-hidden="true">az/</span>
-        </a>
+    <main class="compact-portfolio" data-scroll-root>
+      <canvas class="life-canvas" data-life-canvas aria-label="Interactive cellular background. Click or drag to add living cells."></canvas>
+      <div class="life-shade" aria-hidden="true"></div>
+      <div class="scanlines" aria-hidden="true"></div>
 
-        <nav class="site-nav" aria-label="Primary navigation">
-          <div class="page-links">
-            <a href="work.html">work</a>
-            <a href="projects.html">projects</a>
+      <article class="portfolio-panel" id="content">
+        <header class="identity">
+          <p class="eyebrow"><span aria-hidden="true"></span> Waterloo, Ontario</p>
+          <h1>Andy Zhang</h1>
+          <p class="intro">CS student. Software engineer. I build ambitious things that actually work.</p>
+          <nav class="top-links" aria-label="Contact links">
+            <a href="mailto:andy.jy.zhang@gmail.com">Email</a>
+            <a href="https://github.com/andyjyzhang" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/andyzhang12/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="AndyZhangResume.pdf" target="_blank" rel="noopener">Résumé</a>
+          </nav>
+        </header>
+
+        <section class="compact-section" aria-labelledby="about-title">
+          <div class="section-label"><h2 id="about-title">About</h2><span></span></div>
+          <p class="about-copy">
+            Computer Science student <strong>@ Waterloo</strong>, working across cloud infrastructure,
+            spatial computing, developer tools, and applied machine learning.
+          </p>
+        </section>
+
+        <section class="compact-section" aria-labelledby="experience-title">
+          <div class="section-label"><h2 id="experience-title">Experience</h2><span></span></div>
+          <div class="entry-list">
+            <article class="job-entry">
+              <div class="mark mark--cyan" aria-hidden="true">SC</div>
+              <div class="entry-body">
+                <div class="entry-heading">
+                  <div><h3>Software Engineering Intern</h3><p>Statistics Canada</p></div>
+                  <time datetime="2026-05">May — Aug 2026</time>
+                </div>
+                <p>Built Kubernetes data applications, standardized Azure storage, and cut a large conversion pipeline by 20 hours.</p>
+              </div>
+            </article>
+            <article class="job-entry">
+              <div class="mark mark--orange" aria-hidden="true">N</div>
+              <div class="entry-body">
+                <div class="entry-heading">
+                  <div><h3>Software Engineering Intern</h3><p>Nokia</p></div>
+                  <time datetime="2024-07">Jul — Aug 2024</time>
+                </div>
+                <p>Built performance-testing and reporting tools for network systems, reducing analysis time by 75%.</p>
+              </div>
+            </article>
           </div>
-          <span class="nav-rule" aria-hidden="true"></span>
-          <div class="social-links">
-            <a
-              class="icon-link"
-              href="https://github.com/andyjyzhang"
-              target="_blank"
-              rel="noopener"
-              aria-label="GitHub"
-              data-label="GitHub"
-            >
-              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#github"></use></svg>
-            </a>
-            <a
-              class="icon-link"
-              href="https://www.linkedin.com/in/andyzhang12/"
-              target="_blank"
-              rel="noopener"
-              aria-label="LinkedIn"
-              data-label="LinkedIn"
-            >
-              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#linkedin"></use></svg>
-            </a>
-            <a
-              class="icon-link"
-              href="mailto:andy.jy.zhang@gmail.com"
-              aria-label="Contact Andy"
-              data-label="Contact"
-            >
-              <svg aria-hidden="true"><use href="assets/icons.svg?v=20260712-5#mail"></use></svg>
-            </a>
+        </section>
+
+        <section class="compact-section" aria-labelledby="projects-title">
+          <div class="section-label"><h2 id="projects-title">Projects</h2><span></span></div>
+          <div class="project-grid">
+            <article class="project-card">
+              <p class="project-number">01 / SPATIAL</p>
+              <h3>Reminiscence</h3>
+              <p>Phone video to an explorable VR memory through Gaussian splatting.</p>
+              <small>PYTORCH / UNITY / FASTAPI</small>
+              <div class="project-links"><a href="https://reminiscence-two.vercel.app/" target="_blank" rel="noopener">LIVE ↗</a><a href="https://github.com/andyjyzhang/reminiscence" target="_blank" rel="noopener">CODE ↗</a></div>
+            </article>
+            <article class="project-card">
+              <p class="project-number">02 / GAME AI</p>
+              <h3>AlphaHex</h3>
+              <p>A self-play Catan engine behind a top-500 online rank.</p>
+              <small>PYTORCH / MCTS / REACT</small>
+              <div class="project-links"><a href="https://alphahex.vercel.app/" target="_blank" rel="noopener">LIVE ↗</a></div>
+            </article>
+            <article class="project-card">
+              <p class="project-number">03 / WINNER</p>
+              <h3>Photo Verification</h3>
+              <p>Authenticity records anchored on Solana and matched with vector search.</p>
+              <small>RUST / SOLANA / MONGODB</small>
+            </article>
+            <article class="project-card">
+              <p class="project-number">04 / TRAINER</p>
+              <h3>Memo Lab</h3>
+              <p>Exact blindfold-cubing memo practice with legal-solution validation.</p>
+              <small>TYPESCRIPT / CUBE STATE</small>
+              <div class="project-links"><a href="https://blind-memo-lab.andy-jy-zhang.chatgpt.site" target="_blank" rel="noopener">LIVE ↗</a><a href="https://github.com/andyjyzhang/3bld-helper" target="_blank" rel="noopener">CODE ↗</a></div>
+            </article>
+            <article class="project-card">
+              <p class="project-number">05 / DATA VIZ</p>
+              <h3>Range Visualizer</h3>
+              <p>Maps poker frequencies onto every preflop hand combination.</p>
+              <small>REACT / PWA / OFFLINE</small>
+              <div class="project-links"><a href="https://github.com/andyjyzhang/range-visualizer" target="_blank" rel="noopener">CODE ↗</a></div>
+            </article>
+            <article class="project-card">
+              <p class="project-number">06 / RETRIEVAL</p>
+              <h3>Lawly</h3>
+              <p>Reads legal documents, retrieves evidence, and explains them in context.</p>
+              <small>OCR / PINECONE / RAG</small>
+              <div class="project-links"><a href="https://github.com/andyjyzhang/lawly" target="_blank" rel="noopener">CODE ↗</a></div>
+            </article>
           </div>
-          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch colour theme">
-            <span aria-hidden="true"></span>
-          </button>
-        </nav>
-      </div>
-    </header>
+        </section>
 
-    <main id="main" class="hero">
-      <canvas class="system-field" data-system-field aria-hidden="true"></canvas>
+        <section class="compact-section" aria-labelledby="education-title">
+          <div class="section-label"><h2 id="education-title">Education</h2><span></span></div>
+          <article class="education-entry">
+            <div><h3>Computer Science, Waterloo</h3><p>Bachelor&rsquo;s candidate · National Math Scholarship recipient.</p></div>
+            <time>2023 — 2028</time>
+          </article>
+        </section>
 
-      <section class="hero-content" aria-labelledby="hero-title">
-        <p class="hero-kicker"><span>00</span> Waterloo CS</p>
-        <h1 id="hero-title"><span>Andy</span><span>Zhang</span></h1>
-        <p class="hero-lede">
-          I build practical software across <span>infrastructure</span>,
-          <span>data systems</span>, and <span>applied AI</span>.
-        </p>
-        <div class="hero-actions" aria-label="Explore the site">
-          <a href="projects.html">
-            projects
-          </a>
-          <a href="work.html">
-            work experience
-          </a>
-        </div>
-      </section>
+        <footer class="panel-footer">
+          <p>Want to build something interesting?</p>
+          <a href="mailto:andy.jy.zhang@gmail.com">andy.jy.zhang@gmail.com ↗</a>
+          <span>© <span data-year>2026</span> Andy Zhang</span>
+        </footer>
+      </article>
 
-      <div class="hero-baseline" aria-hidden="true">
-        <span class="field-interaction">interactive field / move + click</span>
-        <span data-system-status>nodes 030 / sync 100%</span>
-        <span data-local-time>ET 00:00:00</span>
-      </div>
+      <button class="life-toggle" type="button" data-life-toggle aria-pressed="false">
+        <span class="toggle-icon" aria-hidden="true"></span>
+        <span class="toggle-label">Pause</span>
+      </button>
     </main>
   </body>
 </html>

@@ -1,0 +1,46 @@
+.activity-feedback { position: absolute; left: 36px; bottom: 170px; width: min(345px,calc(100vw - 44px)); background: #122c3e; color: #edf5f8; border: 1px solid #6b9cb1; border-left: 4px solid #aee9ef; padding: 16px 18px; border-radius: 4px; pointer-events: auto; }
+.feedback-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.feedback-heading strong { font-size: 13px; line-height: 1.5; }
+.feedback-heading button { flex: 0 0 36px; min-height: 36px; color: #edf5f8; font-size: 22px; }
+.activity-feedback small { display: block; font: 10px 'Space Mono',monospace; line-height: 1.7; color: #bfd7e2; }
+.activity-feedback b { display: block; font-size: 15px; line-height: 1.6; }
+.feedback-phase { color: #d5e9ef; font-size: 13px; line-height: 1.65; margin: 12px 0 0; }
+.core-readout,.drone-readout,.beacon-readout { display: flex; align-items: center; gap: 14px; padding-top: 12px; }
+.core-readout > span,.drone-readout > span { font-size: 38px; color: #aee9ef; }
+.beacon-readout > span { font-size: 26px; color: #f2cd37; }
+.cargo-manifest { border: 1px dashed #efb960; padding: 12px; margin-top: 12px; }
+.cargo-manifest > span { font: 11px 'Space Mono',monospace; color: #ffda8a; }
+.activity-feedback[data-kind="cargo"] { border-left-color: #efb960; }
+.activity-feedback[data-kind="noodles"] { color: #29464b; background: #faf6e9; border-color: #947844; border-radius: 0; }
+.order-receipt { border-top: 1px dashed #806e4e; border-bottom: 1px dashed #806e4e; margin-top: 9px; padding: 14px 0; }
+.order-receipt span { display: block; font-size: 12px; margin-top: 8px; }
+.activity-feedback[data-kind="noodles"] small,.activity-feedback[data-kind="noodles"] .feedback-phase { color: #52665e; }
+.activity-feedback[data-kind="noodles"] button { color: #29464b; }
+.receiver-readout { padding: 12px; margin-top: 10px; background: #071321; border: 1px solid #6b9cb1; }
+.receiver-readout > span { display: block; color: #aee9ef; font-size: 22px; letter-spacing: 7px; }
+.activity-feedback[data-kind="crew"] { border-left: 4px solid #efb960; }
+.activity-feedback blockquote { font-size: 13px; line-height: 1.8; margin: 10px 0; }
+.arcade-console { width: min(365px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto 26px auto auto; padding: 22px; border: 2px solid #6b9cb1; border-top: 8px solid #f2cd37; border-radius: 6px; background: #122c3e; color: #edf5f8; overflow-y: auto; }
+.arcade-console::backdrop { background: #07132135; }
+.arcade-top { position: sticky; top: -22px; z-index: 1; background: #122c3e; padding-block: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 10px 'Space Mono',monospace; color: #bfd7e2; }
+.arcade-console h2 { font-size: 29px; margin: 20px 0 12px; }
+.arcade-console p { font-size: 13px; line-height: 1.8; }
+.signal-readout { display: flex; gap: 8px; padding: 16px 8px; margin: 16px 0; background: #071321; }
+.signal-readout > span { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 8px; font-size: 12px; }
+.signal-readout i { width: 32px; height: 32px; border: 3px solid #6b9cb1; border-radius: 50%; background: #25394c; }
+.signal-readout small { font-size: 10px; color: #ffda8a; }
+.signal-readout .lit i { border-color: #edf5f8; }
+.signal-readout .lit:nth-child(1) i { background: #aee9ef; }
+.signal-readout .lit:nth-child(2) i { background: #f2cd37; }
+.signal-readout .lit:nth-child(3) i { background: #fe8a18; }
+.current-signal { font: 12px 'Space Mono',monospace; color: #d5e9ef; }
+.signal-result { border-left: 3px solid #aee9ef; padding: 8px 12px; background: #071321; }
+.signal-result[data-outcome="win"] { border-color: #f2cd37; color: #ffda8a; }
+.arcade-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.arcade-actions button:first-child { grid-column: span 2; background: #f2cd37; color: #29464b; border-color: #f2cd37; }
+.arcade-console .arcade-keys { font-size: 11px; color: #bfd7e2; margin-bottom: 0; line-height: 2.4; }
+@media(max-width:760px) { .activity-feedback { left: 22px; bottom: 265px; } .arcade-console { margin: auto; } .feedback-heading button { min-width: 44px; min-height: 44px; } }
+@media(max-width:760px) and (max-height:600px) {
+  .activity-feedback { left: auto; right: 20px; top: 102px; bottom: auto; width: min(300px,calc(100vw - 44px)); max-height: calc(100dvh - 360px); overflow-y: auto; }
+}
+@media(max-width:760px) and (max-height:450px) { .activity-feedback { width: min(240px,calc(100vw - 44px)); max-height: calc(100dvh - 240px); } }

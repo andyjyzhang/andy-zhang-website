@@ -1,6 +1,12 @@
 .sites-deploy/
 .local-server.*.log
 personalweb-sites.tar.gz
-AndyZhangResume.pdf
+node_modules/
+dist/
+artifacts/
+*.tsbuildinfo
 
 .vercel
+
+# Local development assets
+/references/

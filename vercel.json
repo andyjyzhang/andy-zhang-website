@@ -1,0 +1,10 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "redirects": [
+    { "source": "/work.html", "destination": "/#experience", "permanent": true },
+    { "source": "/projects.html", "destination": "/#projects", "permanent": true }
+  ]
+}

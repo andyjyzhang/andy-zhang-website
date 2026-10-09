@@ -1,0 +1,1880 @@
+[
+  {
+    "file": "1-16chrd.dat",
+    "description": "Chord 0.0625",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16con16.dat",
+    "description": "Cone 16 x 0.0625",
+    "author": "Vincent Messenet [Cheenzo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16con3.dat",
+    "description": "Cone  3 x 0.0625",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16cyli.dat",
+    "description": "Cylinder 0.0625",
+    "author": "Marc Klein [marckl]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16cylo.dat",
+    "description": "Cylinder Open 0.0625",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16edge.dat",
+    "description": "Circle 0.0625",
+    "author": "Marc Klein [marckl]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16ring2.dat",
+    "description": "Ring  2 x 0.0625",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-16tndis.dat",
+    "description": "Disc Negative Truncated 0.0625",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4chrd.dat",
+    "description": "Chord 0.25",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4con10.dat",
+    "description": "Cone 10 x 0.25",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4con4.dat",
+    "description": "Cone  4 x 0.25",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4cyli.dat",
+    "description": "Cylinder 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4cylo.dat",
+    "description": "Cylinder Open 0.25",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4cyls.dat",
+    "description": "Cylinder Sloped 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4cyls2.dat",
+    "description": "Cylinder Sloped 0.25 Convex",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4disc.dat",
+    "description": "Disc 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4edge.dat",
+    "description": "Circle 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4ndis.dat",
+    "description": "Disc Negative 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4rin15.dat",
+    "description": "~Ring 15 x 0.25 (Obsolete)",
+    "author": "Franklin W. Cain [fwcain]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4rin16.dat",
+    "description": "~Ring 16 x 0.25 (Obsolete)",
+    "author": "Franklin W. Cain [fwcain]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4ring1.dat",
+    "description": "Ring  1 x 0.25",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-4ring3.dat",
+    "description": "Ring  3 x 0.25",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8chrd.dat",
+    "description": "Chord 0.125",
+    "author": "Orion Pobursky [OrionP]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8con4.dat",
+    "description": "Cone  4 x 0.125",
+    "author": "Vincent Messenet [Cheenzo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8cyli.dat",
+    "description": "Cylinder 0.125",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8cylo.dat",
+    "description": "Cylinder Open 0.125",
+    "author": "Tim Gould [timgould]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8disc.dat",
+    "description": "Disc 0.125",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8edge.dat",
+    "description": "Circle 0.125",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8ndis.dat",
+    "description": "Disc Negative 0.125",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8ring17.dat",
+    "description": "Ring 17 x 0.125",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8ring3.dat",
+    "description": "Ring  3 x 0.125",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8ring4.dat",
+    "description": "Ring  4 x 0.125",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8ring9.dat",
+    "description": "Ring  9 x 0.125",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8sphe.dat",
+    "description": "Sphere 0.125",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "1-8tndis.dat",
+    "description": "Disc Negative Truncated 0.125",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4chrd.dat",
+    "description": "Chord 0.5",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4con10.dat",
+    "description": "Cone 10 x 0.5",
+    "author": "Michael Heidemann [mikeheide]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4con4.dat",
+    "description": "Cone  4 x 0.5",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4cyli.dat",
+    "description": "Cylinder 0.5",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4cylo.dat",
+    "description": "Cylinder Open 0.5",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4disc.dat",
+    "description": "Disc 0.5",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4edge.dat",
+    "description": "Circle 0.5",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4ndis.dat",
+    "description": "Disc Negative 0.5",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-4ring2.dat",
+    "description": "Ring  2 x 0.5",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2-8sphe.dat",
+    "description": "Sphere 0.25",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2039.dat",
+    "description": "Support  2 x  2 x  7 Lamppost with  6 Base Flutes",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2431.dat",
+    "description": "Tile  1 x  4 with Groove",
+    "author": "Santeri Piippo [arezey]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2446.dat",
+    "description": "~Minifig Helmet Standard (Obsolete)",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2447.dat",
+    "description": "~Minifig Helmet Visor Standard (Obsolete)",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2456.dat",
+    "description": "Brick  2 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "2524.dat",
+    "description": "Minifig Backpack Non-Opening",
+    "author": "John Van Zwieten [jvan]",
+    "license": "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-16cyli.dat",
+    "description": "Cylinder 0.1875",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-16edge.dat",
+    "description": "Circle 0.1875",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4cyli.dat",
+    "description": "Cylinder 0.75",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4cylo.dat",
+    "description": "Cylinder Open 0.75",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4disc.dat",
+    "description": "Disc 0.75",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4edge.dat",
+    "description": "Circle 0.75",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4ndis.dat",
+    "description": "Disc Negative 0.75",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4ring1.dat",
+    "description": "Ring  1 x 0.75",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-4ring5.dat",
+    "description": "Ring  5 x 0.75",
+    "author": "Michael Heidemann [mikeheide]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8chrd.dat",
+    "description": "Chord 0.375",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8cyli.dat",
+    "description": "Cylinder 0.375",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8cylo.dat",
+    "description": "Cylinder Open 0.375",
+    "author": "J.C. Tchang [tchang]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8edge.dat",
+    "description": "Circle 0.375",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8ring12.dat",
+    "description": "Ring 12 x 0.375",
+    "author": "Niels Karsdorp [nielsk]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3-8ring3.dat",
+    "description": "Ring  3 x 0.375",
+    "author": "Niels Karsdorp [nielsk]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3001.dat",
+    "description": "Brick  2 x  4",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3002.dat",
+    "description": "Brick  2 x  3",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3003.dat",
+    "description": "Brick  2 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3004.dat",
+    "description": "Brick  1 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3005.dat",
+    "description": "Brick  1 x  1",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3007.dat",
+    "description": "Brick  2 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3008.dat",
+    "description": "Brick  1 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3009.dat",
+    "description": "Brick  1 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3010.dat",
+    "description": "Brick  1 x  4",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3020.dat",
+    "description": "Plate  2 x  4",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3021.dat",
+    "description": "Plate  2 x  3",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3022.dat",
+    "description": "Plate  2 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3023.dat",
+    "description": "~Moved to 3023b",
+    "author": "Orion Pobursky [OrionP]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3023b.dat",
+    "description": "Plate  1 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3024.dat",
+    "description": "Plate  1 x  1",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3031.dat",
+    "description": "Plate  4 x  4",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3032.dat",
+    "description": "Plate  4 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3034.dat",
+    "description": "Plate  2 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3035.dat",
+    "description": "Plate  4 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3039.dat",
+    "description": "Slope Brick 45  2 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3062b.dat",
+    "description": "Brick  1 x  1 Round with Hollow Stud",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3068b.dat",
+    "description": "Tile  2 x  2 with Groove",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3069b.dat",
+    "description": "Tile  1 x  2 with Groove",
+    "author": "Santeri Piippo [arezey]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3070b.dat",
+    "description": "Tile  1 x  1 with Groove",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3460.dat",
+    "description": "Plate  1 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3622.dat",
+    "description": "Brick  1 x  3",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3623.dat",
+    "description": "Plate  1 x  3",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626b.dat",
+    "description": "Minifig Head with Blocked Hollow Stud",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626bp01.dat",
+    "description": "Minifig Head with Standard Grin Pattern (Blocked Hollow Stud)",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626bp04.dat",
+    "description": "Minifig Head with Standard Grin and Sunglasses Pattern",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626bp05.dat",
+    "description": "Minifig Head with Standard Grin and Eyebrows Pattern",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626bp0i.dat",
+    "description": "Minifig Head with Grey Frame Glasses, Brown Eyebrows and Open Smile Pattern",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3626bp84.dat",
+    "description": "Minifig Head with Smile, Black Eyebrows and White Pupils Pattern (Blocked Hollow Stud)",
+    "author": "Howard Lande [HowardLande]",
+    "license": "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3633.dat",
+    "description": "Fence Lattice  1 x  4 x  1",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3641.dat",
+    "description": "Tyre  6/ 50 x  8 Offset Tread",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3666.dat",
+    "description": "Plate  1 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3710.dat",
+    "description": "Plate  1 x  4",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3787.dat",
+    "description": "Car Mudguard  2 x  4 without Studs",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3795.dat",
+    "description": "Plate  2 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3815b.dat",
+    "description": "Minifig Hips",
+    "author": "Nils Schmidt [BlackBrick89]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3816c.dat",
+    "description": "Minifig Leg Right",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3817c.dat",
+    "description": "Minifig Leg Left",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3818.dat",
+    "description": "Minifig Arm Right",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3819.dat",
+    "description": "Minifig Arm Left",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3820.dat",
+    "description": "Minifig Hand",
+    "author": "Orion Pobursky [OrionP]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3823.dat",
+    "description": "Windscreen  2 x  4 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3828.dat",
+    "description": "~Car Steering Wheel",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3829.dat",
+    "description": "~Moved to 3829c01",
+    "author": "[PTadmin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3829a.dat",
+    "description": "~Car Steering Wheel Stand",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3829c01.dat",
+    "description": "Car Steering Stand and Wheel (Complete)",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3899.dat",
+    "description": "Minifig Cup",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3901.dat",
+    "description": "Minifig Hair Male",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3941.dat",
+    "description": "Brick  2 x  2 Round without Reinforcement",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3942c.dat",
+    "description": "Cone  2 x  2 x  2 with Hollow Stud Open",
+    "author": "Michael Heidemann [mikeheide]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3957.dat",
+    "description": "~Moved to 3957a",
+    "author": "[PTadmin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3957a.dat",
+    "description": "Antenna  4H with Rounded Top",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "3960.dat",
+    "description": "Dish  4 x  4 Inverted",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4con0.dat",
+    "description": "Cone  0 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4con1.dat",
+    "description": "Cone  1 x 1.0",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4con2.dat",
+    "description": "Cone  2 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4con3.dat",
+    "description": "Cone  3 x 1.0",
+    "author": "Niels Karsdorp [nielsk]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4con4.dat",
+    "description": "Cone  4 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4cylc.dat",
+    "description": "Cylinder Closed 1.0",
+    "author": "Alex Taylor [anathema]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4cyli.dat",
+    "description": "Cylinder 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4cylo.dat",
+    "description": "Cylinder Open 1.0",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4cyls.dat",
+    "description": "Cylinder Sloped 1.0",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4disc.dat",
+    "description": "Disc 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4edge.dat",
+    "description": "Circle 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ering.dat",
+    "description": "Adapter Ring Triangles to Normal 1.0",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ndis.dat",
+    "description": "Disc Negative 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4rin13.dat",
+    "description": "~Ring 13 x 1.0 (Obsolete)",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring1.dat",
+    "description": "Ring  1 x 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring19.dat",
+    "description": "Ring 19 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring2.dat",
+    "description": "Ring  2 x 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring3.dat",
+    "description": "Ring  3 x 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring4.dat",
+    "description": "Ring  4 x 1.0",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring5.dat",
+    "description": "Ring  5 x 1.0",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring8.dat",
+    "description": "Ring  8 x 1.0",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-4ring9.dat",
+    "description": "Ring  9 x 1.0",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4-8sphe.dat",
+    "description": "Sphere 0.5",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4032.dat",
+    "description": "~Moved to 4032a",
+    "author": "[PTadmin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4032a.dat",
+    "description": "Plate  2 x  2 Round with Axlehole",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4079.dat",
+    "description": "Minifig Seat  2 x  2",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4162.dat",
+    "description": "Tile  1 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4485.dat",
+    "description": "~Minifig Cap with Long Flat Peak (Obsolete)",
+    "author": "Thomas Burger [grapeape]",
+    "license": "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4592.dat",
+    "description": "Hinge Control Stick Base",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "4624.dat",
+    "description": "Wheel Rim  6.4 x  8",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/1-4cyli.dat",
+    "description": "Hi-Res Cylinder 0.25",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/1-4edge.dat",
+    "description": "Hi-Res Circle 0.25",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/1-4ring9.dat",
+    "description": "Hi-Res Ring  9 x 0.25",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/1-8chrd.dat",
+    "description": "Hi-Res Chord 0.125",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4cyli.dat",
+    "description": "Hi-Res Cylinder 1.0",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4cylo.dat",
+    "description": "Hi-Res Cylinder Open 1.0",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4disc.dat",
+    "description": "Hi-Res Disc 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4edge.dat",
+    "description": "Hi-Res Circle 1.0",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4ring2.dat",
+    "description": "Hi-Res Ring  2 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4ring6.dat",
+    "description": "Hi-Res Ring  6 x 1.0",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "48/4-4ring9.dat",
+    "description": "Hi-Res Ring  9 x 1.0",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "5-16cyli.dat",
+    "description": "Cylinder 0.3125",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "5-8edge.dat",
+    "description": "Circle 0.625",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "6157.dat",
+    "description": "Plate  2 x  2 with 2 Wheel Pins Extended without Wishbones",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "63864.dat",
+    "description": "Tile  1 x  3",
+    "author": "Tim Gould [timgould]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "6636.dat",
+    "description": "Tile  1 x  6",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "7-16cyli.dat",
+    "description": "Cylinder 0.4375",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "8/1-4cyli.dat",
+    "description": "Cylinder 0.25",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "8/1-4cyls.dat",
+    "description": "Cylinder Sloped 0.25",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "8/1-4edge.dat",
+    "description": "Circle 0.25",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "8/1-4ndis.dat",
+    "description": "Lo-Res Disc Negative 0.25",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "87079.dat",
+    "description": "Tile  2 x  4",
+    "author": "Tim Gould [timgould]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "87087.dat",
+    "description": "Brick  1 x  1 with Stud on 1 Side",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "90498.dat",
+    "description": "Tile  8 x 16 Type 2",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "91405.dat",
+    "description": "Plate 16 x 16 with Underside Ribs",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "973.dat",
+    "description": "Minifig Torso",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "98138.dat",
+    "description": "Tile  1 x  1 Round with Groove",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axl5ho10.dat",
+    "description": "Technic Axle Hole Rounded Tooth Surface",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axl5hol8.dat",
+    "description": "Technic Axle Hole Rounded Perimeter",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axl5hol9.dat",
+    "description": "Technic Axle Hole Rounded Tooth Outer Edges",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axlehol2.dat",
+    "description": "Technic Axle Hole Side Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axlehol3.dat",
+    "description": "Technic Axle Hole Tooth Outer Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "axlehole.dat",
+    "description": "Technic Axle Hole Closed",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box2-5.dat",
+    "description": "Box with 2 Faces without 5 Edges",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box2-7.dat",
+    "description": "Box with  2 Faces without  7 Edges",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u10p.dat",
+    "description": "Box with 3 Faces without 10 Parallel Edges",
+    "author": "Owen Burgoyne [C3POwen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u2p.dat",
+    "description": "Box with 3 Faces without 2 Parallel Edges",
+    "author": "Niels Karsdorp [nielsk]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u4a.dat",
+    "description": "Box with 3 Faces without 4 Adjacent Edges",
+    "author": "Niels Karsdorp [nielsk]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u5p.dat",
+    "description": "Box with  3 Faces without  5 Edges",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u7a.dat",
+    "description": "Box with 3 Faces without 7 Adjacent Edges",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box3u8p.dat",
+    "description": "Box with 3 Faces and 4 Parallel Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4-3p.dat",
+    "description": "Box with  4 Faces without  3 Parallel Edges",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4-4a.dat",
+    "description": "Box with  4 Faces without  4 Adjacent Edges",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4-7a.dat",
+    "description": "Box with  4 Faces without  7 Adjacent Edges",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4.dat",
+    "description": "Box with 4 Faces (2 Parallel Pairs) and All Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4o4a.dat",
+    "description": "Box with 4 Faces (2 Parallel Pairs) without Bottom Edges",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box4t.dat",
+    "description": "Box with 4 Adjacent Faces and All Edges",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "box5.dat",
+    "description": "Box with 5 Faces and All Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "boxjcyl4.dat",
+    "description": "Box to Cylinder Joint 1: 4",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "bump5000.dat",
+    "description": "Bump 1.0 x 0.5",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "empty.dat",
+    "description": "Empty",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "filstud3.dat",
+    "description": "Stud Filler with 3 Ribs for Hollow Studs",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "hipstud.dat",
+    "description": "Stud for Minifig Hips",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "knob1.dat",
+    "description": "Minifig Arm Knob",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "rect.dat",
+    "description": "Rectangle",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "rect1.dat",
+    "description": "Rectangle with 1 Edge",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "rect2a.dat",
+    "description": "Rectangle with 2 Adjacent Edges",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "rect2p.dat",
+    "description": "Rectangle with 2 Parallel Edges",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "rect3.dat",
+    "description": "Rectangle with 3 Edges",
+    "author": "Mark Kennedy [mkennedy]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "recte3.dat",
+    "description": "Rectangle Empty with 3 Edges",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "recte4.dat",
+    "description": "Rectangle Empty with 4 Edges",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/2039s01.dat",
+    "description": "~Lamppost  2 x  2 x  7 - Upper Column",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/2039s02.dat",
+    "description": "~Lamppost  2 x  2 x  7 - Lower Column",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/2431s01.dat",
+    "description": "~Tile  1 x  4 with Groove without Top Face",
+    "author": "Santeri Piippo [arezey]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/2446s01.dat",
+    "description": "~Minifig Helmet Standard Structure (Obsolete)",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/2446s02.dat",
+    "description": "~Minifig Helmet Standard Patternable Area Half (Obsolete)",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3001s01.dat",
+    "description": "~Brick  2 x  4 without Front and Back Faces",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3002s01.dat",
+    "description": "~Brick  2 x  3 without Front Face",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3003s01.dat",
+    "description": "~Brick  2 x  2 without Front Face",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3003s02.dat",
+    "description": "~Brick  2 x  2 without Front and Back Faces",
+    "author": "Owen Burgoyne [C3POwen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3004s01.dat",
+    "description": "~Brick  1 x  2 without Front Face",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3005s01.dat",
+    "description": "~Brick  1 x  1 without Front Face",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3007s01.dat",
+    "description": "~Brick  2 x  8 without Front Face",
+    "author": "Michael Heidemann [mikeheide]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3008s01.dat",
+    "description": "~Brick  1 x  8 without Front Face",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3009s01.dat",
+    "description": "~Brick  1 x  6 without Front Face",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3010s01.dat",
+    "description": "~Brick  1 x  4 without Front Face",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3023bs01.dat",
+    "description": "~Plate  1 x  2 without Front Face",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3024s01.dat",
+    "description": "~Plate  1 x  1 without Front Face",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3039s01.dat",
+    "description": "~Slope Brick 45  2 x  2 without Front Face",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3062bs01.dat",
+    "description": "~Brick  1 x  1 Round with Hollow Stud without Outer Surface",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3068bs01.dat",
+    "description": "~Tile  2 x  2 with Groove without Face",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3069bs01.dat",
+    "description": "~Tile  1 x  2 with Groove without Top Face",
+    "author": "Santeri Piippo [arezey]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3070bs01.dat",
+    "description": "~Tile  1 x  1 with Groove without Top Face",
+    "author": "Chris Dee [cwdee]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3460s01.dat",
+    "description": "~Plate  1 x  8 without Front Face",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3622s01.dat",
+    "description": "~Brick  1 x  3 without Front Face",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3623s01.dat",
+    "description": "~Plate  1 x  3 without Front Face",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626ap01s01.dat",
+    "description": "~Minifig Head Standard Grin Pattern - Half",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626bp84s01.dat",
+    "description": "~Minifig Head with Smile and White Pupils Pattern without Eyebrows",
+    "author": "Vincent Messenet [Cheenzo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626bp84s02.dat",
+    "description": "~Minifig Head Eyebrows",
+    "author": "Vincent Messenet [Cheenzo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626bs02.dat",
+    "description": "~Minifig Head - Stud Hollow without Outer Face",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626bs04.dat",
+    "description": "~Minifig Head - Half Back Face",
+    "author": "J.C. Tchang [tchang]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3626p05s01.dat",
+    "description": "~Minifig Head with Standard Grin and Eyebrows Pattern - Half Face",
+    "author": "Stephan Meisinger [smr]",
+    "license": "Licensed under CC BY 2.0 and CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3641s01.dat",
+    "description": "~Tyre  6/ 50 x  8 Offset Tread Eigth",
+    "author": "Rene Rechthaler [Blechtaler]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3666s01.dat",
+    "description": "~Plate  1 x  6 without Front Face",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3710s01.dat",
+    "description": "~Plate  1 x  4 without Front Face",
+    "author": "Massimo Maso [Sirio]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3815bs01.dat",
+    "description": "~Minifig Hips without Decorated Surface",
+    "author": "Nils Schmidt [BlackBrick89]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3815bs02.dat",
+    "description": "~Minifig Hips without Decorated Surface or Studs",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3817cs01.dat",
+    "description": "~Minifig Leg Left without Front Surfaces",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3817cs02.dat",
+    "description": "~Minifig Leg Left without Front and Side Surfaces",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3817cs03.dat",
+    "description": "~Minifig Leg Left Rounded Front",
+    "author": "Max Martin Richter [MMR1988]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3818s01.dat",
+    "description": "~Minifig Arm Right Inner Half",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3818s02.dat",
+    "description": "~Minifig Arm Right Outer Surface",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3818s03.dat",
+    "description": "~Minifig Arm Right Outer Surface Upper Arm",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3818s04.dat",
+    "description": "~Minifig Arm Right Outer Surface Forearm",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3899s01.dat",
+    "description": "~Minifig Cup without Patternable Areas",
+    "author": "Gerald Lasser [GeraldLasser]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3941s01.dat",
+    "description": "~Brick  2 x  2 Round without Reinforcement without Outer Surface",
+    "author": "Gerald Lasser [GeraldLasser]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s00.dat",
+    "description": "~Dish  4 x  4 Inverted without Top and Centre Face",
+    "author": "Gerald Lasser [GeraldLasser]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s01.dat",
+    "description": "~Dish  4 x  4 Inverted without Top Face",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s02.dat",
+    "description": "~Dish  4 x  4 Slice 30 Degrees without Condlines",
+    "author": "Franklin W. Cain [fwcain]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s03.dat",
+    "description": "~Dish  4 x  4 Inverted - Dish Surface",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s04.dat",
+    "description": "~Dish  4 x  4 Slice 30 Degrees at 45 Degrees without Condlines",
+    "author": "Gerald Lasser [GeraldLasser]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/3960s05.dat",
+    "description": "~Dish  4 x  4 Inverted - Conditional Lines",
+    "author": "Gerald Lasser [GeraldLasser]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/4032s01.dat",
+    "description": "~Plate  2 x  2 Round with Axlehole - Quarter",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/4162s01.dat",
+    "description": "~Tile  1 x  8 without Top Face",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/4624s01.dat",
+    "description": "~Wheel Rim  6.4 x  8 - 1/8",
+    "author": "Vincent Messenet [Cheenzo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/63864s01.dat",
+    "description": "~Tile  1 x  3 without Top Face",
+    "author": "Ulrich Röder [UR]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/6636s01.dat",
+    "description": "~Tile  1 x  6 without Top Face",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/87079s01.dat",
+    "description": "~Tile  2 x  4 without Top Surface",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/90498s01.dat",
+    "description": "~Tile  8 x 16 Type 2 without Top Face",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/91405s01.dat",
+    "description": "~Plate 16 x 16 Rib with 1 Quarter Stud",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/91405s02.dat",
+    "description": "~Plate 16 x 16 Rib with 2 Quarter Studs",
+    "author": "Donald Sutter [technog]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/973s01.dat",
+    "description": "~Minifig Torso without Front or Back",
+    "author": "Steve Bliss [sbliss]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/98138s01.dat",
+    "description": "~Tile  1 x  1 Round with Groove with Partial Top Face",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "s/98138s02.dat",
+    "description": "~Tile  1 x  1 Round with Groove without Complete Top Face",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "st4jfil2.dat",
+    "description": "Stud Tube Open to Fillet Narrow (2LDu) Joint",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud.dat",
+    "description": "Stud",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud10.dat",
+    "description": "Stud Truncated Laterally Curved 40D for Round  2 x  2 Parts",
+    "author": "Orion Pobursky [OrionP]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud2.dat",
+    "description": "Stud Open",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud2a.dat",
+    "description": "Stud Open without Base Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud3.dat",
+    "description": "Stud Tube Solid",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud4.dat",
+    "description": "Stud Tube Open",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud4a.dat",
+    "description": "Stud Tube Open without Base Edges",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud4f2n.dat",
+    "description": "Stud Tube Open with  2 Fillets Narrow Opposite",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud4o.dat",
+    "description": "Stud Tube Open without Outer Cylinder",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stud4od.dat",
+    "description": "Stud Tube Open without Outer Cylinder and Top Surface",
+    "author": "Philippe Hurbain [Philo]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-1x2.dat",
+    "description": "Stud Group  1 x  2",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-1x3.dat",
+    "description": "Stud Group  1 x  3",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-1x4.dat",
+    "description": "Stud Group  1 x  4",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-1x6.dat",
+    "description": "Stud Group  1 x  6",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-1x8.dat",
+    "description": "Stud Group  1 x  8",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-2x2.dat",
+    "description": "Stud Group  2 x  2",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-4x4.dat",
+    "description": "Stud Group  4 x  4",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug-8x8.dat",
+    "description": "Stud Group  8 x  8",
+    "author": "Tore Eriksson [Tore_Eriksson]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug10-2x2.dat",
+    "description": "Stud Group Truncated Laterally Curved 40D for Round 2 x 2 Parts",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug2.dat",
+    "description": "~Moved to stug-2x2",
+    "author": "[PTadmin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug3-1x2.dat",
+    "description": "Stud Tube Solid Group  1 x  2",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug3-1x3.dat",
+    "description": "Stud Tube Solid Group  1 x  3",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug3-1x5.dat",
+    "description": "Stud Tube Solid Group  1 x  5",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug3-1x7.dat",
+    "description": "Stud Tube Solid Group  1 x  7",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug4-1x6.dat",
+    "description": "Stud Tube Open Group  1 x  6",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug4-1x7.dat",
+    "description": "Stud Tube Open Group  1 x  7",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug4-3x3.dat",
+    "description": "Stud Tube Open Group  3 x  3",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug4-6x6.dat",
+    "description": "Stud Tube Open Group  6 x  6",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug4-7x7.dat",
+    "description": "Stud Tube Open Group  7 x  7",
+    "author": "Steffen [Steffen]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "stug8.dat",
+    "description": "~Moved to stug-8x8",
+    "author": "[PTadmin]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "t04o3333.dat",
+    "description": "Torus Outside  1 x 0.3333 x 0.25",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "t04o6250.dat",
+    "description": "Torus Outside  1 x 0.6250 x 0.25",
+    "author": "Paul Easter [pneaster]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "tri3.dat",
+    "description": "Triangular Prism with 2 Square Faces and 1 Rectangular Face",
+    "author": "James Jessiman",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "tri3a4.dat",
+    "description": "Triangular Prism with 3 Adjacent Faces without 4 Edges",
+    "author": "Magnus Forsberg [MagFors]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  },
+  {
+    "file": "wpin.dat",
+    "description": "Wheel Holding Pin",
+    "author": "Willy Tschager [Holly-Wood]",
+    "license": "Licensed under CC BY 4.0 : see CAreadme.txt"
+  }
+]

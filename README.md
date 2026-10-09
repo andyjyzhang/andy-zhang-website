@@ -4,6 +4,9 @@ Andy's Orbital Station: a playable LEGO-style spaceport and Andy Zhang's profess
 portfolio.
 Built with TypeScript, Vite and Three.js; no React or physics engine.
 
+Continuing on another device? Read the [complete project handoff](PROJECT_HANDOFF.md)
+for product decisions, source maps, setup, validation history and remaining work.
+
 ## Run locally
 
 Use Node.js 24 (the same major version configured for Vercel).

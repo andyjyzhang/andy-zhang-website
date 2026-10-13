@@ -13,5 +13,5 @@ experience, projects, education, hobbies, poker, contact and useful links.
 - `playerAppearance` in `src/config/world.ts` configures a temporary toy avatar.
 - The website lists six projects. The PDF has its own project selection and is
   maintained separately.
-- Do not assign an unsupported award to Photo Verification or describe the
+- Do not assign an unsupported award to Provenance or describe the
   poker lounge as an AI project.

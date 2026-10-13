@@ -1,6 +1,6 @@
 # Andy's World — complete project handoff
 
-Snapshot date: **2026-10-09**. This document is intended for Andy or a new coding
+Snapshot date: **2026-10-12**. This document is intended for Andy or a new coding
 agent continuing the project on another device without the previous conversation.
 It records the current implementation, the product decisions behind it, practical
 setup instructions, validation history, and work that remains unverified.
@@ -225,8 +225,8 @@ upgrade all packages while moving devices.
 | `/?fallback=1` | Force the simpler WebGL-fallback presentation |
 | `/#about`, `/#experience`, `/#projects` | Direct professional chapters |
 | `/#education`, `/#hobbies`, `/#poker`, `/#contact` | Remaining chapters |
-| `/portfolio.html` | Full portfolio without JavaScript or WebGL |
-| `/portfolio.html#contact` | Direct contact in the static reading view |
+| `/portfolio.html` | Concise portfolio index without JavaScript or WebGL |
+| `/portfolio.html#other` | High Stakes short-film entry |
 | `/AndyZhangResume.pdf` | Preserved résumé |
 | `/model-credits.html` | Model authors and licenses |
 | `/build-notes.html` | Physical scale, export and construction limitations |
@@ -241,9 +241,14 @@ visitor intro; complete/skip the intro first or use the World view button.
 | --- | --- |
 | `andys-world-visited-v3` | Value `yes` means skip the initial build on subsequent visits |
 | `andys-world-sound-v1` | JSON sound enabled/volume preferences |
+| `andys-world-graphics-v1` | `low` enables the saved low-graphics renderer; `standard` restores normal quality |
 
 Sound defaults to enabled at master volume `0.45`, but waits for a gesture before
-playing. The motion preference starts from `prefers-reduced-motion`; the current
+playing. Low graphics can be changed in Controls & settings and applies a 0.75
+pixel-ratio cap, roughly 30 FPS, no real-time shadows/reflections, a plain space
+background and reduced decorative animation. A reload also creates the canvas
+without antialiasing and requests a low-power WebGL context. The motion preference
+starts from `prefers-reduced-motion`; the current
 in-app motion toggle is not a separately persisted localStorage setting.
 Gameplay equipment states are session state, not a persistent saved game.
 
@@ -311,6 +316,7 @@ for local setup. Retain the integration when redesigning the UI.
 | `src/config/station.ts` | Sole station palette, lighting, footprint, overview framing and bounds |
 | `src/config/world.ts` | Five landmarks, section routing, spawn, ship and configurable Andy appearance |
 | `src/config/controls.ts` | Main walking/running speed and mouse sensitivities |
+| `src/config/graphics.ts` | Safe persistent low-graphics preference and pixel-ratio caps |
 | `src/config/characters.ts` | Appearance types and reusable resident designs |
 | `src/content/portfolio.ts` | Factual personal information and portfolio data |
 | `src/world/town.ts` | Station root, construction stages, surface, central equipment and obstacle collection |
@@ -413,7 +419,7 @@ updated résumé, reconcile the text and PDF rather than assuming dates or metri
 | --- | --- | --- |
 | Reminiscence | Phone video to an explorable VR memory; COLMAP, Gaussian splatting, Unity OpenXR; PyTorch / Unity / FastAPI / Modal | `https://reminiscence-two.vercel.app/`, `https://github.com/andyjyzhang/reminiscence` |
 | AlphaHex | Self-play Catan engine with MCTS, board heuristics and resource strategy; current content records top-500 online rank; PyTorch / MCTS / React | `https://alphahex.vercel.app/` |
-| Photo Verification | Solana photo-authenticity records and vector search; Rust / Solana / MongoDB | No link currently supplied; no unsupported award |
+| Provenance | Solana photo-authenticity records and vector search; Rust / Solana / MongoDB | `https://github.com/ItzNotKevin/provenance`; no unsupported award |
 | Memo Lab | Blindfold-cubing memo practice and legal-solution validation; TypeScript / cube state | `https://blind-memo-lab.andy-jy-zhang.chatgpt.site`, `https://github.com/andyjyzhang/3bld-helper` |
 | Range Visualizer | Preflop hand-combination frequencies with offline access; React / PWA | `https://github.com/andyjyzhang/range-visualizer` |
 | Lawly | Legal-document OCR, evidence retrieval and explanations; Flask / Tesseract / Pinecone / RAG | `https://github.com/andyjyzhang/lawly` |
@@ -856,10 +862,18 @@ building, driving, a successful game or a collectible.
 Portfolio panels use a readable instruction/field-guide treatment, retain a
 view of the world, have explicit close/back controls and pause player movement.
 Use shared content markup, escaped text and safe external-link attributes.
+The “Just here for the portfolio?” route opens a deliberately minimal lowercase
+white page with black text and one narrow responsive stack: experience, projects,
+education, other and hobbies. Poker is included in the compact hobbies list
+rather than presented as a separate static section. Its header retains email, GitHub, LinkedIn
+and World links. Project entries route to GitHub; the `other` section links the
+High Stakes Instagram reel with its local thumbnail. The view is generated from
+shared facts, with concise static-page summaries rather than duplicated long-form
+content.
 
 Current accessibility support:
 
-- Skip link and complete static no-JavaScript/WebGL portfolio.
+- Skip link and static no-JavaScript/WebGL portfolio index.
 - Semantic, named native dialogs with explicit Tab/Shift+Tab wrapping.
 - Escape/close behavior and focus restoration to the canvas or opener.
 - Visible focus outlines; proper names for icon-only buttons.
@@ -874,6 +888,8 @@ Current accessibility support:
   remain available. Targets are intended to be at least 44 px.
 - Reduced render density on coarse pointers: pixel ratio cap 1 instead of 1.5,
   and smaller shadow map.
+- A labeled Low graphics checkbox with safe persistence; it is independent from
+  reduced motion and leaves the static reading route available for very weak GPUs.
 
 `src/main.ts` catches unavailable world initialization and provides direct
 reading/résumé/contact links. `index.html` has loading feedback and a noscript
@@ -904,6 +920,10 @@ Current deliberate choices:
 - ACES filmic tone mapping, moderate environment reflection and plastic roughness.
 - Main camera far plane 900; pixel ratio cap 1.5 on normal pointers, 1 on coarse.
 - Shadow map 2048 normal, 1024 coarse.
+- Optional Low graphics: pixel ratio capped at 0.75, render cadence near 30 FPS,
+  shadows and PMREM environment disabled, plain-color sky, steady boosters and
+  no landmark decorative motion. Saved low-mode reloads also disable antialiasing
+  and request a low-power WebGL context.
 - Lazy independent destinations and destination disposal on return.
 - Hidden-tab handling; simple collision representations and bounded audio graphs.
 - Exhaust animates shared shader uniforms rather than geometry, particles or
@@ -916,8 +936,8 @@ cues and last cue. This is observation tooling, not a required public debug API.
 
 Historical overview measurement after plume work: about **700 draws** and
 **4,805,141 triangles**. This is not a new profile of the final head/audio revision.
-The last cleanup production build recorded the main chunk around **740.29 kB /
-257.39 kB gzip**, and Three around **494.94 kB / 124.07 kB gzip**. Separate lazy
+The 2026-10-12 production build records the main chunk around **742.71 kB /
+258.09 kB gzip**, and Three around **494.94 kB / 124.07 kB gzip**. Separate lazy
 destination chunks remain. Vite's **500 kB main-chunk advisory** is still present.
 
 Performance is not certified across ordinary laptops or phones. Browser audits
@@ -928,7 +948,7 @@ to the warning by destroying the visual quality or hiding it with a larger limit
 
 ## 15. Test inventory, records and what has actually been checked
 
-The current repository contains **121 tests across 18 files**, as documented in
+The current repository contains **125 tests across 19 files**, as documented in
 README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 
 | Test file | Main coverage |
@@ -941,6 +961,7 @@ README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 | `city-layout.test.ts` | Authored lot/street/route layout constraints |
 | `collision.test.ts` | Solid scenery, support, clear approaches/exits |
 | `feature-inventory.test.ts` | All 42 activities, real obstacles, vehicle exits and repeated commands |
+| `graphics.test.ts` | Low/standard persistence, storage failure and render-density caps |
 | `input.test.ts` | Keyboard, pointer/capture, wheel and native UI routing |
 | `interactions.test.ts` | Proximity/prompt selection and consistent actions |
 | `intro.test.ts` | One-brick start, partial build, camera, restoration, skip/replay |
@@ -961,12 +982,14 @@ README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 | `docs/BUILD_AUDIO_VALIDATION.md` | 2026-10-04 intro/audio integration and production-browser checks; 110 tests at that stage |
 | `docs/FIGURE_FOLEY_VALIDATION.md` | Molded head/rig/foley rework; 121 tests then, followed by rover/train sound work with 123 tests |
 | `.agents/plans/repository-cleanup.md` | Latest tracked cleanup; model bake/typecheck/lint/production build/build-artifact checks and all 17 targeted UI/accessibility tests passed |
+| `.agents/plans/low-graphics-and-reading-portfolio.md` | 2026-10-12 low-graphics mode and minimalist static portfolio; 125 tests and live desktop/mobile checks |
 
 The final cleanup removed two tests for deleted redirect HTML pages, reducing
-the suite from 123 to the current 121 without removing current gameplay coverage.
-The full suite was **not rerun after that cleanup**; only the relevant 17-test
-static/UI file was rerun, along with typecheck, lint and build/integrity checks.
-Do not report “all 121 passed after cleanup” until actually running them.
+the suite from 123 to 121 without removing current gameplay coverage. The
+2026-10-12 graphics/portfolio work added four tests and reran the complete suite:
+all current 125 tests passed. The existing engine-pod geometry test performs a
+large real overlap calculation and now has an explicit 10-second budget; its
+assertions pass unchanged on this machine.
 
 Older documents still mention six HTML pages, earlier cue/loop/test counts and
 smaller bundles. They are dated records of those revisions. Current artifact
@@ -1020,7 +1043,7 @@ comes from the referenced validation records and prior cleanup checks.
 15. Keyboard focus: Tab/Shift+Tab wrapping, escape, opener/canvas restoration,
     native button/slider keys; actual computed foreground/background contrast.
 16. Forced fallback and disabled JavaScript: readable/scannable static content,
-    anchors, résumé and contact without an unscrollable canvas layout.
+    anchors and direct email/social links without an unscrollable canvas layout.
 17. Build/served artifacts, licenses/credits, PDF integrity and deployment redirects
     after changes to the build/hosting system.
 

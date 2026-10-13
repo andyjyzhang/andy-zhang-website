@@ -42,8 +42,9 @@ are retained. No deployment is performed by local build commands.
   joint measurements. Caps, hands and crew space helmets use calibrated mounts.
 - `src/world/city-layout.ts`: authored mixed-height parcels, road segments, gate and transit configuration.
 - `public/AndyZhangResume.pdf`: original resume, preserved unchanged.
-- `public/portfolio.html`: complete accessible reading view, generated from the
-  same content by `npm run build`. It works without JavaScript or WebGL.
+- `public/portfolio.html`: concise accessible portfolio index, generated from
+  shared content by `npm run build`. It is a lowercase black-on-white,
+  single-column view that works without JavaScript or WebGL.
 - `assets/ldraw/`: attributed physical part data; `npm run build:parts` regenerates
   the bundled geometry offline. Credits are available at `/model-credits.html`.
 
@@ -54,6 +55,9 @@ camera, scroll to zoom or enter first person. E explores blue-stud landmarks or 
 F enters/exits driveable cars. Esc opens/closes the menu or returns from space.
 The Portfolio, Resume and Contact controls provide direct professional access.
 Small screens have movement/action buttons and responsive content panels.
+Controls & settings includes a persistent Low graphics option for weaker PCs.
+It lowers render density, caps rendering near 30 FPS, disables real-time shadows
+and reflections, and starts future visits with a non-antialiased low-power canvas.
 
 Five landmarks: studio (about/contact), workshop (experience/projects), campus
 (education), poker lounge, hobby hub. The launch bay beside the workshop leads
@@ -144,11 +148,14 @@ camera, vehicles, interactions, content and UI live in separate modules.
 `src/config/station.ts` owns the station palette, lighting, footprint and camera
 framing. Static bricks/studs are instanced; minifigures and molded parts share
 geometry. One shadow light, capped pixel ratio, lower touch rendering complexity,
-lazy destinations and hidden-tab pause limit rendering cost.
+lazy destinations and hidden-tab pause limit rendering cost. Low graphics uses a
+0.75 pixel-ratio cap, a plain background and reduced decorative animation without
+removing gameplay or portfolio content.
 
-The suite contains 121 tests in 18 files, covering part assemblies, architecture,
+The suite contains 125 tests in 19 files, covering part assemblies, architecture,
 movement, camera/collision, vehicles, intro, interactions, accessible UI and audio
-lifecycle. Validation records are in:
+lifecycle, plus graphics preference persistence and quality caps. Validation
+records are in:
 
 - [`docs/FEATURE_AUDIT.md`](docs/FEATURE_AUDIT.md)
 - [`docs/BUILD_AUDIO_VALIDATION.md`](docs/BUILD_AUDIO_VALIDATION.md)

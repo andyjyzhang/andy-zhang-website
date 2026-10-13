@@ -18,7 +18,7 @@ function fixture() {
   dom.window.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
   dom.window.HTMLDialogElement.prototype.close=function(){this.open=false;};
   const ui=new Interface(document.querySelector('#app')!);
-  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),motion:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn()};
+  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),motion:vi.fn(),graphics:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn()};
   ui.connect(actions);return{ui,actions};
 }
 afterEach(()=>{dom?.window.close();vi.unstubAllGlobals();});
@@ -32,6 +32,14 @@ describe('real interface keyboard and routing',()=>{
     checkbox.click();expect(actions.sound).toHaveBeenCalledWith(true);
     ui.setSound(true,.7,'ready');expect(ui.menu.querySelector('[data-sound-status]')!.textContent).toBe('Sound on.');
     ui.closeMenu();ui.openMenu();expect(ui.menu.querySelector<HTMLInputElement>('[data-sound-volume]')!.value).toBe('70');
+  });
+  it('exposes a described low-graphics control and keeps its state in sync',()=>{
+    const {ui,actions}=fixture();ui.setGraphics(true);ui.openMenu();
+    const checkbox=ui.menu.querySelector<HTMLInputElement>('[data-graphics]')!;
+    expect(checkbox.checked).toBe(true);expect(checkbox.getAttribute('aria-describedby')).toBe('graphics-note');
+    expect(ui.menu.querySelector('#graphics-note')!.textContent).toContain('30 FPS');
+    checkbox.click();expect(actions.graphics).toHaveBeenCalledWith(false);
+    ui.setGraphics(false);expect(checkbox.checked).toBe(false);
   });
   it.each(Object.keys(sectionLabels) as Section[])('opens/closes %s with a named dialog and focus return',section=>{
     const {ui,actions}=fixture(),trigger=ui.root.querySelector<HTMLElement>('[data-menu]')!;trigger.focus();
@@ -103,9 +111,26 @@ describe('structural accessibility',()=>{
     const station=new StationActivities();ui.activityUI.showFeedback(station.command('noodles','order')!);await run();ui.activityUI.hideFeedback();
     ui.openArcade(station.find('arcade')!,'Ready.');ui.setSignal(1);await run();
   },30000);
-  it('keeps static portfolio navigation and résumé available without JavaScript',async()=>{
+  it('keeps the concise static portfolio navigation and contact available without JavaScript',async()=>{
     dom=new JSDOM(readFileSync('public/portfolio.html','utf8'),{runScripts:'outside-only'});dom.window.eval(axe.source);
-    expect(dom.window.document.querySelectorAll('main section')).toHaveLength(7);expect(dom.window.document.querySelector('a[href="/AndyZhangResume.pdf"]')).not.toBeNull();
+    expect(dom.window.document.querySelectorAll('main section')).toHaveLength(5);expect(dom.window.document.querySelector('#about')).toBeNull();
+    expect([...dom.window.document.querySelectorAll('main section')].map(section=>section.id)).toEqual(['experience','projects','education','other','hobbies']);
+    expect(dom.window.document.querySelector('a[href="/AndyZhangResume.pdf"]')).toBeNull();
+    expect(dom.window.document.querySelector('.site-header p')!.textContent).toBe('cs @ uwaterloo');
+    expect(dom.window.document.querySelector('#projects')!.textContent).not.toMatch(/memo lab|lawly/i);
+    expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/catan engine/);
+    expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/turns phone videos into explorable vr memories/);
+    expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/poker ranging tool/);
+    expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/photo authenticity records on solana/);
+    expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/provenance/i);
+    expect(dom.window.document.querySelector<HTMLAnchorElement>('#projects a[href*="provenance"]')!.href).toBe('https://github.com/ItzNotKevin/provenance');
+    expect([...dom.window.document.querySelectorAll<HTMLAnchorElement>('#projects a')].every(anchor=>new URL(anchor.href).hostname==='github.com')).toBe(true);
+    expect(dom.window.document.querySelector('#education')!.textContent).not.toMatch(/\b20\d{2}\b/);
+    expect(dom.window.document.querySelector('#contact')).toBeNull();
+    expect(dom.window.document.querySelector('#hobbies')!.textContent).toMatch(/cubing, board games, video games, poker/);expect(dom.window.document.querySelector('#poker')).toBeNull();
+    expect([...dom.window.document.querySelectorAll('.role')].map(role=>role.textContent)).toEqual(['swe intern','swe intern']);
+    expect(dom.window.document.querySelector<HTMLAnchorElement>('#other a')!.href).toBe('https://www.instagram.com/reel/Dbh2D-lhjY5/');
+    expect(dom.window.document.body.dataset.layout).toBe('minimal');expect(dom.window.document.querySelector('.portfolio-stack')).not.toBeNull();
     const result=await (dom.window as unknown as {axe:typeof axe}).axe.run(dom.window.document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']},rules:{'color-contrast':{enabled:false}}});
     expect(result.violations.map(v=>v.id)).toEqual([]);
   },30000);

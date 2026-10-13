@@ -3,6 +3,7 @@ import type { Section } from '../config/world';
 
 export const sectionTitles: Record<Section, string> = { about: 'A little about me.', experience: 'Things built in the real world.', projects: 'From idea to working thing.', education: 'Stay curious.', hobbies: 'Off the clock.', poker: 'A student of the game.', contact: 'Let’s build something.' };
 export const sectionLabels: Record<Section, string> = { about: 'About', experience: 'Experience', projects: 'Projects', education: 'Education', hobbies: 'Hobbies', poker: 'Poker', contact: 'Contact' };
+export const portfolioMeta = { personalInfo, experience, projects, education, hobbies, poker, contact };
 export const escape = (text: string) => text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 export function link(url: string, label: string, cls = '') { return `<a class="${cls}" href="${escape(url)}"${url.startsWith('https') || url.endsWith('.pdf') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escape(label)} <span aria-hidden="true">↗</span></a>`; }
 

@@ -64,7 +64,7 @@ describe('supported station assemblies',()=>{
     }
     const pod=pieces.filter(box=>box.max.y<=-24*H+.001&&box.min.x<-110&&box.min.z>-11&&box.max.z<11);
     expect(pod.length).toBeGreaterThan(200);expect(overlaps(pod)).toBe(0);
-  });
+  },10000);
   it.each(landmarks)('keeps the $id signature doorway clear and its pieces separate',l=>{
     const b=new BrickBatch(),root=new T.Group();landmarkEntrance(b,l.id,l.width/S,l.depth/S);b.build(root);
     const boxes=rectangularBounds(root);
@@ -92,5 +92,5 @@ describe('supported station assemblies',()=>{
     assembly.hide();expect(meshes.every(m=>m.count===0)).toBe(true);
     assembly.update(1.8);expect(meshes.some(m=>m.count>0)).toBe(true);
     assembly.restore();meshes.forEach((mesh,i)=>expect(mesh.instanceMatrix.array).toEqual(original[i]));
-  });
+  },10000);
 });

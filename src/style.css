@@ -114,6 +114,7 @@ dialog::backdrop { background: #1f3b4224; }
 .world-settings summary { cursor: pointer; font-weight: 600; }
 .world-settings p { font-size: 11px; line-height: 2.2; color: var(--muted); }
 .world-settings label { display: flex; align-items: center; gap: 10px; }
+.world-settings .setting-note { line-height: 1.55; margin: -2px 0 10px 27px; max-width: 360px; }
 .world-settings input { accent-color: #387b83; }
 .sound-settings { margin: 12px 0; padding: 10px 0; border-block: 1px solid var(--line); }
 .sound-settings label { min-height: 44px; }

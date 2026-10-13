@@ -25,9 +25,12 @@ import {GATE} from '../world/city-layout';
 import {GameAudio} from '../audio/game-audio';
 import {WorldAudio} from '../audio/world-audio';
 import {ENGINE_PODS} from '../world/station-hull';
+import {graphicsPixelRatio,loadLowGraphics,saveLowGraphics} from '../config/graphics';
 
 export class Engine {
   readonly audio=new GameAudio();readonly sound=new WorldAudio(this.audio);
+  graphicsLow=loadLowGraphics();
+  private readonly coarsePointer=matchMedia('(pointer: coarse)').matches;
   readonly renderer: T.WebGLRenderer;
   readonly scene = new T.Scene();
   readonly camera = new T.PerspectiveCamera(52, innerWidth / innerHeight, .1, 900);
@@ -57,15 +60,18 @@ export class Engine {
   private lastTime = 0;
   private uiTime = 0;
   private soundDt=.016;
+  private readonly sun:T.DirectionalLight;
+  private environmentTexture:T.Texture|null=null;
+  private skyTexture:T.CanvasTexture|null=null;
+  private lowFrameTime=0;
   private active: Interactable | null = null;
   constructor(parent: HTMLElement) {
-    this.renderer = new T.WebGLRenderer({ antialias: true });
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, matchMedia('(pointer: coarse)').matches ? 1 : 1.5));
-    this.renderer.setSize(innerWidth, innerHeight); this.renderer.shadowMap.enabled = true; this.renderer.shadowMap.type = T.PCFSoftShadowMap;
+    document.documentElement.dataset.graphics=this.graphicsLow?'low':'standard';
+    this.renderer = new T.WebGLRenderer({ antialias: !this.graphicsLow, powerPreference: this.graphicsLow?'low-power':'high-performance' });
+    this.renderer.setPixelRatio(graphicsPixelRatio(this.graphicsLow,devicePixelRatio,this.coarsePointer));
+    this.renderer.setSize(innerWidth, innerHeight); this.renderer.shadowMap.enabled = !this.graphicsLow; this.renderer.shadowMap.type = T.PCFSoftShadowMap;
     this.renderer.toneMapping = T.ACESFilmicToneMapping; this.renderer.toneMappingExposure = WORLD_STYLE.exposure;
-    const environment = new RoomEnvironment(), pmrem = new T.PMREMGenerator(this.renderer);
-    this.scene.environment = pmrem.fromScene(environment, .04).texture;
-    environment.dispose(); pmrem.dispose(); this.scene.environmentIntensity = .45;
+    if(!this.graphicsLow)this.enableEnvironment();
     this.renderer.domElement.tabIndex = 0; this.renderer.domElement.setAttribute('role', 'application'); this.renderer.domElement.setAttribute('aria-label', "Andy's World. WASD move, Shift run, Space jump, drag or arrows to look, E explore, F drive, Escape menu."); parent.append(this.renderer.domElement);
     this.input = new Input(this.renderer.domElement); this.ui = new Interface(parent);
     this.ui.onSound=cue=>this.audio.play(cue);
@@ -76,12 +82,10 @@ export class Engine {
     this.diagnostics = new PerformanceMonitor(parent);
     this.scene.background = new T.Color(WORLD_STYLE.background);
     this.scene.add(new T.HemisphereLight(WORLD_STYLE.sky, '#1c2948', WORLD_STYLE.ambient));
-    const sun = new T.DirectionalLight(WORLD_STYLE.sun, WORLD_STYLE.sunlight); sun.position.set(-65, 145, 75); sun.castShadow = true; sun.shadow.mapSize.setScalar(matchMedia('(pointer: coarse)').matches ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -145, right: 145, top: 125, bottom: -125, far:350 }); sun.shadow.normalBias = .18; sun.shadow.bias = -.0002; this.scene.add(sun);
+    const sun = this.sun = new T.DirectionalLight(WORLD_STYLE.sun, WORLD_STYLE.sunlight); sun.position.set(-65, 145, 75); sun.castShadow = !this.graphicsLow; sun.shadow.mapSize.setScalar(this.coarsePointer ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -145, right: 145, top: 125, bottom: -125, far:350 }); sun.shadow.normalBias = .18; sun.shadow.bias = -.0002; this.scene.add(sun);
     if(WORLD_STYLE.id==='orbital') {
       const fill=new T.DirectionalLight('#ffa35a',1.3);fill.position.set(50,35,35);this.scene.add(fill);
-      const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=1024;const c=canvas.getContext('2d')!;c.fillStyle=WORLD_STYLE.background;c.fillRect(0,0,2048,1024);
-      for(let i=0;i<340;i++){const x=(i*1597)%2048,y=(i*i*53)%900;c.fillStyle=i%7?'#93b5d3':'#f4ddb0';c.fillRect(x,y,i%3?1:2,i%3?1:2);}
-      const sky=new T.CanvasTexture(canvas);sky.mapping=T.EquirectangularReflectionMapping;sky.colorSpace=T.SRGBColorSpace;this.scene.background=sky;
+      if(!this.graphicsLow)this.scene.background=this.createSkyTexture();
     }
     for (const b of this.buildings) {
       this.town.root.add(b.root); const l = b.landmark;
@@ -106,12 +110,14 @@ export class Engine {
       overview:()=>this.follow.overview=!this.follow.overview,
       pov:()=>{const view=this.activeView;if(!view)return;view.togglePOV();this.syncView();if(view.firstPerson)this.input.captureMouse();},
       travel:id=>this.travel(id),motion:enabled=>this.setMotion(enabled),
+      graphics:enabled=>this.setGraphics(enabled),
       replay:()=>{this.returnToTown();this.exitVehicle(true);this.sound.reset();this.intro.show(this.reducedMotion);},
       action:key=>this.interact(key),returnToTown:()=>this.returnToTown(),activity:(id,command)=>this.commandActivity(id,command),
       exportBuild:()=>{const count=downloadBuild(this.town.root,WORLD_STYLE.name);this.audio.play('select');this.ui.notify(`Exported ${count.toLocaleString()} catalog pieces as an LDraw model.`);},
       sound:enabled=>this.audio.setEnabled(enabled),volume:volume=>this.audio.setVolume(volume),
     });
     this.syncSound();
+    this.ui.setGraphics(this.graphicsLow);
     for(const {spec,model} of this.life.workers)this.activities.addCrew(spec.id,spec.name,model.root.position.x,model.root.position.z,spec.task);
     this.items.push(...this.activities.items);
     this.ui.setStops([...this.activities.definitions,...this.vehicles.filter(v=>v.spec.driveable).map(v=>v.spec)]);
@@ -128,6 +134,24 @@ export class Engine {
     if (isSection(hash)) this.openSection(hash);
     else if (!hasVisited() || new URLSearchParams(location.search).get('intro') === '1') this.intro.show(this.reducedMotion);
     else {this.follow.overview=new URLSearchParams(location.search).get('view')==='world';this.ui.notify(`Welcome to ${WORLD_STYLE.name}. WASD to explore; scroll in for first person.`);}
+  }
+  private enableEnvironment(){
+    if(!this.environmentTexture){const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environmentTexture=pmrem.fromScene(environment,.04).texture;environment.dispose();pmrem.dispose();}
+    this.scene.environment=this.environmentTexture;this.scene.environmentIntensity=.45;
+  }
+  private createSkyTexture(){
+    if(this.skyTexture)return this.skyTexture;
+    const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=1024;const c=canvas.getContext('2d')!;c.fillStyle=WORLD_STYLE.background;c.fillRect(0,0,2048,1024);
+    for(let i=0;i<340;i++){const x=(i*1597)%2048,y=(i*i*53)%900;c.fillStyle=i%7?'#93b5d3':'#f4ddb0';c.fillRect(x,y,i%3?1:2,i%3?1:2);}
+    this.skyTexture=new T.CanvasTexture(canvas);this.skyTexture.mapping=T.EquirectangularReflectionMapping;this.skyTexture.colorSpace=T.SRGBColorSpace;return this.skyTexture;
+  }
+  private setGraphics(enabled:boolean){
+    this.graphicsLow=enabled;saveLowGraphics(enabled);document.documentElement.dataset.graphics=enabled?'low':'standard';
+    this.renderer.setPixelRatio(graphicsPixelRatio(enabled,devicePixelRatio,this.coarsePointer));this.renderer.setSize(innerWidth,innerHeight);
+    this.renderer.shadowMap.enabled=!enabled;this.sun.castShadow=!enabled;this.lowFrameTime=0;
+    if(enabled){this.scene.environment=null;this.environmentTexture?.dispose();this.environmentTexture=null;this.skyTexture?.dispose();this.skyTexture=null;this.scene.background=new T.Color(WORLD_STYLE.background);}
+    else{this.enableEnvironment();if(WORLD_STYLE.id==='orbital')this.scene.background=this.createSkyTexture();}
+    this.ui.setGraphics(enabled);this.ui.notify(enabled?'Low graphics on · lower resolution, 30 FPS, no real-time shadows.':'Standard graphics restored.');
   }
   private setMotion(enabled: boolean) { this.reducedMotion = enabled; document.documentElement.dataset.motion = enabled ? 'reduced' : 'full'; if (enabled && this.intro?.active) this.intro.finish(); }
   private syncSound(){this.ui.setSound(this.audio.settings.enabled,this.audio.settings.volume,this.audio.status);this.intro?.setSound(this.audio.settings.enabled);this.diagnostics?.audio(this.audio.stats);}
@@ -245,11 +269,13 @@ export class Engine {
     this.follow.focus = null; this.input.clear(); this.renderer.domElement.focus({preventScroll:true});
   }
   private update(time: number) {
+    if(this.graphicsLow&&this.lowFrameTime&&time-this.lowFrameTime<30)return;
+    this.lowFrameTime=this.graphicsLow?time:0;
     this.diagnostics.startFrame();
     const elapsed = Math.min(this.lastTime ? (time - this.lastTime) / 1000 : .016, 2);
     const dt = Math.min(elapsed, .05); this.lastTime = time;this.soundDt=dt;
     if (document.hidden) return;
-    this.town.boosters.update(dt,this.reducedMotion);
+    this.town.boosters.update(dt,this.reducedMotion||this.graphicsLow);
     if (this.intro.active) {
       this.input.setFirstPerson(false);
       this.intro.update(elapsed); this.ui.setPrompt(null);
@@ -306,9 +332,9 @@ export class Engine {
     this.syncView();
     for (const b of this.buildings) {
       const near = this.active?.id === b.landmark.id;
-      b.markers.traverse(o=>{if(o instanceof T.Mesh&&(o.material as T.MeshStandardMaterial).isMeshStandardMaterial)(o.material as T.MeshStandardMaterial).emissiveIntensity=near&&!this.reducedMotion?.2+Math.sin(time*.004)*.08:.12;});
+      b.markers.traverse(o=>{if(o instanceof T.Mesh&&(o.material as T.MeshStandardMaterial).isMeshStandardMaterial)(o.material as T.MeshStandardMaterial).emissiveIntensity=near&&!this.reducedMotion&&!this.graphicsLow ? .2+Math.sin(time*.004)*.08 : .12;});
       b.animated.visible = true;
-      if (!this.reducedMotion && near && ['garage', 'hobby', 'poker'].includes(b.landmark.id)) b.animated.rotation.y = Math.sin(time * .0015) * (b.landmark.id === 'garage' ? .12 : .05);
+      if (!this.reducedMotion && !this.graphicsLow && near && ['garage', 'hobby', 'poker'].includes(b.landmark.id)) b.animated.rotation.y = Math.sin(time * .0015) * (b.landmark.id === 'garage' ? .12 : .05);
     }
     if (time - this.uiTime > 120) {
       this.uiTime = time; this.ui.setPrompt(this.active, Boolean(this.driving));

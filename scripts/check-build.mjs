@@ -9,6 +9,7 @@ const root=resolve('dist'),files=(await readdir(root,{recursive:true})).map(file
 const pages=files.filter(file=>file.endsWith('.html')),documents=new Map(),local=new Set();
 for(const page of pages)documents.set(page,new JSDOM(await readFile(resolve(root,page),'utf8'),{url:`http://build.local/${page}`}));
 const chapters=['about','experience','projects','education','hobbies','poker','contact'];
+const readingChapters=['experience','projects','education','other','hobbies'];
 for(const [page,dom] of documents) {
   const d=dom.window.document;
   assert.equal(d.documentElement.lang,'en',`${page}: document language`);
@@ -29,8 +30,27 @@ for(const [page,dom] of documents) {
   }
 }
 const reading=documents.get('portfolio.html').window.document;
-assert.deepEqual([...reading.querySelectorAll('main section')].map(s=>s.id),chapters);
+assert.deepEqual([...reading.querySelectorAll('main section')].map(s=>s.id),readingChapters);
+assert.equal(reading.body.dataset.layout,'minimal');assert.ok(reading.querySelector('.portfolio-stack'));
 assert.ok(reading.querySelector('a[href="mailto:andy.jy.zhang@gmail.com"]'));
+assert.equal(reading.querySelector('a[href="/AndyZhangResume.pdf"]'),null);
+assert.equal(reading.querySelector('.site-header p').textContent,'cs @ uwaterloo');
+assert.doesNotMatch(reading.querySelector('#projects').textContent,/memo lab|lawly/i);
+assert.match(reading.querySelector('#projects').textContent,/catan engine/);
+assert.match(reading.querySelector('#projects').textContent,/turns phone videos into explorable vr memories/);
+assert.match(reading.querySelector('#projects').textContent,/poker ranging tool/);
+assert.match(reading.querySelector('#projects').textContent,/photo authenticity records on solana/);
+assert.match(reading.querySelector('#projects').textContent,/provenance/i);
+assert.equal(reading.querySelector('#projects a[href*="provenance"]')?.href,'https://github.com/ItzNotKevin/provenance');
+assert.deepEqual([...reading.querySelectorAll('#experience .meta')].map(el=>el.textContent),['2026','2024']);
+assert.doesNotMatch(reading.querySelector('#education').textContent,/\b20\d{2}\b/);
+for(const anchor of reading.querySelectorAll('#projects a'))assert.equal(new URL(anchor.href).hostname,'github.com');
+assert.equal(reading.querySelector('#contact'),null);
+assert.match(reading.querySelector('#hobbies').textContent,/cubing, board games, video games, poker/);assert.equal(reading.querySelector('#poker'),null);
+assert.deepEqual([...reading.querySelectorAll('#experience .role')].map(el=>el.textContent),['swe intern','swe intern']);
+for(const anchor of reading.querySelectorAll('.quick-links a[href*="github.com"],.quick-links a[href*="linkedin.com"]'))assert.doesNotMatch(anchor.textContent,/↗/);
+assert.equal(reading.querySelector('#other a').href,'https://www.instagram.com/reel/Dbh2D-lhjY5/');
+assert.equal(reading.querySelector('#other img').getAttribute('src'),'/high-stakes.png');
 const pdf=await readFile(resolve(root,'AndyZhangResume.pdf'));
 assert.equal(pdf.subarray(0,5).toString(),'%PDF-');assert.ok(pdf.length>1000);
 JSON.parse(await readFile(resolve(root,'models/ldraw-attribution.json'),'utf8'));
@@ -48,7 +68,7 @@ if(process.argv[2]) {
     served.push(file);
   }
 }
-const result={pages,localLinks:local.size,resumeBytes:pdf.length,chapters,served,passed:true};
+const result={pages,localLinks:local.size,resumeBytes:pdf.length,chapters,readingChapters,served,passed:true};
 await mkdir('artifacts',{recursive:true});await writeFile('artifacts/build-audit.json',JSON.stringify(result,null,2));
 for(const dom of documents.values())dom.window.close();
 console.log(JSON.stringify(result,null,2));

@@ -53,7 +53,8 @@ are retained. No deployment is performed by local build commands.
 WASD move, Shift run, Space jump; drag mouse or use arrow keys to rotate the
 camera, scroll to zoom or enter first person. E explores blue-stud landmarks or launches the ship.
 F enters/exits driveable cars. Esc opens/closes the menu or returns from space.
-The Portfolio, Resume and Contact controls provide direct professional access.
+The enlarged bottom-right portfolio link, directory and Contact control provide
+direct professional access; the résumé remains in the directory.
 Small screens have movement/action buttons and responsive content panels.
 Controls & settings includes a persistent Low graphics option for weaker PCs.
 It lowers render density, caps rendering near 30 FPS, disables real-time shadows
@@ -78,7 +79,7 @@ Simple actions execute directly in the world with distinct cooling, telemetry,
 dispatch, receipt, receiver, beacon or crew feedback. They do not pause movement.
 The signal cabinet uses a compact game panel: Space stops, the right arrow steps,
 R restarts and Esc closes. Named colors and manual steps support reduced motion.
-Portfolio → More station stops exposes every facade, crew member and driveable
+Directory → More station stops exposes every facade, crew member and driveable
 vehicle; professional chapters and résumé remain immediately accessible.
 The reactor changes cooling state, a drone performs a test flight, a loading
 crane dispatches cargo, a noodle hatch serves a bowl, and a receiver tunes its
@@ -112,7 +113,7 @@ vehicles and furniture. Roads and markings replace cells in a shared surface
 grid. `src/world/part-catalog.ts` lists the rectangular parts; specialist source
 IDs are generated in `src/assets/ldraw-catalog.json`.
 
-**Portfolio → Controls & settings → Download this build (.ldr)** exports placed
+**Directory → Controls & settings → Download this build (.ldr)** exports placed
 catalog parts for LDraw CAD. Prints are custom stickers; gantry cord, character
 prints and background stars are presentation details. An export is not a
 certified construction kit; see `/build-notes.html` for the CAD-review limits.
@@ -130,7 +131,7 @@ Original game sound covers construction, walking/running, jumps and landings,
 vehicle entry/exit and motors, station equipment, arcade results, UI and journeys.
 Footsteps follow actual movement and machinery fades with distance. The Sound
 button mutes immediately, including during construction and travel;
-Portfolio → Controls & settings includes a saved volume slider. Sound starts
+Directory → Controls & settings includes a saved volume slider. Sound starts
 after interaction, quiets while reading and suspends in hidden tabs. It uses
 cached synthesized effects and Web Audio, with no additional sound downloads.
 Construction now has a continuous shuffled-brick layer that advances with the

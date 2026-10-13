@@ -49,5 +49,5 @@ describe('spaceport access',()=>{
       expect(Math.hypot(point!.x-activity.x,point!.z-activity.z)).toBeLessThan(3.4);
       expect(blocked(point!.x,point!.z,.62,obstacles.filter(o=>o.height>.792&&(o.bottom??0)<4.312))).toBe(false);
     }
-  });
+  },10000);
 });

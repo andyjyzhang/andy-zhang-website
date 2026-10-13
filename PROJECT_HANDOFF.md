@@ -781,7 +781,7 @@ hidden underside tubes/covered studs; export uses full catalog IDs.
 
 ### CAD export and limits
 
-Portfolio → Controls & settings → **Download this build (.ldr)** exports placed
+Directory → Controls & settings → **Download this build (.ldr)** exports placed
 catalog source IDs, color codes and transforms at actual LDraw scale. A prior
 browser audit recorded **115,349 catalog pieces**; that is a historical count,
 not a fixed acceptance value for future changes. Compatible CAD software needs
@@ -854,10 +854,12 @@ and a broad device audio review remain unverified.
 
 ## 13. Professional UX, mobile and accessibility
 
-The header has Portfolio, Résumé and Contact access. The directory immediately
-exposes seven chapters plus résumé, then station travel shortcuts, More station
-stops and Controls & settings. Professional content never requires finding a
-building, driving, a successful game or a collectible.
+The header retains the Contact shortcut while the enlarged bottom-right link
+opens the direct portfolio. The directory immediately exposes seven chapters
+plus résumé, then station travel shortcuts, More station stops and Controls &
+settings. Professional content never requires finding a building, driving, a
+successful game or a collectible. The bottom-left controls include the saved
+Low graphics toggle directly; first person remains available by scrolling in.
 
 Portfolio panels use a readable instruction/field-guide treatment, retain a
 view of the world, have explicit close/back controls and pause player movement.

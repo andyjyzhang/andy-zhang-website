@@ -29,8 +29,8 @@ The reading portfolio remains generated from shared structured content. Its gene
 
 ## User Experience
 
-1. A visitor opens Portfolio → Controls & settings.
-2. They enable Low graphics.
+1. A visitor uses the bottom-left Low graphics control or opens Directory → Controls & settings.
+2. They enable Low graphics from either synchronized control.
 3. The world immediately lowers resolution, disables shadows/reflections and reduces decorative animation/render frequency; the setting persists on reload, where the canvas also starts without antialiasing.
 4. Disabling it restores the normal visual presentation.
 5. A visitor selecting “Just here for the portfolio?” opens a fast white page with Andy's name, direct links and five concise sections in one vertical column.
@@ -110,9 +110,18 @@ Expected Result: the project and film entries carry slightly more visual and des
 
 Validation: verify the five-section order and combined hobby list, inspect desktop/mobile layout and overflow, then rerun the production and accessibility checks.
 
+### Milestone 10 — Main HUD simplification
+
+Work: remove the top Portfolio and Résumé shortcuts, remove the secondary station-status bar and POV button, enlarge the bottom-right direct-portfolio link, and expose the saved Low graphics setting as a synchronized bottom-left toggle.
+
+Expected Result: the main world has a quieter HUD while retaining immediate access to the reading portfolio, directory, résumé, contact, graphics quality and first-person zoom.
+
+Validation: verify the removed elements and synchronized toggle in UI tests, inspect the live desktop HUD in both graphics states, check responsive behavior, and rerun the full quality sequence.
+
 ## Acceptance Criteria
 
 - Low graphics is a labeled native setting and persists safely across reloads.
+- Low graphics is directly available in the bottom-left HUD and remains synchronized with the directory checkbox.
 - A low-mode startup requests a non-antialiased, low-power WebGL context.
 - Low mode caps pixel ratio at 0.75, disables real-time shadows and reflection environment, uses a plain space background, reduces decorative animation, and limits rendering to roughly 30 fps.
 - Standard mode can be restored without losing gameplay state.
@@ -164,6 +173,7 @@ Use a native checkbox with descriptive text and saved state. Low graphics is ind
 - [x] GitHub-only project links and High Stakes entry
 - [x] Final content, thumbnail sizing and edge-alignment polish
 - [x] Expanded Reminiscence label, larger film thumbnail and combined Hobbies/Poker list
+- [x] Simplified main HUD and direct Low graphics toggle
 
 ## Decisions
 
@@ -183,7 +193,7 @@ Reason: detailed descriptions already exist in the explorable world; the direct 
 
 The current static page is already the target of every “skip 3D” link and is generated during `npm run build`, making it the correct place for the minimalist design. The renderer currently has no post-processing; shadows, high-DPI fill, environment lighting and frame cadence are the largest safe quality controls available without reauthoring geometry.
 
-A real Chrome session confirmed that the settings checkbox changes the live canvas ratio from 1 to 0.75, writes `low` to storage and reloads into a non-antialiased low-mode context. The final single-column reading view measures exactly one 1440x900 desktop viewport with no horizontal overflow. Device emulation at 390x844 also found no horizontal overflow, with a white body, near-black text and all five static sections. The existing engine-pod and hull-assembly geometry tests perform enough real work to exceed Vitest's five-second default on this machine; test-only 10-second budgets preserve every assertion and let the complete suite pass.
+A real Chrome session confirmed that the settings checkbox changes the live canvas ratio from 1 to 0.75, writes `low` to storage and reloads into a non-antialiased low-mode context. The final single-column reading view measures exactly one 1440x900 desktop viewport with no horizontal overflow. Device emulation at 390x844 also found no horizontal overflow, with a white body, near-black text and all five static sections. The existing engine-pod, hull-assembly and spaceport-access geometry tests perform enough real work to exceed Vitest's five-second default on this machine; test-only 10-second budgets preserve every assertion and let the complete suite pass.
 
 ## Risks / Open Questions
 
@@ -203,4 +213,6 @@ A final 2026-10-13 polish pass shortened the role labels, varied the internship 
 
 The next follow-up restored Hobbies as one terse line, folded poker into that list instead of restoring a separate section, expanded the Reminiscence summary and increased the High Stakes thumbnail to 220 pixels on desktop and 180 pixels on mobile.
 
-Typecheck, lint, all 125 tests across 19 files, production build, static artifact validation, served-file byte comparison and diff checks pass. Browser checks covered the real graphics toggle, saved reload behavior, antialias state, desktop composition and a 390×844 reading viewport with no horizontal overflow. The production main chunk is 742.71 kB / 258.09 kB gzip; the pre-existing 500 kB advisory remains. No deployment or commit was performed.
+The main-world HUD was then simplified by removing its top Portfolio and Résumé shortcuts, the duplicate orbital-status strip and the POV button. The direct portfolio link is larger, and Low graphics now has a synchronized bottom-left toggle in addition to its detailed directory setting.
+
+Typecheck, lint, all 126 tests across 19 files, production build, static artifact validation, served-file byte comparison and diff checks pass. Browser checks covered the real graphics toggle, saved reload behavior, antialias state, desktop composition and a 390×844 reading viewport with no horizontal overflow. The production main chunk remains about 743 kB / 258 kB gzip; the pre-existing 500 kB advisory remains. No deployment or commit was performed.

@@ -19,9 +19,8 @@ export class Interface {
   constructor(parent:HTMLElement) {
     document.documentElement.dataset.world='orbital';this.root.className='interface';
     this.root.innerHTML=`<a class="skip-link" href="/portfolio.html">Read the portfolio without 3D</a>
-      <header class="world-header"><a class="world-brand" href="/" aria-label="Andy's World home"><span class="brand-brick" aria-hidden="true"><i></i><i></i></span><span>ANDY’S WORLD<small>Andy's Orbital Station / Built brick by brick.</small></span></a><nav class="quick-links" aria-label="Quick access"><button data-menu class="button portfolio-button">▦ Portfolio</button>${link(contact.resume,'Résumé','button resume-button')}<button data-contact class="button icon-button" aria-label="Contact Andy">↗</button></nav></header>
-      <div class="world-meta"><span class="daylight-dot"></span> ORBITAL STATION / SPACEPORT ONLINE <span class="meta-rule"></span> BUILT BRICK BY BRICK</div>
-      <div class="world-tools"><button class="button" data-overview aria-label="Toggle world view">⌖ World view</button><button class="button" data-pov aria-label="Switch first-person view" aria-pressed="false">◎ POV</button><button class="button sound-toggle" data-sound-toggle aria-label="Mute sound" aria-pressed="true">♪ <span data-sound-label>Sound</span></button><button class="button" data-controls aria-label="Controls and settings">?</button></div>
+      <header class="world-header"><a class="world-brand" href="/" aria-label="Andy's World home"><span class="brand-brick" aria-hidden="true"><i></i><i></i></span><span>ANDY’S WORLD<small>Andy's Orbital Station / Built brick by brick.</small></span></a><nav class="quick-links" aria-label="Quick access"><button data-contact class="button icon-button" aria-label="Contact Andy">↗</button></nav></header>
+      <div class="world-tools"><button class="button" data-overview aria-label="Toggle world view">⌖ World view</button><button class="button graphics-toggle" data-graphics-toggle aria-label="Enable low graphics" aria-pressed="false">▧ <span data-graphics-label>Low graphics</span></button><button class="button sound-toggle" data-sound-toggle aria-label="Mute sound" aria-pressed="true">♪ <span data-sound-label>Sound</span></button><button class="button" data-controls aria-label="Controls and settings">?</button></div>
       <div class="control-guide"><span><kbd>W A S D</kbd> Move</span><span><kbd>⇧</kbd> Run</span><span><kbd>SPACE</kbd> Jump</span><span data-look-guide>Drag to look · Scroll for POV</span><span><kbd>ESC</kbd> Menu</span></div>
       <div class="map-widget"><div class="map-heading"><span>ANDY'S ORBITAL STATION</span><button data-menu aria-label="Open world directory">↗</button></div><svg class="mini-map" viewBox="0 0 100 88" aria-label="Spaceport map">${this.mapMarkup()}</svg><div class="map-legend"><i></i> Blue studs lead to Andy’s portfolio.</div></div>
       <a class="fallback-link" href="/portfolio.html">Just here for the portfolio? ↗</a><button class="button space-return" hidden data-return>← Return to Andy’s World</button>`;
@@ -41,10 +40,10 @@ export class Interface {
     this.root.addEventListener('click',e=>{
       const t=(e.target as HTMLElement).closest<HTMLElement>('button');if(!t)return;
       if(t.hasAttribute('data-sound-toggle'))this.actions?.sound(!this.soundEnabled);
+      if(t.hasAttribute('data-graphics-toggle'))this.actions?.graphics(!this.graphicsLow);
       if(t.hasAttribute('data-menu')||t.hasAttribute('data-controls'))this.openMenu();
       if(t.hasAttribute('data-contact'))this.actions?.openSection('contact');
       if(t.hasAttribute('data-overview')){this.actions?.overview();this.onSound?.('select');}
-      if(t.hasAttribute('data-pov')){this.actions?.pov();this.onSound?.('select');}
       if(t.hasAttribute('data-close-panel'))this.closePanel();
       if(t.hasAttribute('data-close-menu'))this.closeMenu();
       if(t.dataset.section)this.actions?.openSection(t.dataset.section as Section);
@@ -61,7 +60,12 @@ export class Interface {
     });
   }
   connect(actions:UIActions){this.actions=actions;}
-  setGraphics(enabled:boolean){this.graphicsLow=enabled;const checkbox=this.menu.querySelector<HTMLInputElement>('[data-graphics]');if(checkbox)checkbox.checked=enabled;}
+  setGraphics(enabled:boolean){
+    this.graphicsLow=enabled;
+    const button=this.root.querySelector<HTMLButtonElement>('[data-graphics-toggle]')!;
+    button.setAttribute('aria-pressed',String(enabled));button.setAttribute('aria-label',enabled?'Disable low graphics':'Enable low graphics');
+    const checkbox=this.menu.querySelector<HTMLInputElement>('[data-graphics]');if(checkbox)checkbox.checked=enabled;
+  }
   setSound(enabled:boolean,volume:number,status='waiting') {
     this.soundEnabled=enabled;this.soundVolume=volume;
     this.soundStatus=!enabled?'Sound muted.':status==='unavailable'?'Sound is unavailable in this browser.':volume===0?'Volume is at zero.':status==='ready'?'Sound on.':'Sound starts with your first interaction.';
@@ -105,7 +109,6 @@ export class Interface {
   }
   closeMenu(){if(!this.menu.open)return;this.menu.close();this.restoreFocus();this.onSound?.('close');}
   setPOV(firstPerson:boolean,overview=false){
-    this.root.querySelector('[data-pov]')!.setAttribute('aria-pressed',String(firstPerson));
     this.root.querySelector('[data-overview]')!.setAttribute('aria-pressed',String(overview));
     this.root.querySelector('[data-look-guide]')!.textContent=overview?'Drag to orbit · Scroll to zoom':firstPerson?'Mouse to look · Scroll to zoom out':'Drag to look · Scroll for POV';
   }

@@ -35,11 +35,22 @@ describe('real interface keyboard and routing',()=>{
   });
   it('exposes a described low-graphics control and keeps its state in sync',()=>{
     const {ui,actions}=fixture();ui.setGraphics(true);ui.openMenu();
+    const toolbar=ui.root.querySelector<HTMLButtonElement>('[data-graphics-toggle]')!;
+    expect(toolbar.getAttribute('aria-pressed')).toBe('true');expect(toolbar.getAttribute('aria-label')).toBe('Disable low graphics');
+    toolbar.click();expect(actions.graphics).toHaveBeenCalledWith(false);
     const checkbox=ui.menu.querySelector<HTMLInputElement>('[data-graphics]')!;
     expect(checkbox.checked).toBe(true);expect(checkbox.getAttribute('aria-describedby')).toBe('graphics-note');
     expect(ui.menu.querySelector('#graphics-note')!.textContent).toContain('30 FPS');
     checkbox.click();expect(actions.graphics).toHaveBeenCalledWith(false);
     ui.setGraphics(false);expect(checkbox.checked).toBe(false);
+    expect(toolbar.getAttribute('aria-pressed')).toBe('false');expect(toolbar.getAttribute('aria-label')).toBe('Enable low graphics');
+  });
+  it('keeps the primary HUD minimal while retaining direct portfolio and settings access',()=>{
+    const {ui}=fixture();
+    expect(ui.root.querySelector('.world-meta')).toBeNull();expect(ui.root.querySelector('[data-pov]')).toBeNull();
+    expect(ui.root.querySelector('.portfolio-button')).toBeNull();expect(ui.root.querySelector('.resume-button')).toBeNull();
+    expect(ui.root.querySelector<HTMLAnchorElement>('.fallback-link')!.href).toBe('http://localhost/portfolio.html');
+    expect(ui.root.querySelector('[data-controls]')).not.toBeNull();
   });
   it.each(Object.keys(sectionLabels) as Section[])('opens/closes %s with a named dialog and focus return',section=>{
     const {ui,actions}=fixture(),trigger=ui.root.querySelector<HTMLElement>('[data-menu]')!;trigger.focus();

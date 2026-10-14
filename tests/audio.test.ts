@@ -77,15 +77,14 @@ describe('game sound follows actual actions',()=>{
     for(let i=0;i<15;i++)world.update(.016,{...town,z:10-i*.2,airborne:true,verticalSpeed:-4});
     world.update(.016,{...town,z:7.2});world.update(.016,{...town,z:7.2});
     expect(audio.play.mock.calls.map(c=>c[0])).toEqual(['jump','land']);
-    for(const mode of ['space','observatory','transit','gate','launch','intro'] as const){world.update(.016,{...town,mode});world.update(.016,{...town,mode,x:1,paused:true});}
+    for(const mode of ['space','transit','launch','intro'] as const){world.update(.016,{...town,mode});world.update(.016,{...town,mode,x:1,paused:true});}
     expect(audio.play).toHaveBeenCalledTimes(2);
     world.update(.016,{...town,driving:true,vehicleSpeed:10});world.update(.016,{...town,driving:true,vehicleSpeed:12,x:.2});expect(audio.loop).toHaveBeenCalledWith('motor',expect.any(Number),expect.any(Number));
   });
-  it('routes every activity family, all arcade outcomes, and throttled build cues',()=>{
+  it('routes every remaining activity family and throttled build cues',()=>{
     const audio=sink(),world=new WorldAudio(audio),activities=new StationActivities();activities.addCrew('worker','Crew',0,0,'On duty.');
-    for(const d of activities.definitions)for(const cmd of d.commands){const result=activities.command(d.id,cmd.id,1)!;world.activity(result);}
-    for(const expected of ['switch','drone','cargo','noodles','radio','crew','ride','gate','signal-step','signal-win','open'])expect(audio.play.mock.calls.some(c=>c[0]===expected)).toBe(true);
-    world.activity(activities.command('arcade','stop',0)!);expect(audio.play).toHaveBeenLastCalledWith('signal-miss');
+    for(const d of activities.definitions)for(const cmd of d.commands){const result=activities.command(d.id,cmd.id)!;world.activity(result);}
+    for(const expected of ['switch','drone','cargo','noodles','radio','crew','ride','gate'])expect(audio.play.mock.calls.some(c=>c[0]===expected)).toBe(true);
     for(const event of ['start','snap','reveal','land','skip'] as const)world.intro(event);
     expect(audio.play).toHaveBeenLastCalledWith('close');expect(audio.quiet).toHaveBeenCalled();
   });

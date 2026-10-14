@@ -9,12 +9,10 @@ import type {ActivityDefinition} from '../interactions/activities';
 export class SpaceportProps {
   readonly root=new T.Group();readonly staticObstacles:Obstacle[]=[];
   private drone=new T.Group();private crane=new T.Group();private crate=new T.Group();private bowl=new T.Group();private receiver=new T.Group();private core=new T.Group();
-  private droneTime=10;private cargoTime=10;private dishTime=10;private cooling=false;private elapsed=0;
-  private sweep=true;private lockedSignal=0;private indicator:T.InstancedMesh;private indicators=new Map<string,number>();
+  private droneTime=10;private cargoTime=10;private dishTime=10;private cooling=false;
+  private indicator:T.InstancedMesh;private indicators=new Map<string,number>();
   private cargoReturning=false;
-  private lamps:T.InstancedMesh;
   private tether=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:'#05131d'}));
-  get signal(){return this.sweep?Math.floor(this.elapsed*1.8)%3:this.lockedSignal;}
   get coolingActive(){return this.cooling;}
   busy(id:string){return id==='repair'?this.droneTime<7:id==='cargo'?this.cargoTime<8:false;}
   unavailable(id:string,reduced:boolean,player?:{x:number;y:number;z:number}) {
@@ -35,7 +33,7 @@ export class SpaceportProps {
   constructor(parent:T.Object3D,definitions:ActivityDefinition[]) {
     this.drone.name='survey-drone';this.crane.name='cargo-gantry-arm';this.crate.name='supply-crate';this.bowl.name='noodle-order';this.receiver.name='radio-receiver';this.core.name='cooling-rotor';
     this.root.name='spaceport-activities';parent.add(this.root);const fixed=new T.Group();this.root.add(fixed);const b=new BrickBatch();
-    const selected=definitions.filter(d=>d.kind!=='crew'&&d.kind!=='arcade');
+    const selected=definitions.filter(d=>d.kind!=='crew');
     this.indicator=new T.InstancedMesh(partGeometry('roundTile').clone().scale(LDRAW_SCALE,-LDRAW_SCALE,-LDRAW_SCALE),new T.MeshStandardMaterial({color:'white',emissive:'white',emissiveIntensity:.2,roughness:.2}),selected.length);
     const matrix=new T.Matrix4(),dummy=new T.Object3D();
     selected.forEach((a,i)=>{
@@ -69,11 +67,8 @@ export class SpaceportProps {
     b.obstacle({x:-67.84,z:68.48,w:2.56,d:2.56,height:4.352,bottom:.512,label:'receiver pedestal'});
     const receiver=new BrickBatch();receiver.stack('#008f9b',0,0,0,2,3,4,'stud');receiver.mold('sideStud','#008f9b',S/2,6*H,1.5*S);receiver.mold('dish','@cyan',S/2,6*H,3*S,0,-Math.PI/2);receiver.build(this.receiver);this.receiver.position.set(-67.84,3.584,68.48);this.root.add(this.receiver);
     b.build(fixed,'station-consoles-and-machinery');this.staticObstacles.push(...b.colliders);consolidateStatic(fixed);
-    this.lamps=new T.InstancedMesh(partGeometry('roundTile').clone().scale(LDRAW_SCALE,-LDRAW_SCALE,-LDRAW_SCALE),new T.MeshStandardMaterial({color:'white',emissive:'white',emissiveIntensity:.3}),3);
-    for(let i=0;i<3;i++) {dummy.position.set(-35.84+(i-1)*S,3.584,34.624);dummy.rotation.x=-Math.PI/2;dummy.updateMatrix();this.lamps.setMatrixAt(i,dummy.matrix);this.lamps.setColorAt(i,new T.Color('#1c2948'));}
-    this.lamps.computeBoundingSphere();this.root.add(this.lamps);
   }
-  activate(id:string,on:boolean,command:string,reduced:boolean) {
+  activate(id:string,on:boolean,_command:string,reduced:boolean) {
     if(this.busy(id)&&!reduced)return false;
     const index=this.indicators.get(id);if(index!==undefined){this.indicator.setColorAt(index,new T.Color(on?'#aee9ef':'#f2cd37'));this.indicator.instanceColor!.needsUpdate=true;}
     if(id==='reactor')this.cooling=on;
@@ -81,13 +76,12 @@ export class SpaceportProps {
     if(id==='cargo'&&this.cargoTime>=8){this.cargoReturning=this.crate.position.x>-66.24;this.cargoTime=reduced?10:0;}
     if(id==='noodles')this.bowl.visible=true;
     if(id==='radio'){this.dishTime=reduced?10:0;if(reduced)this.receiver.rotation.y+=Math.PI/3;}
-    if(id==='arcade'){if(command==='stop'||command==='step'){this.lockedSignal=(this.signal+(command==='step'?1:0))%3;this.sweep=false;}else this.sweep=true;}
     if(reduced&&id==='cargo'){this.crate.position.set(this.cargoReturning?-67.84:-64.64,this.cargoReturning?.512:.768,this.cargoReturning?39.68:36.48);this.crane.rotation.y=this.cargoReturning?0:Math.PI/2;}
     return true;
   }
   update(dt:number,reduced:boolean,player?:{x:number;y:number;z:number}) {
     if(!reduced) {
-      this.elapsed+=dt;if(this.cooling)this.core.rotation.y+=dt*1.8;
+      if(this.cooling)this.core.rotation.y+=dt*1.8;
       this.droneTime+=dt;this.cargoTime+=dt;this.dishTime+=dt;
       if(this.droneTime<7) {const lift=Math.sin(Math.min(1,this.droneTime/7)*Math.PI);this.drone.position.y=2.304+lift*2.56;this.drone.rotation.y=Math.sin(this.droneTime*2)*.3;}else{this.drone.position.y=2.304;this.drone.rotation.y=0;}
       if(this.cargoTime<8) {
@@ -105,7 +99,5 @@ export class SpaceportProps {
       }
     }
     const positions=this.tether.geometry.getAttribute('position');positions.setXYZ(0,this.crate.position.x,8.192,this.crate.position.z);positions.setXYZ(1,this.crate.position.x,this.crate.position.y+1.536,this.crate.position.z);positions.needsUpdate=true;this.tether.geometry.computeBoundingSphere();
-    for(let i=0;i<3;i++)this.lamps.setColorAt(i,new T.Color(i===this.signal?['#aee9ef','#f2cd37','#fe8a18'][i]:'#1c2948'));
-    this.lamps.instanceColor!.needsUpdate=true;
   }
 }

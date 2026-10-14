@@ -9,11 +9,11 @@ import {standingPart} from './part-placement';
 import type {Obstacle,Point} from './collision';
 
 export const stationCrew=[
-  {id:'crew-dispatch',name:'Dispatch / Mira',x:8.96,z:6.4,task:'The dispatcher watches departures from the concourse. Say hello for a little wave.',appearance:{...residentAppearances[0],torso:'flight',torsoColor:'#008f9b',legColor:'#0a3463'}},
+  {id:'crew-dispatch',name:'Dispatch / Mira',x:8.96,z:6.4,task:'The dispatcher watches departures from the concourse. Say hello for a little wave.',appearance:residentAppearances[0]},
   {id:'crew-courier',name:'Courier / Jax',x:-66.56,z:25.6,task:'This courier carries supply parcels from the freight exchange to the scanning checkpoint, then returns for another delivery.',appearance:residentAppearances[1]},
-  {id:'crew-mechanic',name:'Mechanic / Rook',x:27.52,z:-28.8,task:'The mechanic runs diagnostics beside the survey drone. Try the drone-test console to see it fly.',appearance:{...residentAppearances[2],torso:'flight',face:'confident',hair:'helmet',hairColor:'#f4f4f4'}},
-  {id:'crew-loader',name:'Cargo / Sol',x:-64,z:29.44,task:'The cargo operator checks the delivery pad and signals the gantry. The freight console dispatches a supply crate.',appearance:{...residentAppearances[2],hair:'cap',hairColor:'#f2cd37',torso:'jacket',torsoColor:'#9ba19d',face:'glasses',accessory:'headphones'}},
-  {id:'crew-scan',name:'Security / Vega',x:49.92,z:-5.12,task:'A patient checkpoint scan keeps the docking lane clear. The scanner sweeps cargo rather than pacing the street.',appearance:{...residentAppearances[2],hair:'helmet',hairColor:'#0a3463',torso:'flight',torsoColor:'#0a3463',face:'visor',legColor:'#9ba19d'}},
+  {id:'crew-mechanic',name:'Mechanic / Rook',x:27.52,z:-28.8,task:'The mechanic runs diagnostics beside the survey drone. Try the drone-test console to see it fly.',appearance:residentAppearances[2]},
+  {id:'crew-loader',name:'Cargo / Sol',x:-64,z:29.44,task:'The cargo operator checks the delivery pad and signals the gantry. The freight console dispatches a supply crate.',appearance:residentAppearances[3]},
+  {id:'crew-scan',name:'Security / Vega',x:49.92,z:-5.12,task:'A patient checkpoint scan keeps the docking lane clear. The scanner sweeps cargo rather than pacing the street.',appearance:residentAppearances[4]},
 ] as const;
 
 export class AmbientLife {

@@ -5,9 +5,11 @@ import {readFileSync} from 'node:fs';
 import {Interface,type UIActions} from '../src/ui/interface';
 import {StationActivities} from '../src/interactions/activities';
 import {feedbackMarkup} from '../src/ui/activity-ui';
-import {sectionLabels} from '../src/ui/content-markup';
+import {contentMarkup,sectionLabels} from '../src/ui/content-markup';
 import type {Section} from '../src/config/world';
 import {Input} from '../src/player/input';
+import {FlightHUD} from '../src/ui/flight-hud';
+import {SalvageRun} from '../src/interactions/flight-game';
 
 let dom:JSDOM;
 function fixture() {
@@ -18,7 +20,7 @@ function fixture() {
   dom.window.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
   dom.window.HTMLDialogElement.prototype.close=function(){this.open=false;};
   const ui=new Interface(document.querySelector('#app')!);
-  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),motion:vi.fn(),graphics:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn()};
+  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),previewActivity:vi.fn(),flight:vi.fn(),motion:vi.fn(),graphics:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn()};
   ui.connect(actions);return{ui,actions};
 }
 afterEach(()=>{dom?.window.close();vi.unstubAllGlobals();});
@@ -55,24 +57,35 @@ describe('real interface keyboard and routing',()=>{
   it.each(Object.keys(sectionLabels) as Section[])('opens/closes %s with a named dialog and focus return',section=>{
     const {ui,actions}=fixture(),trigger=ui.root.querySelector<HTMLElement>('[data-menu]')!;trigger.focus();
     ui.openPanel(section);expect(ui.paused).toBe(true);expect(ui.panel.querySelector('h2')!.textContent).toBeTruthy();
+    expect(ui.panel.querySelector('a[href$=".pdf"]')).toBeNull();
+    if(section==='about'){expect(ui.panel.querySelector('[data-section="contact"]')).toBeNull();expect(ui.panel.querySelector('dl')).toBeNull();}
     const close=ui.panel.querySelector<HTMLElement>('[data-close-panel]')!;expect(document.activeElement).toBe(close);close.click();
     expect(ui.paused).toBe(false);expect(document.activeElement).toBe(trigger);expect(actions.closePanel).toHaveBeenCalledTimes(1);
   });
   it('routes all additional station stops and every professional chapter once',()=>{
     const {ui,actions}=fixture(),station=new StationActivities();station.addCrew('crew-test','Dock worker',0,0,'On shift.');
     ui.setStops(station.definitions);ui.openMenu();
+    expect(ui.menu.querySelector('a[href$=".pdf"]')).toBeNull();
     const choices=ui.menu.querySelectorAll<HTMLButtonElement>('[data-travel]');expect(new Set([...choices].map(b=>b.dataset.travel)).size).toBe(choices.length);
     expect(ui.menu.querySelector('[data-travel="crew-test"]')).not.toBeNull();
     ui.menu.querySelector<HTMLButtonElement>('[data-travel="facility-0"]')!.click();expect(actions.travel).toHaveBeenCalledWith('facility-0');expect(ui.menu.open).toBe(false);
     for(const section of Object.keys(sectionLabels)){ui.openMenu();ui.menu.querySelector<HTMLButtonElement>(`[data-section="${section}"]`)!.click();expect(actions.openSection).toHaveBeenCalledWith(section);}
   });
-  it('handles signal keyboard stop, manual step and restart without duplicate commands',()=>{
-    const {ui,actions}=fixture(),d=new StationActivities().find('arcade')!,canvas=document.querySelector('canvas')!;canvas.focus();
-    ui.openArcade(d,'Ready.');ui.setSignal(1);expect(ui.activity.textContent).toContain('Signal: Amber');
-    for(const code of ['Space','ArrowRight','KeyR'])ui.activity.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code,bubbles:true,cancelable:true}));
-    expect(actions.activity).toHaveBeenNthCalledWith(1,'arcade','stop');expect(actions.activity).toHaveBeenNthCalledWith(2,'arcade','step');expect(actions.activity).toHaveBeenNthCalledWith(3,'arcade','restart');
-    ui.activity.querySelector<HTMLButtonElement>('[data-command="stop"]')!.click();expect(actions.activity).toHaveBeenCalledTimes(4);
-    ui.activity.dispatchEvent(new dom.window.Event('cancel',{cancelable:true}));expect(ui.paused).toBe(false);expect(document.activeElement).toBe(canvas);
+  it('provides an opt-in gallery for every panel, compact game and destination',()=>{
+    const {ui,actions}=fixture(),station=new StationActivities();ui.enableDevGallery(station.definitions);
+    expect(ui.devGallery.querySelectorAll('[data-section]')).toHaveLength(Object.keys(sectionLabels).length);
+    expect([...ui.devGallery.querySelectorAll<HTMLElement>('[data-preview-activity]')].map(button=>button.dataset.previewActivity)).toEqual(['cube','poker-game']);
+    ui.devGallery.querySelector<HTMLButtonElement>('[data-section="projects"]')!.click();expect(actions.openSection).toHaveBeenCalledWith('projects');
+    ui.devGallery.querySelector<HTMLButtonElement>('[data-preview-activity="cube"]')!.click();expect(actions.previewActivity).toHaveBeenCalledWith('cube');
+    ui.openPanel('projects');expect(ui.panel.contains(ui.devGallery)).toBe(true);ui.closePanel();expect(ui.root.contains(ui.devGallery)).toBe(true);
+  });
+  it('plays cube recall and Redshift Draw with buttons and keyboard',()=>{
+    const {ui}=fixture(),station=new StationActivities();
+    ui.openGame(station.find('cube')!);ui.activity.querySelector<HTMLButtonElement>('[data-game-action="cube-hide"]')!.click();
+    for(const code of ['Digit1','Digit2','Digit4'])ui.activity.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code,bubbles:true,cancelable:true}));
+    expect(ui.activity.querySelector('[data-outcome="won"]')!.textContent).toContain('Sequence solved');ui.closeActivity();
+    ui.openGame(station.find('poker-game')!);ui.activity.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code:'KeyB',bubbles:true,cancelable:true}));
+    expect(ui.activity.textContent).toContain('chips banked');expect(ui.activity.querySelector('[data-game-action="poker-next"]')).not.toBeNull();
   });
   it('shows distinct simple feedback without pausing or stealing canvas focus',()=>{
     const {ui}=fixture(),station=new StationActivities(),canvas=document.querySelector('canvas')!;canvas.focus();
@@ -84,11 +97,11 @@ describe('real interface keyboard and routing',()=>{
     expect(unique.size).toBe(6);ui.setScene(true,true);expect(ui.activityUI.feedback.hidden).toBe(true);
   });
   it('wraps keyboard focus in every dialog and skips controls in collapsed directory settings',()=>{
-    const {ui}=fixture();ui.openPanel('contact');
+    const {ui}=fixture();ui.openPanel('about');
     ui.openMenu();const closedSettings=ui.menu.querySelector('[data-motion]')!;
-    ui.openArcade(new StationActivities().find('arcade')!,'Ready.');
-    for(const [dialog,firstSelector,lastSelector] of [[ui.panel,'[data-close-panel]','.panel-footer button'],[ui.menu,'[data-close-menu]','a[href="/portfolio.html"]'],[ui.activity,'[data-close-arcade]','[data-command="restart"]']] as const) {
-      if(dialog===ui.panel)ui.openPanel('contact');else if(dialog===ui.menu)ui.openMenu();else ui.openArcade(new StationActivities().find('arcade')!,'Ready.');
+    ui.openGame(new StationActivities().find('poker-game')!);
+    for(const [dialog,firstSelector,lastSelector] of [[ui.panel,'[data-close-panel]','.panel-footer button'],[ui.menu,'[data-close-menu]','a[href="/portfolio.html"]'],[ui.activity,'[data-close-game]','.poker-guide summary']] as const) {
+      if(dialog===ui.panel)ui.openPanel('about');else if(dialog===ui.menu)ui.openMenu();else ui.openGame(new StationActivities().find('poker-game')!);
       const first=dialog.querySelector<HTMLElement>(firstSelector)!,last=dialog.querySelector<HTMLElement>(lastSelector)!;
       last.focus();last.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Tab',code:'Tab',bubbles:true,cancelable:true}));expect(document.activeElement).toBe(first);
       first.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Tab',code:'Tab',shiftKey:true,bubbles:true,cancelable:true}));expect(document.activeElement).toBe(last);
@@ -104,14 +117,14 @@ describe('real interface keyboard and routing',()=>{
     canvas.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code:'KeyW',bubbles:true}));expect(input.down('KeyW')).toBe(true);input.clear();
     ui.setPrompt({id:'reactor',name:'Energy core',action:'Interact',key:'E',x:0,z:0,radius:3});ui.prompt.focus();ui.prompt.click();
     expect(actions.action).toHaveBeenCalledWith('E');expect(document.activeElement).toBe(canvas);
-    vi.mocked(actions.action).mockImplementation(()=>ui.openArcade(new StationActivities().find('arcade')!,'Ready.'));
+    vi.mocked(actions.action).mockImplementation(()=>ui.openGame(new StationActivities().find('poker-game')!));
     ui.prompt.focus();ui.prompt.click();ui.closeActivity();expect(document.activeElement).toBe(canvas);
     menu.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code:'Escape',bubbles:true}));expect(input.pressed('Escape')).toBe(true);
   });
 });
 
 describe('structural accessibility',()=>{
-  it('has no axe WCAG A/AA violations in portfolio, directory, feedback and arcade markup',async()=>{
+  it('has no axe WCAG A/AA violations in portfolio, directory, feedback and game markup',async()=>{
     const {ui}=fixture();dom.window.eval(axe.source);
     const run=async()=>{
       const result=await (dom.window as unknown as {axe:typeof axe}).axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']},rules:{'color-contrast':{enabled:false}}});
@@ -120,7 +133,10 @@ describe('structural accessibility',()=>{
     for(const section of Object.keys(sectionLabels) as Section[]){ui.openPanel(section);await run();ui.closePanel();}
     ui.openMenu();ui.menu.querySelector('details')!.open=true;await run();ui.closeMenu();
     const station=new StationActivities();ui.activityUI.showFeedback(station.command('noodles','order')!);await run();ui.activityUI.hideFeedback();
-    ui.openArcade(station.find('arcade')!,'Ready.');ui.setSignal(1);await run();
+    for(const id of ['cube','poker-game']){ui.openGame(station.find(id)!);await run();ui.closeActivity();}
+    const game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game);ui.setScene(true,true);
+    for(const phase of ['briefing','playing','won'] as const){game.phase=phase;hud.refresh();await run();}
+    hud.dispose();ui.setScene(false);
   },30000);
   it('keeps the concise static portfolio navigation and contact available without JavaScript',async()=>{
     dom=new JSDOM(readFileSync('public/portfolio.html','utf8'),{runScripts:'outside-only'});dom.window.eval(axe.source);
@@ -136,6 +152,9 @@ describe('structural accessibility',()=>{
     expect(dom.window.document.querySelector('#projects')!.textContent).toMatch(/provenance/i);
     expect(dom.window.document.querySelector<HTMLAnchorElement>('#projects a[href*="provenance"]')!.href).toBe('https://github.com/ItzNotKevin/provenance');
     expect([...dom.window.document.querySelectorAll<HTMLAnchorElement>('#projects a')].every(anchor=>new URL(anchor.href).hostname==='github.com')).toBe(true);
+    const worldProjects=new JSDOM(contentMarkup('projects'));
+    expect([...worldProjects.window.document.querySelectorAll('.project-summary')].map(item=>item.textContent)).toEqual([...dom.window.document.querySelectorAll('#projects .category')].map(item=>item.textContent));
+    expect([...worldProjects.window.document.querySelectorAll('h3 a')].map(anchor=>anchor.getAttribute('href'))).toEqual([...dom.window.document.querySelectorAll('#projects a')].map(anchor=>anchor.getAttribute('href')));worldProjects.window.close();
     expect(dom.window.document.querySelector('#education')!.textContent).not.toMatch(/\b20\d{2}\b/);
     expect(dom.window.document.querySelector('#contact')).toBeNull();
     expect(dom.window.document.querySelector('#hobbies')!.textContent).toMatch(/cubing, board games, video games, poker/);expect(dom.window.document.querySelector('#poker')).toBeNull();

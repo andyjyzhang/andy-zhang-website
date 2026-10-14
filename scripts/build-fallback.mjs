@@ -16,19 +16,6 @@ const experienceSummaries = {
   'Statistics Canada': 'built internal data tools and cloud workflows for survey and census teams.',
   Nokia: 'created load testing and performance reporting tools for network software.',
 };
-const visibleProjects = projects.filter(project => !['Memo Lab', 'Lawly'].includes(project.title));
-const projectGithub = {
-  Reminiscence: 'https://github.com/andyjyzhang/reminiscence',
-  AlphaHex: 'https://github.com/rli8145/alphahex',
-  Provenance: 'https://github.com/ItzNotKevin/provenance',
-  'Range Visualizer': 'https://github.com/andyjyzhang/range-visualizer',
-};
-const projectDescriptions = {
-  Reminiscence: 'turns phone videos into explorable vr memories',
-  AlphaHex: 'catan engine',
-  Provenance: 'photo authenticity records on solana',
-  'Range Visualizer': 'poker ranging tool',
-};
 const filmProject = {
   title: 'high stakes',
   description: 'short film',
@@ -36,7 +23,7 @@ const filmProject = {
   image: '/high-stakes.png',
 };
 
-const projectTitle = project => link(projectGithub[project.title], project.title);
+const projectTitle = project => link(project.github, project.title);
 const experienceYear = job => job.date.match(/\d{4}/g)?.at(-1) ?? job.date;
 
 const styles = `
@@ -136,7 +123,7 @@ const html = `<!doctype html>
     </section>
     <section id="projects" aria-labelledby="title-projects">
       <h2 id="title-projects">projects</h2>
-      <ul class="project-list">${visibleProjects.map(project => `<li>${projectTitle(project)}<span class="category">${escape(projectDescriptions[project.title] ?? project.category)}</span></li>`).join('')}</ul>
+      <ul class="project-list">${projects.map(project => `<li>${projectTitle(project)}<span class="category">${escape(project.summary)}</span></li>`).join('')}</ul>
     </section>
     <section id="education" aria-labelledby="title-education">
       <h2 id="title-education">education</h2>

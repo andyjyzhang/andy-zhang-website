@@ -32,7 +32,6 @@ export async function interactionState(tab) {
     dialogs:Array.from(document.querySelectorAll('dialog[open]')).map(d=>d.getAttribute('aria-labelledby')),
     focused:document.activeElement?.getAttribute('aria-label')||document.activeElement?.tagName,
     diagnostics:{...document.querySelector('[aria-label="World diagnostics"]')?.dataset},
-    signal:document.querySelector('.arcade-console[open] .current-signal')?.textContent||null,
-    result:document.querySelector('.arcade-console[open] [data-activity-status]')?.textContent||null,
+    result:document.querySelector('.game-console[open] [role="status"]')?.textContent||null,
   }));
 }

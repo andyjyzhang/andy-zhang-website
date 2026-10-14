@@ -26,12 +26,12 @@ describe('first-person input',()=>{
     handlers.get('pointermove')!({clientX:100,clientY:100} as never);
     expect(input.consumeCamera().x).toBe(0);
     handlers.get('pointerdown')!({button:0,pointerId:1,clientX:100,clientY:100} as never);
-    handlers.get('pointermove')!({clientX:220,clientY:25} as never);
+    handlers.get('pointermove')!({pointerId:1,clientX:220,clientY:25} as never);
     handlers.get('wheel')!({deltaY:-400,preventDefault:vi.fn()} as never);
     follow.update(1/60,input,subject,false,true,true);
     expect(camera.position.distanceTo(start)).toBeGreaterThan(100);
     expect({yaw:follow.yaw,pitch:follow.pitch,distance:follow.distance}).toEqual(street);
-    handlers.get('pointercancel')!({} as never);
+    handlers.get('pointercancel')!({pointerId:1} as never);
     handlers.get('pointermove')!({clientX:400,clientY:100} as never);
     expect(input.dragging).toBe(false);expect(input.consumeCamera()).toEqual({x:0,y:0,zoom:0});
   });
@@ -44,5 +44,18 @@ describe('first-person input',()=>{
     input.setFirstPerson(false);expect(input.onCaptureExit).not.toHaveBeenCalled();expect(canvas.style.cursor).toBe('');
     input.setFirstPerson(true);documentStub.pointerLockElement=null;documentEvents.get('pointerlockchange')!();
     expect(input.onCaptureExit).toHaveBeenCalledOnce();
+  });
+  it('routes either mouse button and touch drag to view steering and clears capture',()=>{
+    const handlers=new Map<string,(event:never)=>void>();
+    vi.stubGlobal('window',{addEventListener:vi.fn()});vi.stubGlobal('document',{addEventListener:vi.fn(),querySelector:()=>null,pointerLockElement:null});
+    const canvas={style:{cursor:''},addEventListener:(name:string,fn:(event:never)=>void)=>handlers.set(name,fn),setPointerCapture:vi.fn(),focus:vi.fn()};
+    const input=new Input(canvas as unknown as HTMLCanvasElement);
+    for(const [button,pointerType] of [[0,'mouse'],[2,'mouse'],[0,'touch']] as const){
+      handlers.get('pointerdown')!({button,pointerType,pointerId:1,clientX:100,clientY:100} as never);
+      handlers.get('pointermove')!({pointerId:1,clientX:125,clientY:50} as never);
+      expect(input.consumeCamera()).toEqual({x:.1,y:-.2,zoom:0});
+      handlers.get('lostpointercapture')!({pointerId:1} as never);expect(input.dragging).toBe(false);
+    }
+    input.clear();expect(input.consumeCamera()).toEqual({x:0,y:0,zoom:0});
   });
 });

@@ -4,7 +4,7 @@ import type {GameAudio,LoopKind} from './game-audio';
 type Sink=Pick<GameAudio,'play'|'beginFrame'|'endFrame'|'loop'|'quiet'>;
 interface Point {x:number;z:number}
 export interface SoundFrame extends Point {
-  mode:'town'|'intro'|'launch'|'space'|'gate'|'observatory'|'transit';
+  mode:'town'|'intro'|'launch'|'space'|'transit';
   paused:boolean;airborne?:boolean;verticalSpeed?:number;vehicleSpeed?:number;vehicleThrottle?:number;driving?:boolean;running?:boolean;yaw?:number;
   cooling?:boolean;drone?:boolean;cargo?:boolean;train?:Point;progress?:number;
   boosters?:readonly Point[];overview?:boolean;building?:boolean;
@@ -18,7 +18,7 @@ export class WorldAudio {
   intro(cue:BuildCue){if(cue==='start'||cue==='snap')this.sink.play('brick',{volume:cue==='start'?.9:.32});else if(cue==='reveal'){this.sink.quiet();this.sink.play('ready');}else if(cue==='land')this.sink.play('land',{volume:.75});else if(cue==='skip'||cue==='finish'){this.sink.quiet();if(cue==='skip')this.sink.play('close');}}
   activity(result:ActivityResult) {
     const kind=result.definition.kind;
-    if(kind==='arcade')this.sink.play(result.command==='stop'?(result.message.includes('Synchronized')?'signal-win':'signal-miss'):result.command==='step'?'signal-step':'open');
+    if(kind==='cube'||kind==='poker-game')this.sink.play('select');
     else this.sink.play(kind==='reactor'||kind==='facility'?'switch':kind==='repair'?'drone':kind==='transit'?'ride':kind);
   }
   update(dt:number,s:SoundFrame) {
@@ -34,7 +34,7 @@ export class WorldAudio {
       this.sink.endFrame();this.last={...s};return;
     }
     if(changed||s.paused||travelled>3){this.walked=0;this.last={...s};this.sink.quiet();return;}
-    if(!s.driving&&(s.mode==='town'||s.mode==='observatory')) {
+    if(!s.driving&&s.mode==='town') {
       if(s.airborne&&!previous?.airborne&&(s.verticalSpeed??0)>0)this.sink.play('jump',{volume:.1});
       if(!s.airborne&&previous?.airborne){this.sink.play('land',{volume:.1});this.walked=0;}
       if(!s.airborne&&travelled>.001) {
@@ -51,9 +51,7 @@ export class WorldAudio {
       if(Math.abs(previousSpeed)>3&&speed<Math.abs(previousSpeed)*.75&&travelled<speed*dt*.45&&this.collisionCooldown===0){this.sink.play('impact',{volume:.7});this.collisionCooldown=.5;}
     } else if(s.mode==='space'){this.sink.loop('motor',travelled>.001?.065:.035,travelled>.001?1.4:.85);this.sink.loop('air',.009);}
     else if(s.mode==='launch')this.sink.loop('launch',.035+Math.min(1,(s.progress??0)/4)*.07,.8+Math.min(1,(s.progress??0)/5)*.65);
-    else if(s.mode==='gate')this.sink.loop('core',.045,1.4);
     else if(s.mode==='transit')this.sink.loop('rail',.11,1.15);
-    else if(s.mode==='observatory')this.sink.loop('air',.008);
     if(s.mode==='town') {
       for(const [kind,active] of [['core',s.cooling],['drone',s.drone],['cargo',s.cargo]] as const)if(active&&this.sources[kind])this.near(kind,s,this.sources[kind]!,kind==='drone'?.045:.03);
       if(s.train) {

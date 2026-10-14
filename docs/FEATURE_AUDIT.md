@@ -1,5 +1,9 @@
 # Feature and accessibility audit
 
+> Historical record from 2026-10-04. The current activity/game inventory is
+> superseded by `docs/UI_GAME_CAST_VALIDATION.md`: Cube Recall and Pot Odds were
+> added on 2026-10-13, bringing the live activity count to 44.
+
 Completed locally on 2026-10-04 against the production Vite preview. No deployment or commit was performed.
 
 ## Result
@@ -49,7 +53,7 @@ Simple interactions now execute in the world rather than opening a repeated full
 | Reading / fallback | Forced no-WebGL view, scroll, mobile Contact anchor, resume/contact; build notes and credits | Static portfolio's seven chapters and structural accessibility pass without JavaScript |
 | Routes / deployed files | All seven live hash changes, hash removal, safe unknown route | Current artifacts include four HTML documents, favicon, PDF, attribution JSON, main/Three/CSS and lazy destinations. Deployment redirects preserve the experience/projects URLs; reading anchors remain available |
 
-“Minigames” here means the features actually implemented: signal match, space-flight prototype, observation destination and express ride. Cubing/poker challenges and other proposed future games are not implemented or claimed as tested.
+At the time of this audit, “minigames” meant signal match, space-flight prototype, observation destination and express ride. Cube Recall and Pot Odds were added and validated later; see the superseding record above.
 
 ## Accessibility evidence
 

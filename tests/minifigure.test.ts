@@ -41,6 +41,11 @@ describe('calibrated physical minifigures',()=>{
     expect(print.boundingBox!.max.z).toBeLessThan(-11);expect(print.boundingBox!.min.y).toBeGreaterThan(4);
     expect(partLayers('headPlain')).toEqual(['plastic']);
   });
+  it('gives every named figure a distinct face and complete visual signature',()=>{
+    const appearances=cast.map(member=>member.appearance as Appearance);
+    expect(new Set(appearances.map(a=>a.face)).size).toBe(appearances.length);
+    expect(new Set(appearances.map(a=>[a.face,a.hair,a.hairColor,a.torso,a.torsoColor,a.legColor,a.accessory].join('/'))).size).toBe(appearances.length);
+  });
   it('seats a cap and helmet without the old four-unit lift and shares face mold geometry',()=>{
     const cap=createMinifigure(playerAppearance).head.getObjectByName('LDraw cap')!;expect(cap.position.y).toBe(0);
     const helmet=createMinifigure({...playerAppearance,hair:'helmet'}).head;

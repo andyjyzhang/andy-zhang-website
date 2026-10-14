@@ -6,22 +6,20 @@ import { Input } from '../player/input';
 import { FollowCamera } from '../camera/follow-camera';
 import { Interface } from '../ui/interface';
 import { createBuilding } from '../landmarks/buildings';
-import { landmarks, sectionLandmark, isSection, SHIP, type Section } from '../config/world';
+import { landmarks, sectionLandmark, resolveSection, SHIP, type Section } from '../config/world';
 import { nearestInteraction, type Interactable } from '../interactions/detection';
 import { Vehicle, vehicleSpecs } from '../vehicles/vehicle';
 import { safeExit,safeApproach } from '../world/collision';
 import { BuildIntro, hasVisited } from './build-intro';
 import { AmbientLife } from '../world/ambient';
 import { Spaceship, LaunchSequence } from './spaceship';
-import type { SpacePrototype } from './space-prototype';
+import type { SpaceGame } from './space-game';
 import { PerformanceMonitor } from './performance-monitor';
 import { WORLD_STYLE } from '../config/station';
 import { groundHeight } from '../player/locomotion';
 import { downloadBuild } from '../world/export-build';
-import {StationActivities} from '../interactions/activities';
+import {isGameActivity,StationActivities,type ActivityDefinition} from '../interactions/activities';
 import {SpaceportProps} from '../world/spaceport-props';
-import {GateJourney} from './gate-journey';
-import {GATE} from '../world/city-layout';
 import {GameAudio} from '../audio/game-audio';
 import {WorldAudio} from '../audio/world-audio';
 import {ENGINE_PODS} from '../world/station-hull';
@@ -50,12 +48,11 @@ export class Engine {
   readonly items: Interactable[] = landmarks.map(l => ({ id: l.id, name: l.name, action: 'Explore', key: 'E', x: l.entry[0], z: l.entry[1], radius: 4.2 }));
   reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   private driving: Vehicle | null = null;
-  private mode: 'town' | 'launch' | 'space' | 'gate' | 'transit' = 'town';
-  private gate:GateJourney|null=null;
+  private mode: 'town' | 'launch' | 'space' | 'transit' = 'town';
   private rideTime=0;
   private launch: LaunchSequence | null = null;
-  private space: SpacePrototype | null = null;
-  private destinationPromise: Promise<typeof import('./space-prototype')> | null = null;
+  private space: SpaceGame | null = null;
+  private destinationPromise: Promise<typeof import('./space-game')> | null = null;
   private enteringSpace = false;
   private lastTime = 0;
   private uiTime = 0;
@@ -77,7 +74,7 @@ export class Engine {
     this.ui.onSound=cue=>this.audio.play(cue);
     this.audio.onChange=()=>this.syncSound();
     this.sound.sources={core:this.props.root.getObjectByName('cooling-rotor')!.position,drone:this.props.root.getObjectByName('survey-drone')!.position,cargo:this.props.root.getObjectByName('cargo-gantry-arm')!.position};
-    this.input.onCaptureExit=()=>{if(this.ui.paused)return;if(this.mode==='town')this.ui.openMenu();else if(this.mode==='space'||this.mode==='gate')this.returnToTown();};
+    this.input.onCaptureExit=()=>{if(this.ui.paused)return;if(this.mode==='town')this.ui.openMenu();else if(this.mode==='space')this.returnToTown();};
     this.input.onScroll=()=>{const view=this.activeView;if(view&&!this.ui.paused&&!this.intro?.active&&!(view===this.follow&&(this.follow.overview||this.follow.focus))&&view.distance+this.input.zoom<=1)this.input.captureMouse();};
     this.diagnostics = new PerformanceMonitor(parent);
     this.scene.background = new T.Color(WORLD_STYLE.background);
@@ -109,7 +106,8 @@ export class Engine {
       closePanel:()=>{this.follow.focus=null;this.input.clear();this.sound.reset();history.replaceState(null,'',location.pathname+location.search);},
       overview:()=>this.follow.overview=!this.follow.overview,
       pov:()=>{const view=this.activeView;if(!view)return;view.togglePOV();this.syncView();if(view.firstPerson)this.input.captureMouse();},
-      travel:id=>this.travel(id),motion:enabled=>this.setMotion(enabled),
+      travel:id=>this.travel(id),previewActivity:id=>this.previewActivity(id),motion:enabled=>this.setMotion(enabled),
+      flight:()=>this.previewFlight(),
       graphics:enabled=>this.setGraphics(enabled),
       replay:()=>{this.returnToTown();this.exitVehicle(true);this.sound.reset();this.intro.show(this.reducedMotion);},
       action:key=>this.interact(key),returnToTown:()=>this.returnToTown(),activity:(id,command)=>this.commandActivity(id,command),
@@ -121,17 +119,22 @@ export class Engine {
     for(const {spec,model} of this.life.workers)this.activities.addCrew(spec.id,spec.name,model.root.position.x,model.root.position.z,spec.task);
     this.items.push(...this.activities.items);
     this.ui.setStops([...this.activities.definitions,...this.vehicles.filter(v=>v.spec.driveable).map(v=>v.spec)]);
+    if(new URLSearchParams(location.search).get('dev')==='ui')this.ui.enableDevGallery(this.activities.definitions);
     this.setMotion(this.reducedMotion);
-    window.addEventListener('resize', () => { this.camera.aspect = innerWidth / innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(innerWidth, innerHeight); this.space?.resize();this.gate?.resize(); });
+    window.addEventListener('resize', () => { this.camera.aspect = innerWidth / innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(innerWidth, innerHeight); this.space?.resize(); });
     document.addEventListener('visibilitychange', () => { this.input.clear(); this.lastTime = 0; });
     window.addEventListener('hashchange',()=>{
-      const section=location.hash.slice(1);
-      if(isSection(section))this.openSection(section);
-      else if(!section)this.ui.closePanel();
+      const hash=location.hash.slice(1),section=resolveSection(hash);
+      if(section)this.openSection(section);
+      else if(hash==='flight'&&new URLSearchParams(location.search).get('dev')==='ui')this.previewFlight();
+      else if(hash.startsWith('game-')&&new URLSearchParams(location.search).get('dev')==='ui')this.previewActivity(hash.slice(5));
+      else if(!hash)this.ui.closePanel();
     });
     this.bindTouch(); this.renderer.setAnimationLoop(t => this.update(t));
-    const hash = location.hash.slice(1);
-    if (isSection(hash)) this.openSection(hash);
+    const hash = location.hash.slice(1),section=resolveSection(hash);
+    if (section) this.openSection(section);
+    else if(hash==='flight'&&new URLSearchParams(location.search).get('dev')==='ui')this.previewFlight();
+    else if(hash.startsWith('game-')&&new URLSearchParams(location.search).get('dev')==='ui')this.previewActivity(hash.slice(5));
     else if (!hasVisited() || new URLSearchParams(location.search).get('intro') === '1') this.intro.show(this.reducedMotion);
     else {this.follow.overview=new URLSearchParams(location.search).get('view')==='world';this.ui.notify(`Welcome to ${WORLD_STYLE.name}. WASD to explore; scroll in for first person.`);}
   }
@@ -172,6 +175,19 @@ export class Engine {
     this.player.teleport(l.entry[0], l.entry[1]); this.follow.frameLandmark(l.x, l.z, l.facing); this.follow.overview = false;
     this.input.clear(); this.ui.openPanel(section); history.replaceState(null, '', `${location.pathname}${location.search}#${section}`);
   }
+  private previewActivity(id:string){
+    const activity=this.activities.find(id);if(!activity)return;
+    if(this.mode!=='town')this.returnToTown();if(this.intro.active)this.intro.finish();this.exitVehicle(true);this.input.clear();
+    if(isGameActivity(activity.kind)){this.openActivityGame(activity);if(new URLSearchParams(location.search).get('dev')==='ui')history.replaceState(null,'',`${location.pathname}${location.search}#game-${id}`);}
+    else this.commandActivity(activity.id,activity.commands[0].id);
+  }
+  private openActivityGame(activity:ActivityDefinition){
+    this.input.clear();this.ui.openGame(activity);
+  }
+  private previewFlight(){
+    this.ui.closePanel();this.ui.closeMenu();this.ui.closeActivity();this.travel('ship');this.startLaunch(true);
+    history.replaceState(null,'',`${location.pathname}${location.search}#flight`);
+  }
   private travel(id: string) {
     this.sound.reset();this.audio.play('travel');
     if (this.mode !== 'town') this.returnToTown();
@@ -179,7 +195,7 @@ export class Engine {
     this.exitVehicle(true);
     if (id === 'plaza') this.player.teleport(0, 10);
     else if (id === 'ship') this.player.teleport(...SHIP.entry);
-    else if(this.activities.find(id)){const a=this.activities.find(id)!,point=safeApproach(a,this.town.obstacles.concat(this.props.obstacles,this.life.obstacles,this.vehicles.map(v=>v.obstacle())),['arcade','noodles'].includes(a.kind)?Math.PI:0);if(point){this.player.teleport(point.x,point.z);this.follow.yaw=Math.atan2(point.x-a.x,point.z-a.z);}}
+    else if(this.activities.find(id)){const a=this.activities.find(id)!,point=safeApproach(a,this.town.obstacles.concat(this.props.obstacles,this.life.obstacles,this.vehicles.map(v=>v.obstacle())),['cube','noodles'].includes(a.kind)?Math.PI:0);if(point){this.player.teleport(point.x,point.z);this.follow.yaw=Math.atan2(point.x-a.x,point.z-a.z);}}
     else { const v = this.vehicles.find(v => v.spec.id === id)!;const exit=safeExit(v.position,v.heading,this.town.obstacles.concat(this.vehicles.map(v=>v.obstacle())));if(exit)this.player.teleport(exit.x,exit.z); }
     this.follow.focus = null; this.follow.overview = false;if(!this.activities.find(id))this.follow.yaw=.12; this.input.clear(); this.renderer.domElement.focus();
     this.player.motion.heading=this.follow.yaw+Math.PI;this.player.model.root.rotation.y=this.player.motion.heading;
@@ -201,31 +217,28 @@ export class Engine {
     if (this.active.action === 'Launch') this.startLaunch();
     if(this.active.action==='Interact'||this.active.action==='Play') {
       const a=this.activities.find(this.active.id);
-      if(a?.kind==='arcade'){this.input.clear();this.ui.openArcade(a,this.activities.status(a.id));this.ui.setSignal(this.props.signal);}
+      if(a&&isGameActivity(a.kind))this.openActivityGame(a);
       else if(a)this.commandActivity(a.id,a.commands[0].id);
     }
   }
   private commandActivity(id:string,command:string) {
     const unavailable=this.props.unavailable(id,this.reducedMotion,this.player.position);if(unavailable){this.ui.notify(unavailable,3000);this.audio.play('signal-miss',{volume:.3});return;}
-    const result=this.activities.command(id,command,this.props.signal);if(!result)return;
+    const result=this.activities.command(id,command);if(!result)return;
     this.sound.activity(result);
     this.props.activate(id,result.on,command,this.reducedMotion);
     if(result.definition.kind==='crew')this.life.greet(id,this.reducedMotion);
-    this.ui.updateActivityStatus(result.message);
-    if(id==='gate') {
-      this.ui.closeActivity();this.input.setFirstPerson(false);this.input.clear();this.player.model.root.visible=false;
-      this.mode='gate';this.gate=new GateJourney(this.ui.root.parentElement!,this.scene,this.camera,this.town.root,this.reducedMotion);this.ui.setScene(true);
-    } else if(id==='transit') {
+    if(id==='transit') {
       this.ui.closeActivity();this.input.setFirstPerson(false);this.input.clear();this.player.model.root.visible=false;this.mode='transit';this.rideTime=0;this.ui.setScene(true);
-    } else if(result.definition.kind!=='arcade')this.ui.activityUI.showFeedback(result);
+    } else if(!isGameActivity(result.definition.kind))this.ui.activityUI.showFeedback(result);
   }
-  private startLaunch() {
+  private startLaunch(preview=false) {
     if (this.mode !== 'town') return;
     this.audio.play('launch');this.sound.reset();
     this.mode = 'launch'; this.input.clear(); this.follow.focus = null; this.follow.overview = false;
     this.launch = new LaunchSequence(this.spaceship, this.camera, this.player.model.root, this.ui.root.parentElement!, this.reducedMotion);
-    this.destinationPromise = import('./space-prototype'); this.enteringSpace = false;
+    this.destinationPromise = import('./space-game'); this.enteringSpace = false;
     this.ui.setScene(true); this.ui.setPrompt(null); this.ui.toast.hidden = true;
+    if(preview){this.launch.update(10);void this.enterSpace();}
   }
   private async enterSpace() {
     if (this.enteringSpace || !this.launch) return;
@@ -233,7 +246,7 @@ export class Engine {
     try {
       const destination = await this.destinationPromise!;
       if (this.mode !== 'launch' || this.launch !== sequence) return;
-      this.space = new destination.SpacePrototype(this.ui.root.parentElement!); this.mode = 'space';this.ui.setScene(true,true);
+      this.space = new destination.SpaceGame(this.ui.root.parentElement!,cue=>this.audio.play(cue)); this.mode = 'space';this.ui.setScene(true,true);
       this.launch.dispose(); this.launch = null; this.input.clear(); this.renderer.domElement.focus();
     } catch (error) { console.error('Destination unavailable:', error); this.returnToTown(); this.ui.notify('The outpost is unavailable. Your world is still here.'); }
   }
@@ -241,17 +254,16 @@ export class Engine {
     if (this.mode === 'town') return;
     this.sound.reset();this.audio.play('return');
     this.input.setFirstPerson(false);
-    const previous=this.mode;this.gate?.dispose();this.gate=null;
+    const previous=this.mode;
     this.launch?.dispose(); this.launch = null; this.space?.dispose(); this.space = null;
     this.spaceship.reset(); this.mode = 'town'; this.enteringSpace = false; this.input.clear();
     this.player.model.root.visible = true;
-    if(previous==='gate')this.player.teleport(GATE.entry[0],GATE.entry[1]+1.92);
-    else if(previous==='transit')this.player.teleport(-50.56,-50.56);
+    if(previous==='transit')this.player.teleport(-50.56,-50.56);
     else this.player.teleport(SHIP.entry[0], SHIP.entry[1]);
     this.follow.focus = null; this.follow.overview = false; this.camera.position.set(this.player.position.x + 12, 12, this.player.position.z + 22);
     this.ui.setScene(false); this.renderer.domElement.focus(); this.ui.notify('Back on familiar ground. Welcome home.');
   }
-  private get activeView(){return this.mode==='town'?this.follow:this.mode==='space'?this.space?.view:this.mode==='gate'?this.gate?.view:null;}
+  private get activeView(){return this.mode==='town'?this.follow:this.mode==='space'?this.space?.view:null;}
   private syncView(){
     const firstPerson=!this.ui.paused&&Boolean(this.activeView?.firstPerson);
     this.input.setFirstPerson(firstPerson);this.ui.setPOV(firstPerson,this.mode==='town'&&this.follow.overview);
@@ -287,11 +299,6 @@ export class Engine {
       this.life.update(dt,this.reducedMotion,this.player.position,this.vehicles.map(v=>v.obstacle()));this.props.update(dt,this.reducedMotion,this.player.position);
       if(this.ui.activityUI.active)this.ui.activityUI.updatePhase(this.props.phase(this.ui.activityUI.active));
       for(const worker of this.life.workers){const d=this.activities.find(worker.spec.id),i=this.items.find(i=>i.id===worker.spec.id);if(d&&i){d.x=i.x=worker.model.root.position.x;d.z=i.z=worker.model.root.position.z;}}
-      this.ui.setSignal(this.props.signal);
-    }
-    if(this.mode==='gate'&&this.gate) {
-      if(this.input.pressed('Escape'))this.returnToTown();else{this.gate.update(elapsed,this.input,!this.ui.paused);this.ui.setScene(true,this.gate.arrived);this.syncView();this.render(this.gate.scene,this.gate.camera);this.diagnostics.update(time,this.renderer,this.gate.camera,{mode:this.gate.arrived?'observatory':'gate',x:this.gate.position.x,y:this.gate.position.y,z:this.gate.position.z,speed:0});}
-      this.input.endFrame();return;
     }
     if(this.mode==='transit') {
       this.rideTime+=elapsed;
@@ -306,7 +313,7 @@ export class Engine {
     }
     if (this.mode === 'space' && this.space) {
       if (this.input.pressed('Escape')) this.returnToTown();
-      else { this.space.update(dt, this.input, this.reducedMotion, !this.ui.paused);this.syncView(); this.render(this.space.scene, this.space.camera); this.diagnostics.update(time, this.renderer, this.space.camera, { mode: 'space', x: this.space.position.x, y: this.space.position.y, z: this.space.position.z, speed: 0 }); }
+      else { this.space.update(dt, this.input, this.reducedMotion||this.graphicsLow, !this.ui.paused);this.syncView(); this.render(this.space.scene, this.space.camera); this.diagnostics.update(time, this.renderer, this.space.camera, { mode: 'space', x: this.space.position.x, y: this.space.position.y, z: this.space.position.z, speed: 0 }); }
       this.input.endFrame(); return;
     }
     const enabled = !this.ui.paused;
@@ -348,9 +355,9 @@ export class Engine {
     this.input.endFrame();
   }
   private render(scene: T.Scene, camera: T.PerspectiveCamera) {
-    const mode=this.intro.active?'intro':this.mode==='gate'&&this.gate?.arrived?'observatory':this.mode;
-    const position=mode==='space'&&this.space?this.space.position:mode==='observatory'&&this.gate?this.gate.position:this.player.position;
-    this.sound.update(this.soundDt,{mode,x:position.x,z:position.z,paused:this.ui.paused,airborne:mode==='town'&&this.player.airborne,verticalSpeed:this.player.velocityY,driving:!!this.driving,vehicleSpeed:this.driving?.speed,vehicleThrottle:Number(this.input.down('KeyW'))-Number(this.input.down('KeyS')),running:this.input.down('ShiftLeft','ShiftRight'),yaw:this.activeView?.yaw,cooling:this.props.coolingActive,drone:this.props.busy('repair'),cargo:this.props.busy('cargo'),train:this.life.train.position,progress:mode==='intro'?this.intro.buildTime:this.launch?.elapsed,building:this.intro.building,boosters:ENGINE_PODS,overview:this.follow.overview});
+    const mode=this.intro.active?'intro':this.mode;
+    const position=mode==='space'&&this.space?this.space.position:this.player.position;
+    this.sound.update(this.soundDt,{mode,x:position.x,z:position.z,paused:this.ui.paused||(mode==='space'&&this.space?.game.phase!=='playing'),airborne:mode==='town'&&this.player.airborne,verticalSpeed:this.player.velocityY,driving:!!this.driving,vehicleSpeed:this.driving?.speed,vehicleThrottle:Number(this.input.down('KeyW'))-Number(this.input.down('KeyS')),running:this.input.down('ShiftLeft','ShiftRight'),yaw:this.activeView?.yaw,cooling:this.props.coolingActive,drone:this.props.busy('repair'),cargo:this.props.busy('cargo'),train:this.life.train.position,progress:mode==='intro'?this.intro.buildTime:this.launch?.elapsed,building:this.intro.building,boosters:ENGINE_PODS,overview:this.follow.overview});
     this.diagnostics.audio(this.audio.stats);
     this.diagnostics.beforeRender(this.renderer); this.renderer.render(scene, camera); this.diagnostics.afterRender(this.renderer);
   }

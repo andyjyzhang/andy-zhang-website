@@ -5,6 +5,7 @@ export class Input {
   private presses = new Set<string>();
   cameraX = 0;
   cameraY = 0;
+  private dragPointer:number|null=null;
   zoom = 0;
   dragging = false;
   firstPerson = false;
@@ -28,22 +29,26 @@ export class Input {
     window.addEventListener('blur', () => this.clear());
     canvas.addEventListener('pointerdown', e => {
       if (e.button !== 0 && e.button !== 2) return;
+      if(this.dragPointer!==null&&this.dragPointer!==e.pointerId)return;
       this.dragging = true;
+      this.dragPointer=e.pointerId;
       this.pointerX = e.clientX; this.pointerY = e.clientY;
       canvas.setPointerCapture(e.pointerId);
       canvas.focus({ preventScroll: true });
       if(this.firstPerson)this.captureMouse();
     });
     canvas.addEventListener('pointermove', e => {
+      if(this.dragPointer!==null&&e.pointerId!==this.dragPointer)return;
       if(this.firstPerson){this.cameraX+=e.movementX*PLAYER_TUNING.firstPersonSensitivity;this.cameraY+=e.movementY*PLAYER_TUNING.firstPersonSensitivity;return;}
       if (!this.dragging) return;
       this.cameraX += (e.clientX - this.pointerX) * PLAYER_TUNING.orbitSensitivity;
       this.cameraY += (e.clientY - this.pointerY) * PLAYER_TUNING.orbitSensitivity;
       this.pointerX = e.clientX; this.pointerY = e.clientY;
     });
-    const release = () => { this.dragging = false; };
+    const release = (e:PointerEvent) => {if(this.dragPointer!==null&&e.pointerId!==this.dragPointer)return;this.releaseDrag();};
     canvas.addEventListener('pointerup', release);
     canvas.addEventListener('pointercancel', release);
+    canvas.addEventListener('lostpointercapture',release);
     canvas.addEventListener('contextmenu', e => e.preventDefault());
     canvas.addEventListener('wheel', e => { this.zoom += e.deltaY * .015;this.onScroll?.(); e.preventDefault(); }, { passive: false });
     document.addEventListener('pointerlockchange',()=>{if(this.firstPerson&&document.pointerLockElement!==canvas)this.onCaptureExit?.();});
@@ -69,6 +74,7 @@ export class Input {
     this.cameraX = this.cameraY = this.zoom = 0;
     return delta;
   }
-  clear() { this.keys.clear(); this.presses.clear(); this.dragging = false; this.cameraX = this.cameraY = this.zoom = 0; }
+  private releaseDrag(){this.dragging=false;this.dragPointer=null;}
+  clear() { this.keys.clear(); this.presses.clear(); this.releaseDrag();this.cameraX = this.cameraY = this.zoom = 0; }
   endFrame() { this.presses.clear(); }
 }

@@ -27,7 +27,7 @@ export const CITY_LOTS:CityLot[]=[
   {name:'HABITAT / A',x:-36.48,z:-.64,w:32,d:24,floors:12,design:'apartments'},
   {name:'TRAFFIC / COMMS',x:23.04,z:-1.28,w:24,d:26,floors:15,design:'factory'},
   {name:'FUSION / REPAIR',x:-49.28,z:35.84,w:12,d:24,floors:4,design:'factory'},
-  {name:'SIGNAL ARCADE',x:15.36,z:35.84,w:32,d:26,floors:7,design:'arcade'},
+  {name:'CREW COMMONS',x:15.36,z:35.84,w:32,d:26,floors:7,design:'arcade'},
   {name:'DATA STORAGE',x:-35.84,z:72.96,w:34,d:32,floors:9,design:'civic'},
   {name:'BATTERY EXCHANGE',x:-12.8,z:71.68,w:18,d:30,floors:3,design:'factory'},
   {name:'FLIGHT / SYSTEMS',x:80.64,z:-32.64,w:32,d:30,floors:16,design:'terrace'},

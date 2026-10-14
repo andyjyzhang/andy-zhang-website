@@ -67,11 +67,7 @@ export function hobbyProps(b:BrickBatch,animated:T.Group,root:T.Group) {
   for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)b.mold('roundPlate',colors[(row+col+6)%6],col*2*S+(row%2)*S,10*H,.64+row*2*S);
   for(let i=0;i<3;i++)b.stack('#c91a09',-1.92+i*1.28,10*H,.64,1,2,1,'stud');
   seat(b,0,3.84,'#a0bcac');
-  b.stack('#0a3463',4.48,H,0,3,12,3,'stud');
-  b.obstacle({x:4.48,z:0,w:3*S,d:4*S,height:15*H,bottom:H,label:'arcade cabinet'});
-  b.mold('sideStud',P.ink,4.48,13*H,1.28);sign(root,'READY?',4.48,9*H,1.3,2*S,2*S,P.ink,'#bbe90b');
-  b.stack('#f2cd37',4.48,5*H,1.28,3,1,2,'tile');b.mold('joystick',P.ink,3.84,7*H,1.6);
-  b.mold('roundTile','#c91a09',4.48,7*H,1.6);b.mold('roundTile','#5a93db',5.12,7*H,1.6);
+  shelf(b,4.48,-1.28,3);
   const cb=new BrickBatch();cube(cb,0,0,0);const rotating=cb.build(animated);rotating.position.set(-2.56,2.048,1.28);
   b.stack(P.wood,-2.56,H,1.28,4,7,4);
   b.obstacle({x:-2.56,z:1.28,w:4*S,d:4*S,height:18*H,bottom:H,label:'cube display'});

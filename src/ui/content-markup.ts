@@ -1,20 +1,23 @@
-import { personalInfo, experience, projects, education, hobbies, poker, contact } from '../content/portfolio';
-import type { Section } from '../config/world';
+import {personalInfo,experience,projects,education,hobbies,poker,contact} from '../content/portfolio';
+import type {Section} from '../config/world';
 
-export const sectionTitles: Record<Section, string> = { about: 'A little about me.', experience: 'Things built in the real world.', projects: 'From idea to working thing.', education: 'Stay curious.', hobbies: 'Off the clock.', poker: 'A student of the game.', contact: 'Let’s build something.' };
-export const sectionLabels: Record<Section, string> = { about: 'About', experience: 'Experience', projects: 'Projects', education: 'Education', hobbies: 'Hobbies', poker: 'Poker', contact: 'Contact' };
-export const portfolioMeta = { personalInfo, experience, projects, education, hobbies, poker, contact };
-export const escape = (text: string) => text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
-export function link(url: string, label: string, cls = '') { return `<a class="${cls}" href="${escape(url)}"${url.startsWith('https') || url.endsWith('.pdf') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escape(label)} <span aria-hidden="true">↗</span></a>`; }
+export const sectionTitles:Record<Section,string>={about:'About',experience:'Experience',projects:'Projects',education:'Education',hobbies:'Hobbies',poker:'Poker'};
+export const sectionLabels:Record<Section,string>={...sectionTitles};
+export const portfolioMeta={personalInfo,experience,projects,education,hobbies,poker,contact};
+export const escape=(text:string)=>text.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+export function link(url:string,label:string,cls=''){return `<a class="${cls}" href="${escape(url)}"${url.startsWith('https')?' target="_blank" rel="noopener noreferrer"':''}>${escape(label)}</a>`;}
 
-export function contentMarkup(section: Section) {
-  switch (section) {
-    case 'about': return `<p class="lead">${escape(personalInfo.intro)}</p><p>${escape(personalInfo.aside)}</p><div class="fact-strip"><span>BASED IN</span><strong>${escape(personalInfo.location)}</strong></div><div class="panel-links">${link(contact.resume, 'View résumé', 'primary-link')}${link(contact.github, 'GitHub')}${link(contact.linkedin, 'LinkedIn')}</div><div class="paper-note">Have something interesting in mind?<br>${link('mailto:' + contact.email, contact.email)}</div>`;
-    case 'experience': return experience.map((job, i) => `<article class="content-entry"><div class="entry-kicker"><span>0${i + 1} / ${escape(job.date)}</span></div><h3>${escape(job.company)}</h3><p class="role">${escape(job.role)}</p><p>${escape(job.detail)}</p><p class="result">${escape(job.result)}</p><small class="stack">${escape(job.stack)}</small></article>`).join('') + `<p class="paper-note">Also part of my journey: Ontario Government. Detailed role information will be added when available.</p>${link(contact.resume, 'The full résumé', 'primary-link')}`;
-    case 'projects': return projects.map((project, i) => `<article class="content-entry"><div class="entry-kicker">0${i + 1} / ${escape(project.category)}</div><h3>${escape(project.title)}</h3><p>${escape(project.description)}</p><small class="stack">${escape(project.stack)}</small><div class="panel-links">${project.links.map(l => link(l.url, l.label)).join('')}</div></article>`).join('');
-    case 'education': return `<div class="university-mark" aria-hidden="true">W</div><p class="entry-kicker">${escape(education.date)}</p><h3>${escape(education.institution)}</h3><p class="lead">${escape(education.degree)}<br>Bachelor’s degree candidate</p><div class="paper-note"><span class="entry-kicker">SCHOLARSHIP</span><h3>${escape(education.award)}</h3><p>${escape(education.awardDetail)}</p></div><p class="entry-kicker">RELEVANT COURSEWORK</p><p>${escape(education.courses)}</p>${link(contact.resume, 'View résumé', 'primary-link')}`;
-    case 'hobbies': return hobbies.map(h => `<article class="content-entry hobby-entry"><span class="hobby-icon" aria-hidden="true">${h.icon}</span><div><h3>${escape(h.title)}</h3><p>${escape(h.detail)}</p></div></article>`).join('') + `<div class="paper-note">A few interests made their way into this town. Have a look at the tabletop, cube shelf, and arcade cabinet.</div>`;
-    case 'poker': return `<div class="card-motif" aria-hidden="true"><span>A<br>♠</span><span>K<br>♥</span></div><h3>${escape(poker.title)}</h3><p class="lead">${escape(poker.intro)}</p><ol class="study-list">${poker.topics.map(topic => `<li>${escape(topic)}</li>`).join('')}</ol><p class="paper-note">${escape(poker.closing)}</p>`;
-    case 'contact': return `<p class="lead">Software, an interesting problem, or a hello. The studio door is open.</p><a class="email-link" href="mailto:${contact.email}">${contact.email}<span aria-hidden="true">↗</span></a><div class="contact-list">${link(contact.github, 'Find me on GitHub')}${link(contact.linkedin, 'Connect on LinkedIn')}${link(contact.resume, 'Download my résumé')}</div><p class="paper-note">${escape(personalInfo.name)}<br>Computer Science · University of Waterloo<br>${escape(personalInfo.location)}</p>`;
+function entry(title:string,meta:string,body:string,detail=''){
+  return `<article class="content-entry"><div class="entry-heading"><h3>${escape(title)}</h3><span>${escape(meta)}</span></div>${body}${detail}</article>`;
+}
+
+export function contentMarkup(section:Section){
+  switch(section){
+    case 'about':return `<p class="panel-intro">${escape(personalInfo.intro)}</p><p>${escape(personalInfo.aside)}</p><footer class="about-contact" aria-label="Contact"><div class="panel-links">${link('mailto:'+contact.email,'email')}${link(contact.github,'github')}${link(contact.linkedin,'linkedin')}</div></footer>`;
+    case 'experience':return experience.map(job=>entry(job.company,job.date,`<p class="entry-role">${escape(job.role)}</p><p>${escape(job.detail)}</p>`,`<p class="entry-stack">${escape(job.stack)}</p>`)).join('');
+    case 'projects':return projects.map((project,i)=>`<article class="content-entry project-entry"><div class="entry-heading"><h3>${link(project.github,project.title)}</h3><span>${String(i+1).padStart(2,'0')}</span></div><p class="project-summary">${escape(project.summary)}</p><p>${escape(project.description)}</p><p class="entry-stack">${escape(project.stack)}</p></article>`).join('');
+    case 'education':return `${entry(education.institution,'',`<p class="entry-role">${escape(education.degree)}</p>`)}<div class="scholarship-line"><h3>${escape(education.award)}</h3><p>${escape(education.awardDetail)}</p></div><div class="coursework"><h3>coursework</h3><p>${escape(education.courses)}</p></div>`;
+    case 'hobbies':return hobbies.map(hobby=>entry(hobby.title,'',`<p>${escape(hobby.detail)}</p>`)).join('')+`<p class="compact-note">Look for the tabletop and cube shelf around the station.</p>`;
+    case 'poker':return `<p class="panel-intro">${escape(poker.intro)}</p><ul class="plain-list">${poker.topics.map(topic=>`<li>${escape(topic)}</li>`).join('')}</ul><p>${escape(poker.closing)}</p><p class="compact-note">Try Redshift Draw at the lounge table: build poker hands, collect bonuses, and chase a high score.</p>`;
   }
 }

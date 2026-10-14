@@ -8,13 +8,14 @@ import {JSDOM} from 'jsdom';
 const root=resolve('dist'),files=(await readdir(root,{recursive:true})).map(file=>file.replaceAll('\\','/'));
 const pages=files.filter(file=>file.endsWith('.html')),documents=new Map(),local=new Set();
 for(const page of pages)documents.set(page,new JSDOM(await readFile(resolve(root,page),'utf8'),{url:`http://build.local/${page}`}));
-const chapters=['about','experience','projects','education','hobbies','poker','contact'];
+const chapters=['about','experience','projects','education','hobbies','poker'];
 const readingChapters=['experience','projects','education','other','hobbies'];
 for(const [page,dom] of documents) {
   const d=dom.window.document;
   assert.equal(d.documentElement.lang,'en',`${page}: document language`);
   assert.ok(d.title,`${page}: page title`);
   assert.ok(d.querySelector('meta[name="viewport"]'),`${page}: mobile viewport`);
+  assert.equal(d.querySelector('a[href*="Resume"],a[href*="resume"],a[href$=".pdf"]'),null,`${page}: résumé must not be exposed`);
   for(const el of d.querySelectorAll('a[href],link[href],script[src],img[src]')) {
     const value=el.getAttribute('href')||el.getAttribute('src');
     const url=new URL(value,`http://build.local/${page}`);
@@ -51,8 +52,11 @@ assert.deepEqual([...reading.querySelectorAll('#experience .role')].map(el=>el.t
 for(const anchor of reading.querySelectorAll('.quick-links a[href*="github.com"],.quick-links a[href*="linkedin.com"]'))assert.doesNotMatch(anchor.textContent,/↗/);
 assert.equal(reading.querySelector('#other a').href,'https://www.instagram.com/reel/Dbh2D-lhjY5/');
 assert.equal(reading.querySelector('#other img').getAttribute('src'),'/high-stakes.png');
-const pdf=await readFile(resolve(root,'AndyZhangResume.pdf'));
-assert.equal(pdf.subarray(0,5).toString(),'%PDF-');assert.ok(pdf.length>1000);
+assert.equal(files.some(file=>/resume|résumé|\.pdf$/i.test(file)),false,'No résumé PDF in deployable artifacts');
+assert.equal(files.some(file=>/observatory|space-prototype|gate-journey/i.test(file)),false,'No removed destination chunks in production output');
+for(const file of files.filter(file=>/\.(js|css)$/.test(file)))
+  assert.doesNotMatch(await readFile(resolve(root,file),'utf8'),/signal match|stop the signal|data-lamp|arcade-console/i,
+    file+': removed Signal Match UI must not be deployed');
 JSON.parse(await readFile(resolve(root,'models/ldraw-attribution.json'),'utf8'));
 const deployment=JSON.parse(await readFile('vercel.json','utf8'));
 for(const [source,chapter] of [['/work.html','experience'],['/projects.html','projects']])
@@ -68,7 +72,7 @@ if(process.argv[2]) {
     served.push(file);
   }
 }
-const result={pages,localLinks:local.size,resumeBytes:pdf.length,chapters,readingChapters,served,passed:true};
+const result={pages,localLinks:local.size,chapters,readingChapters,served,passed:true};
 await mkdir('artifacts',{recursive:true});await writeFile('artifacts/build-audit.json',JSON.stringify(result,null,2));
 for(const dom of documents.values())dom.window.close();
 console.log(JSON.stringify(result,null,2));

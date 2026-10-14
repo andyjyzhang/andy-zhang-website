@@ -32,14 +32,14 @@ describe('complete live station inventory',()=>{
     vi.unstubAllGlobals();
   });
   it('accounts for every facade, activity, crew member and driveable vehicle',()=>{
-    expect(activities.definitions).toHaveLength(42);
+    expect(activities.definitions).toHaveLength(43);
     expect(activities.definitions.filter(d=>d.kind==='facility')).toHaveLength(29);
     expect(activities.definitions.filter(d=>d.kind==='crew')).toHaveLength(5);
     expect(vehicles.filter(v=>v.spec.driveable)).toHaveLength(3);
   });
   it('arrives clear of all live obstacles with the intended contextual prompt at every station stop',()=>{
     for(const d of activities.definitions){
-      const point=safeApproach(d,obstacles,['arcade','noodles'].includes(d.kind)?Math.PI:0);
+      const point=safeApproach(d,obstacles,['cube','noodles'].includes(d.kind)?Math.PI:0);
       expect(point,`${d.id} / ${d.name}: no arrival`).not.toBeNull();
       expect(nearestInteraction(point!.x,point!.z,items)?.id,`${d.id} / ${d.name}: wrong prompt`).toBe(d.id);
     }
@@ -83,17 +83,6 @@ describe('activity completion and retry safety',()=>{
     expect(props.unavailable('cargo',true,{x:0,y:.512,z:10})).toBe('');
     props.activate('cargo',false,'load',true);
     expect(props.unavailable('cargo',true,{x:-67.84,y:.512,z:39.68})).toContain('clear');
-  });
-  it('evaluates all three stopped signals and can retry after a miss or win',()=>{
-    labels();const s=new StationActivities(),props=new SpaceportProps(new T.Group(),s.definitions);
-    props.activate('arcade',false,'stop',true);
-    for(let signal=0;signal<3;signal++){
-      expect(props.signal).toBe(signal);
-      expect(s.command('arcade','stop',props.signal)?.message).toContain(signal===1?'Synchronized':'Almost');
-      props.activate('arcade',false,'stop',true);props.update(1,true);expect(props.signal).toBe(signal);
-      props.activate('arcade',false,'step',true);
-    }
-    expect(props.signal).toBe(0);props.activate('arcade',false,'restart',false);props.update(.6,false);expect(props.signal).toBe(1);
   });
   it('keeps an occupied cargo pad clear when reduced motion is enabled mid-flight',()=>{
     labels();const props=new SpaceportProps(new T.Group(),new StationActivities().definitions),crate=props.root.getObjectByName('supply-crate')!;

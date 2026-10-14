@@ -1,5 +1,5 @@
 import {contact,friction,cabinetNote,finishSignal,type Contact} from './foley';
-export const SOUND_CUES=['brick','footstep','runstep','jump','land','enter','exit','select','open','close','travel','ready','switch','drone','cargo','noodles','radio','crew','signal-step','signal-win','signal-miss','launch','gate','return','ride','impact','brake','train-bell'] as const;
+export const SOUND_CUES=['brick','footstep','runstep','jump','land','enter','exit','select','open','close','travel','ready','switch','drone','cargo','noodles','radio','crew','signal-step','signal-win','signal-miss','launch','gate','return','ride','impact','brake','train-bell','blaster','detonate'] as const;
 export type SoundCue=typeof SOUND_CUES[number];
 interface Recipe {duration:number;contacts?:Contact[];scrapes?:[number,number,number,number,number?][];notes?:[number,number,number,number][]}
 const hit=(at:number,body:number,gain:number,decay=.022,hard=.6):Contact=>({at,body,gain,decay,hard});
@@ -32,6 +32,8 @@ const recipes:Record<SoundCue,Recipe>={
   impact:{duration:.26,contacts:[hit(0,80,.86,.038,.45),hit(.019,410,.48,.015),hit(.045,1220,.25,.008)],scrapes:[[.009,.1,.2,2100]]},
   brake:{duration:.32,contacts:[hit(0,310,.16,.009,.25)],scrapes:[[.002,.29,.4,2800,-.45]]},
   'train-bell':{duration:.65,contacts:[hit(0,980,.36,.075,.08),hit(.21,980,.3,.062,.08)]},
+  blaster:{duration:.18,contacts:[hit(0,1450,.3,.008),hit(.016,520,.2,.025)],scrapes:[[0,.16,.22,2800,-.88]],notes:[[.008,.12,330,.06]]},
+  detonate:{duration:.42,contacts:[hit(0,70,.72,.075,.35),hit(.022,180,.4,.048),hit(.08,480,.24,.025)],scrapes:[[.015,.37,.32,750,-.8]]},
 };
 export function renderSound(cue:SoundCue,sampleRate=24000,variant=0) {
   const r=recipes[cue],pcm=new Float32Array(Math.ceil(r.duration*sampleRate)),seed=7919*(variant+1)+cue.length*71;

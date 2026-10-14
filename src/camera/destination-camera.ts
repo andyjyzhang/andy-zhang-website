@@ -8,25 +8,38 @@ export class DestinationCamera {
   private boxes:T.Box3[];
   private desired=new T.Vector3();private target=new T.Vector3();private look=new T.Vector3();
   private direction=new T.Vector3();private ray=new T.Ray();private hit=new T.Vector3();
+  private readonly aimView:boolean;
   get firstPerson(){return this.distance<=1;}
-  constructor(readonly camera:T.PerspectiveCamera,options:{distance:number;yaw?:number;pitch?:number},obstacles:Obstacle[]=[]) {
+  constructor(readonly camera:T.PerspectiveCamera,options:{distance:number;yaw?:number;pitch?:number;aimView?:boolean},obstacles:Obstacle[]=[]) {
     this.distance=options.distance;this.yaw=options.yaw??0;this.pitch=options.pitch??.42;
+    this.aimView=options.aimView??false;
     this.boxes=obstacles.map(o=>new T.Box3(new T.Vector3(o.x-o.w/2-.35,o.bottom??0,o.z-o.d/2-.35),new T.Vector3(o.x+o.w/2+.35,o.height+.3,o.z+o.d/2+.35)));
   }
-  togglePOV(){this.distance=this.firstPerson?19:0;this.pitch=this.firstPerson?0:Math.max(.3,this.pitch);}
+  togglePOV(){this.distance=this.firstPerson?19:0;if(!this.aimView)this.pitch=this.firstPerson?0:Math.max(.3,this.pitch);}
   update(dt:number,input:Input,anchor:T.Vector3,reduced:boolean,enabled:boolean) {
     const wasFirstPerson=this.firstPerson,mouse=input.consumeCamera();
+    const minPitch=this.aimView?-1.35:-.7,maxPitch=this.aimView?1.35:1.1;
     if(enabled) {
-      this.yaw-=mouse.x;this.pitch=T.MathUtils.clamp(this.pitch+mouse.y,-.7,1.1);
+      this.yaw-=mouse.x;this.pitch=T.MathUtils.clamp(this.pitch+mouse.y,minPitch,maxPitch);
       this.distance=T.MathUtils.clamp(this.distance+mouse.zoom,0,46);
-      if(this.firstPerson&&!wasFirstPerson)this.pitch=0;
+      if(this.firstPerson&&!wasFirstPerson&&!this.aimView)this.pitch=0;
       // Restore an elevated follow view when leaving eye level, even if the
       // player was looking up. Otherwise the figure sits below the viewport.
-      if(wasFirstPerson&&!this.firstPerson)this.pitch=Math.max(.3,this.pitch);
+      if(wasFirstPerson&&!this.firstPerson&&!this.aimView)this.pitch=Math.max(.3,this.pitch);
       if(input.down('ArrowLeft'))this.yaw+=dt*1.5;
       if(input.down('ArrowRight'))this.yaw-=dt*1.5;
-      if(input.down('ArrowUp'))this.pitch=Math.max(-.7,this.pitch-dt);
-      if(input.down('ArrowDown'))this.pitch=Math.min(1.1,this.pitch+dt);
+      if(input.down('ArrowUp'))this.pitch=Math.max(minPitch,this.pitch-dt);
+      if(input.down('ArrowDown'))this.pitch=Math.min(maxPitch,this.pitch+dt);
+    }
+    if(this.aimView){
+      this.direction.set(-Math.sin(this.yaw)*Math.cos(this.pitch),-Math.sin(this.pitch),-Math.cos(this.yaw)*Math.cos(this.pitch));
+      this.target.copy(anchor);if(!this.firstPerson)this.target.y+=2.4;
+      this.hit.copy(this.direction).negate();let distance=this.firstPerson?0:Math.max(2.8,this.distance);
+      this.ray.set(this.target,this.hit);
+      for(const box of this.boxes)if(!box.containsPoint(this.target)&&this.ray.intersectBox(box,this.desired))distance=Math.min(distance,Math.max(.8,this.target.distanceTo(this.desired)-.55));
+      this.desired.copy(this.target).addScaledVector(this.direction,-distance);
+      this.camera.position.lerp(this.desired,reduced?1:1-Math.exp(-12*dt));
+      this.look.copy(this.camera.position).addScaledVector(this.direction,100);this.camera.lookAt(this.look);return;
     }
     if(this.firstPerson) {
       this.desired.copy(anchor);

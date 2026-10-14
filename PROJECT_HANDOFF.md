@@ -1,6 +1,6 @@
 # Andy's World — complete project handoff
 
-Snapshot date: **2026-10-12**. This document is intended for Andy or a new coding
+Snapshot date: **2026-10-14**. This document is intended for Andy or a new coding
 agent continuing the project on another device without the previous conversation.
 It records the current implementation, the product decisions behind it, practical
 setup instructions, validation history, and work that remains unverified.
@@ -8,6 +8,53 @@ setup instructions, validation history, and work that remains unverified.
 Read this file together with the repository. Source code takes precedence over
 older measurements and historical completion reports. Update this handoff when a
 future change makes its descriptions stale.
+
+Current portfolio-page update (2026-10-14): in-world pages and the directory use
+an ink-blue/amber Manrope/IBM Plex Mono theme. About no longer has a Contact tab
+or metadata table. Experience includes only Statistics Canada and Nokia, with
+results integrated into prose. Both views share four project summaries and
+GitHub links; in-world projects have expanded descriptions. Education includes
+CS245/CS246 and a clean scholarship row. Contact has email/social links only.
+All public résumé links/downloads are removed; the unchanged source PDF is now
+archived at `assets/content/AndyZhangResume.pdf`. See
+`docs/PORTFOLIO_PAGE_VALIDATION.md` for this revision's verification.
+
+Latest game/navigation update (2026-10-14): Contact is merged into About's bottom
+link footer; there are six canonical chapters and `#contact` aliases About.
+Salvage Run replaces the flight sandbox with three scored cargo missions,
+hazards/shields, boost, radar, timer and replay. Redshift Draw replaces Pot Odds
+with five-card draw, combination scoring and crew-contract bonuses.
+The observatory destination and gate-journey modules are removed; the physical
+station gate remains a navigation-beacon interaction. `?dev=ui#flight` opens
+Salvage Run directly. See `docs/FLIGHT_DRAW_VALIDATION.md` for this revision.
+
+Latest flight-combat update (2026-10-14): Salvage Run now has three-axis flight,
+patrol drones guarding cargo, useful blaster fire, destructible debris, enemy
+bolts, heat/cooling and a detailed foil-wing ship, hangar and wreckage field.
+WASD flies, E rises, Q descends, Space fires, Shift boosts and R restarts; touch
+hold controls are available. Cargo heights vary, the dock sits at 8m, missions
+last 120 seconds, and delivery restores shields. Signal Match is fully removed
+(activity, cabinet, lamps, menus, gallery and dialog code). Cube Recall and
+Redshift Draw remain. Current validation: `docs/SALVAGE_COMBAT_VALIDATION.md`.
+
+Previous control/layout update (2026-10-14): Player auto-aim is removed. ShipAim
+owns manual yaw/pitch, separate from the camera. Left drag/IJKL aims the ship;
+right drag/arrows looks, and C centres the view without changing aim. WASD is
+ship-relative, including nose pitch. Touch uses an explicit look-around toggle.
+The reticle projects the actual shot direction, and Return restores town input.
+The desktop minimap moved upward to clear the enlarged portfolio button. See
+`docs/MANUAL_FLIGHT_AIM_VALIDATION.md` for current control verification.
+
+Latest crosshair/publish check (2026-10-14): The crosshair is fixed at screen
+centre and mouse/touch drag or arrows aims through it. Ship/projectiles point
+toward the central camera ray, with exact on-ray intersections correcting
+third-person parallax and no off-axis target snapping. Independent IJKL aim,
+C centering and the touch look toggle are removed. The flight camera trails
+above the ship and preserves view direction when zooming into the cockpit.
+150 tests, type checking, lint, build, served assets and production browser smoke
+checks pass. The working tree remains uncommitted; new source files must be
+included in a Git deployment. No deployment or live-account verification occurred.
+See `docs/CENTRED_AIM_PUBLISH_CHECK.md`.
 
 ### Navigation
 
@@ -39,8 +86,8 @@ The project is a working **interactive 3D LEGO-style personal portfolio** for
 **Andy's Orbital Station**. The visitor controls a minifigure, explores the
 station, reads portfolio content at five landmarks, drives rovers, interacts with
 equipment and crew, rides an elevated express, and discovers two independent
-destinations. Recruiters can immediately open professional chapters, the résumé,
-or contact information without playing.
+destinations. Recruiters can immediately open professional chapters or contact
+information without playing.
 
 This is already implemented. Continue improving the actual website; do not
 restart it as a mockup, a conventional portfolio, or a new framework migration.
@@ -224,10 +271,10 @@ upgrade all packages while moving devices.
 | `/?intro=1&debug=1` | Observe construction and audio diagnostics together |
 | `/?fallback=1` | Force the simpler WebGL-fallback presentation |
 | `/#about`, `/#experience`, `/#projects` | Direct professional chapters |
-| `/#education`, `/#hobbies`, `/#poker`, `/#contact` | Remaining chapters |
+| `/#education`, `/#hobbies`, `/#poker` | Remaining chapters |
+| `/#contact` | Compatibility alias for merged About |
 | `/portfolio.html` | Concise portfolio index without JavaScript or WebGL |
 | `/portfolio.html#other` | High Stakes short-film entry |
-| `/AndyZhangResume.pdf` | Preserved résumé |
 | `/model-credits.html` | Model authors and licenses |
 | `/build-notes.html` | Physical scale, export and construction limitations |
 
@@ -353,7 +400,7 @@ for local setup. Retain the integration when redesigning the UI.
 | `src/interactions/detection.ts` | Shared nearest eligible contextual interaction |
 | `src/interactions/activities.ts` | Activity definitions, valid commands and session state |
 | `src/ui/interface.ts` | HUD, directory, professional dialogs, touch controls and UI actions |
-| `src/ui/activity-ui.ts` and `.css` | Distinct nonmodal equipment feedback and compact signal game |
+| `src/ui/activity-ui.ts` and `.css` | Distinct nonmodal equipment feedback and three compact games |
 | `src/ui/content-markup.ts` | Shared escaped content markup for live and static portfolio |
 | `src/ui/dialog-focus.ts` | Explicit dialog focus wrapping |
 | `src/style.css` | World interface, portfolio, intro, responsive and accessibility styles |
@@ -361,9 +408,13 @@ for local setup. Retain the integration when redesigning the UI.
 | `src/scenes/build-timeline.ts` | Construction scheduling and continuous camera path |
 | `src/scenes/piece-assembly.ts` | Efficient instance-course assembly and exact restoration |
 | `src/scenes/spaceship.ts` | Ship/hangar and cinematic launch |
-| `src/scenes/space-prototype.ts` | Independent Curiosity outpost flight prototype |
-| `src/scenes/gate-journey.ts` | Gateway charge/transition/cancel/disposal |
-| `src/scenes/orbital-observatory.ts` | Independent far-side observation deck |
+| `src/scenes/space-game.ts` | Independent Salvage Run scene, HUD, radar and controls |
+| `src/interactions/flight-game.ts` | Pure XYZ missions, guards, bolts, debris, heat, shields, boost and score |
+| `src/interactions/flight-aim.ts` | Ship orientation toward the centre aim point and movement |
+| `src/scenes/salvage-models.ts` | Courier, patrol and cargo brick models |
+| `src/scenes/salvage-environment.ts` | Hangar, capital hull, floating wreckage, moon and camera clearances |
+| `src/ui/flight-hud.ts` | Flight briefings, objectives, altitude/heat, radar and hold controls |
+| `src/interactions/poker-draw.ts` | Deck, poker-hand evaluation, redraws and crew contracts |
 | `src/scenes/performance-monitor.ts` | Debug rendering/player/audio measurements |
 | `src/audio/game-audio.ts` | Web Audio graph, preferences, unlock, caching and cleanup |
 | `src/audio/world-audio.ts` | Simulation-to-sound routing and distance/cadence rules |
@@ -400,7 +451,7 @@ generated file is tracked and should agree with the structured content.
 - Email: `andy.jy.zhang@gmail.com`.
 - GitHub: `https://github.com/andyjyzhang`.
 - LinkedIn: `https://www.linkedin.com/in/andyzhang12/`.
-- Résumé: `public/AndyZhangResume.pdf`, served as `/AndyZhangResume.pdf`.
+- Original source résumé: `assets/content/AndyZhangResume.pdf`, not deployed.
 
 ### Current experience
 
@@ -408,21 +459,18 @@ generated file is tracked and should agree with the structured content.
 | --- | --- | --- |
 | Statistics Canada | Software Engineering Intern; May–Aug 2026 | Python, Shiny, DuckDB, Azure, Kubernetes; survey/census apps used by over 100 employees; Azure Blob Storage standardized across five applications; GitLab CI/Helm releases; 6.9× faster XML-to-Parquet conversion, roughly 20 hours saved per large run |
 | Nokia | Software Engineering Intern; Jul–Aug 2024 | Python, Locust, Kubernetes, Grafana, Prometheus; Network Services Platform load testing, metrics and reports; 75% reduction in analysis runtime |
-| Ontario Government | Affiliation only; exact role/dates unavailable | The experience chapter explicitly says details will be added when available; do not create an invented résumé entry |
 
 These facts describe current approved repository content. If the user supplies an
 updated résumé, reconcile the text and PDF rather than assuming dates or metrics.
 
-### Six current projects
+### Four current projects
 
 | Project | Current description / stack | Preserved links |
 | --- | --- | --- |
-| Reminiscence | Phone video to an explorable VR memory; COLMAP, Gaussian splatting, Unity OpenXR; PyTorch / Unity / FastAPI / Modal | `https://reminiscence-two.vercel.app/`, `https://github.com/andyjyzhang/reminiscence` |
-| AlphaHex | Self-play Catan engine with MCTS, board heuristics and resource strategy; current content records top-500 online rank; PyTorch / MCTS / React | `https://alphahex.vercel.app/` |
+| Reminiscence | Phone video to an explorable VR memory; COLMAP, Gaussian splatting, Unity OpenXR; PyTorch / Unity / FastAPI / Modal | `https://github.com/andyjyzhang/reminiscence` |
+| AlphaHex | Self-play Catan engine with MCTS, board heuristics and resource strategy; current content records top-500 online rank; PyTorch / MCTS / React | `https://github.com/rli8145/alphahex` |
 | Provenance | Solana photo-authenticity records and vector search; Rust / Solana / MongoDB | `https://github.com/ItzNotKevin/provenance`; no unsupported award |
-| Memo Lab | Blindfold-cubing memo practice and legal-solution validation; TypeScript / cube state | `https://blind-memo-lab.andy-jy-zhang.chatgpt.site`, `https://github.com/andyjyzhang/3bld-helper` |
 | Range Visualizer | Preflop hand-combination frequencies with offline access; React / PWA | `https://github.com/andyjyzhang/range-visualizer` |
-| Lawly | Legal-document OCR, evidence retrieval and explanations; Flask / Tesseract / Pinecone / RAG | `https://github.com/andyjyzhang/lawly` |
 
 The résumé has its own project selection and is maintained separately. Do not
 replace valid links with fabricated demos. A preserved URL is not a claim that
@@ -432,7 +480,7 @@ its external service was recently tested for uptime.
 
 - Waterloo Computer Science, **2023–2028**, bachelor's degree candidate.
 - **National Math Scholarship**, **$15,000**, awarded to **15 students**.
-- Listed coursework: **CS145, CS146, CS136L**.
+- Listed coursework: **CS145, CS146, CS136L, CS245, CS246**.
 - Hobbies: cubing, board games/Catan, video games.
 - Poker: a hobby Andy is actively learning, with strategy study, hand review and
   better habits. The lounge is **not a poker AI project**. Do not invent poker
@@ -467,7 +515,7 @@ The 29 facade consoles exclude the dedicated noodle shop interaction.
 
 | Config ID | Current name | Content | Center x,z | Entry x,z |
 | --- | --- | --- | --- | --- |
-| `house` | Andy's flight studio | About, Contact, résumé | -38.4, -28.16 | -38.4, -17.92 |
+| `house` | Andy's flight studio | About; Contact via direct shortcuts | -38.4, -28.16 | -38.4, -17.92 |
 | `garage` | Zero-G workshop | Experience, Projects | 16, -30.72 | 16, -19.2 |
 | `poker` | The redshift lounge | Poker journey | 65.28, 1.28 | 65.28, -7.68 |
 | `hobby` | Off-duty / game hub | Cubing, board games, video games | -31.36, 35.84 | -31.36, 23.68 |
@@ -527,8 +575,8 @@ firstPersonSensitivity: 0.0015
 orbitSensitivity: 0.004
 ```
 
-The outpost and observation deck currently have their own simpler movement
-speeds. Do not assume changing main player tuning changes all scenes.
+Salvage Run has its own movement tuning: 18 units/second normally, 30 while
+boosting. Main player tuning does not change flight controls.
 
 ### Player and collision
 
@@ -578,15 +626,15 @@ The interaction convention is consistent:
 
 - Portfolio landmark: **E Explore**.
 - Equipment, crew or facade: **E Interact**.
-- Signal cabinet: **E Play**.
+- Signal cabinet, cube shelf or poker table: **E Play**.
 - Spaceship: **E Launch**, never E Explore.
 - Driveable vehicle: **F Drive**, then F exits.
 
 `nearestInteraction` selects the nearest target inside its radius. Prompts appear
 only when relevant. Dynamic crew and vehicle positions update their targets.
-The main activity system contains **42 activities**: eight primary activities,
+The main activity system contains **43 activities**: nine authored activities,
 29 facade consoles and five crew members. Portfolio landmarks and vehicles are
-separate interaction entries, not part of that 42 count.
+separate interaction entries, not part of that 43 count.
 
 ### Primary activities
 
@@ -598,8 +646,9 @@ separate interaction entries, not part of that 42 count.
 | `noodles` | Order a bowl at the shop hatch | Small receipt and visible bowl |
 | `radio` | Cycle three channels and tune the receiver dish | Receiver/channel readout |
 | `transit` | Board an elevated express view | Direct ride, Return/Escape available |
-| `gate` | Charge the orbital ring and cross to the far side | Cinematic, then independent observation deck |
-| `arcade` | Stop a three-lamp signal on amber | Compact dedicated game dialog |
+| `gate` | Toggle orbital navigation beacon | Nonmodal beacon status |
+| `cube` | Memorize and reproduce a named-color sequence | Compact dedicated game dialog |
+| `poker-game` | Build and bank poker hands across three deliveries | Redshift Draw card dialog |
 
 Simple feedback uses an `aside`, does not steal focus, does not stop movement,
 can be dismissed and normally expires after 14 seconds. Equipment animation
@@ -612,16 +661,27 @@ Facade consoles toggle arrival beacons. They are lightweight interactions, not
 29 additional portfolio sections. The directory exposes all station stops and
 all three driveable vehicles, including the energy core.
 
-### Signal match
+### Cube recall and Redshift Draw
 
-- Lamps: **Cyan, Amber, Orange**. Amber is the target; signal index is 1.
-- Space or Stop button locks the signal.
-- Right arrow or Next signal advances it manually.
-- R or Restart starts another sweep.
-- Escape/close returns to the world and restores focus.
-- Both success and miss can be followed by another attempt.
-- Reduced motion must still allow reaching amber with manual stepping. Do not
-  make winning depend on automatic animation or color perception alone.
+- Cube Recall is attached to the hobby-hub cube display. The sequence is shown
+  until the player explicitly hides it, so reduced motion does not change the
+  rules. Buttons and keys 1–4 are labeled with color names; retry, next round
+  and full restart are available.
+- Redshift Draw is attached to the lounge table. Select cards to replace using
+  1–5 or the card buttons, D draws (twice per hand), B banks, N advances and R
+  replays. Three hands must bank 150 chips; poker combinations and crew contracts
+  determine the score. Cards are shuffled with a seed and do not repeat in a run.
+- Both games are UI state machines with no render-loop work while closed and no
+  new 3D meshes, lights, shadows or collision bodies.
+
+### Developer UI gallery
+
+`/?dev=ui` enables an opt-in gallery that stays available while a modal is open.
+It links to every professional chapter, the directory, both compact games
+and the flight/transit entry points. `#game-cube`,
+`#game-poker-game` and `#flight` are supported development deep links. Normal visitors do not
+receive the gallery. Portfolio panels use compact headings, short factual
+entries and simple dividers; the older faux binding/chapter decoration is gone.
 
 ### Vehicles
 
@@ -654,7 +714,8 @@ several districts, with supports clear of streets, doorways and the hangar.
 Boarding starts a roughly **10-second** view and returns automatically; Return
 or Escape ends it immediately. This is a scenic ride, not a full train simulator.
 
-Five crew members have distinct appearances and purposeful routines:
+Five crew members have distinct faces, headwear/accessories, uniforms and
+purposeful routines. Together with Andy, all six face assignments are unique:
 
 - **Mira**: dispatch at the concourse.
 - **Jax**: courier carries parcels between freight and a scanning stop, yielding
@@ -674,22 +735,30 @@ ship out and launches it. Reduced motion uses a short transition. The destinatio
 module starts loading at launch; cancellation guards prevent a late import from
 replacing the station after the user has returned.
 
-`SpacePrototype` is an independent small scene with a ship, landing/outpost
-scenery and a simple bounded drift area. It supports WASD, Shift, camera-relative
-movement, scenery collision, wheel zoom, POV and Return/Escape. Scroll-out changes
-the camera while remaining in that destination. It is a **prototype**, not a
-completed combat, mission or Star Wars game. There are no commercial game assets,
-missions, enemies or progression to claim as finished.
+`SpaceGame` renders Salvage Run in an independent scene. Pure XYZ mission/combat
+state lives in `flight-game.ts`; `salvage-environment.ts` and `salvage-models.ts`
+own scenery/models, and `flight-hud.ts` owns HUD and hold controls.
+Three 120-second missions require disabling patrols, recovering elevated cargo
+and returning to the green dock at 8m. Blasters fire straight along the aimed nose,
+heat and cooldown; enemy bolts/debris cost shields. Swept bolt collision and
+fixed substeps avoid tunneling. Delivery restores all shields and scores
+remaining time/shields. WASD follows the ship, E/Q rise/descend, Space fires,
+Shift boosts. Mouse/touch drag or arrows aims through the fixed centre crosshair.
+Shots and the ship point toward its world aim point, compensating for camera
+offset. Independent aim/look modes are removed. No player auto-aim remains.
+Keyboard/touch controls, radar, altitude guidance, three-sector win/failure,
+replay, briefing-only timer start and Return/Escape cleanup are implemented.
+Original foil-wing courier, solar-panel drones, hangar, hull wreckage, moon and
+stars use shared/instanced geometry without new dependencies. Reduced motion
+and low graphics suppress decorative roll/spin and bursts, not combat.
 
-### Orbital gate / far-side observatory
+### Orbital gate beacon
 
-The large brick ring is usable. E triggers charge/camera travel, then lazily loads
-`OrbitalObservatory`. The deck has a minifigure, small equipment, a stepped brick
-moon display, bounded movement, first/third person and clean return. It initially
-uses POV. Returning restores gate lights/state, removes destination UI/resources,
-and places Andy by the gate rather than the spaceship.
+The observatory destination was removed at Andy's request. The large brick ring
+remains in the authored station; E toggles its navigation-beacon console and
+reports status without pausing movement or changing scenes.
 
-Professional quick access from either destination returns to the station and
+Professional quick access from the flight game returns to the station and
 opens the requested chapter. Repeated launches, cancels, returns and route opens
 must not leave hidden players, stuck input, stale overlays or leaking scenes.
 
@@ -802,10 +871,10 @@ Sound is original procedural Web Audio foley. No commercial game audio files,
 music or speech were downloaded or bundled. Effects target dry plastic contacts,
 brick rattles, machinery, tires and recognizable game feedback.
 
-The system has **28 one-shot cue recipes** and **nine cached loop textures**:
+The system has **30 one-shot cue recipes** and **nine cached loop textures**:
 `build`, `motor`, `rail`, `air`, `core`, `drone`, `cargo`, `launch`, `tires`.
 One-shots cover construction, steps, jumps/landings, entry/exit, UI, travel,
-equipment, crew, arcade outcomes, journeys, impacts, brake and train bell.
+equipment, crew, game outcomes, blasters, combat, journeys, impacts, brake and train bell.
 
 `GameAudio` owns gesture unlock, the master/limiter graph, cached buffers, bounded
 voices, loop graphs and preferences. `WorldAudio` receives actual simulation
@@ -855,14 +924,16 @@ and a broad device audio review remain unverified.
 ## 13. Professional UX, mobile and accessibility
 
 The header retains the Contact shortcut while the enlarged bottom-right link
-opens the direct portfolio. The directory immediately exposes seven chapters
-plus résumé, then station travel shortcuts, More station stops and Controls &
+opens the direct portfolio. The directory immediately exposes six chapters,
+then station travel shortcuts, More station stops and Controls &
 settings. Professional content never requires finding a building, driving, a
 successful game or a collectible. The bottom-left controls include the saved
 Low graphics toggle directly; first person remains available by scrolling in.
 
-Portfolio panels use a readable instruction/field-guide treatment, retain a
-view of the world, have explicit close/back controls and pause player movement.
+Portfolio panels use a dark ink-blue background, amber accents, Manrope body
+type and IBM Plex Mono metadata. They retain a view of the world, have fixed
+heading/footer controls and pause player movement. Short pages size to content;
+long pages scroll. Only the workshop has Experience/Projects tabs.
 Use shared content markup, escaped text and safe external-link attributes.
 The “Just here for the portfolio?” route opens a deliberately minimal lowercase
 white page with black text and one narrow responsive stack: experience, projects,
@@ -882,7 +953,7 @@ Current accessibility support:
 - Native keyboard routing for buttons, links, settings and volume slider.
 - Status announcements for meaningful results without announcing every rapidly
   changing lamp animation.
-- Named colors and manual stepping in the signal game.
+- Named-color Cube Recall controls and readable card/game outcomes.
 - OS reduced-motion detection and in-app motion control.
 - Scrollable responsive dialogs/feedback, with close controls reachable on short
   screens; no forced full desktop layout on phones.
@@ -894,7 +965,7 @@ Current accessibility support:
   reduced motion and leaves the static reading route available for very weak GPUs.
 
 `src/main.ts` catches unavailable world initialization and provides direct
-reading/résumé/contact links. `index.html` has loading feedback and a noscript
+reading/contact links. `index.html` has loading feedback and a noscript
 route; the fallback must remain scrollable.
 
 Earlier Chrome checks covered 390×844, 320×568 and 740×390 layouts. They repaired
@@ -938,9 +1009,10 @@ cues and last cue. This is observation tooling, not a required public debug API.
 
 Historical overview measurement after plume work: about **700 draws** and
 **4,805,141 triangles**. This is not a new profile of the final head/audio revision.
-The 2026-10-12 production build records the main chunk around **742.71 kB /
-258.09 kB gzip**, and Three around **494.94 kB / 124.07 kB gzip**. Separate lazy
-destination chunks remain. Vite's **500 kB main-chunk advisory** is still present.
+The 2026-10-14 centred-aim build records the main chunk around **747.65 kB /
+259.51 kB gzip**, and Three around **498.52 kB / 125.29 kB gzip**. The lazy
+Salvage Run chunk is approximately **29.9 kB / 10.9 kB gzip**. Vite's existing
+**500 kB main-chunk advisory** is still present.
 
 Performance is not certified across ordinary laptops or phones. Browser audits
 were sometimes background-throttled, so their FPS/timings are not hardware
@@ -950,7 +1022,7 @@ to the warning by destroying the visual quality or hiding it with a larger limit
 
 ## 15. Test inventory, records and what has actually been checked
 
-The current repository contains **125 tests across 19 files**, as documented in
+The current repository contains **150 tests across 19 files**, as documented in
 README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 
 | Test file | Main coverage |
@@ -962,13 +1034,13 @@ README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 | `boosters.test.ts` | Plume geometry, animation, reduced motion and export |
 | `city-layout.test.ts` | Authored lot/street/route layout constraints |
 | `collision.test.ts` | Solid scenery, support, clear approaches/exits |
-| `feature-inventory.test.ts` | All 42 activities, real obstacles, vehicle exits and repeated commands |
+| `feature-inventory.test.ts` | All 43 activities, real obstacles, vehicle exits and repeated commands |
 | `graphics.test.ts` | Low/standard persistence, storage failure and render-density caps |
 | `input.test.ts` | Keyboard, pointer/capture, wheel and native UI routing |
 | `interactions.test.ts` | Proximity/prompt selection and consistent actions |
 | `intro.test.ts` | One-brick start, partial build, camera, restoration, skip/replay |
 | `minifigure.test.ts` | All six figures, physical proportions, prints, mounts and shared geometry |
-| `minigames.test.ts` | Independent destination movement/collision/camera and signal behavior |
+| `minigames.test.ts` | XYZ flight, combat/heat/objectives/pause, camera/holds/disposal, cube recall and poker |
 | `parts.test.ts` | Catalog-scale assemblies and placement |
 | `player.test.ts` | Movement, acceleration, jump/landing and pause |
 | `spaceport-access.test.ts` | Relevant station access/clearance constraints |
@@ -983,6 +1055,12 @@ README. These are Vitest tests, not a browser end-to-end runner. Relevant files:
 | `docs/FEATURE_AUDIT.md` | 2026-10-04 full exposed feature inventory and production-browser accessibility/interaction audit; 97 tests at that stage |
 | `docs/BUILD_AUDIO_VALIDATION.md` | 2026-10-04 intro/audio integration and production-browser checks; 110 tests at that stage |
 | `docs/FIGURE_FOLEY_VALIDATION.md` | Molded head/rig/foley rework; 121 tests then, followed by rover/train sound work with 123 tests |
+| `docs/UI_GAME_CAST_VALIDATION.md` | 2026-10-13 compact portfolio UI, developer gallery, cube/poker games and distinct six-character cast; 131 tests |
+| `docs/PORTFOLIO_PAGE_VALIDATION.md` | 2026-10-14 panel theme/layout, content edits, shared project summaries and removal of public résumé assets |
+| `docs/FLIGHT_DRAW_VALIDATION.md` | 2026-10-14 About/Contact merge, Salvage Run, Redshift Draw and observatory removal; 141 tests and actual three-mission browser victory |
+| `docs/SALVAGE_COMBAT_VALIDATION.md` | 2026-10-14 XYZ flight, combat/heat, detailed scene, Signal Match removal; 144 tests and 3,995-point browser victory |
+| `docs/MANUAL_FLIGHT_AIM_VALIDATION.md` | Independent manual aiming/camera look, input restoration and minimap clearance; 149 tests |
+| `docs/CENTRED_AIM_PUBLISH_CHECK.md` | Superseding screen-centre aim, production browser/HTTP and Vercel readiness checks; 150 tests |
 | `.agents/plans/repository-cleanup.md` | Latest tracked cleanup; model bake/typecheck/lint/production build/build-artifact checks and all 17 targeted UI/accessibility tests passed |
 | `.agents/plans/low-graphics-and-reading-portfolio.md` | 2026-10-12 low-graphics mode and minimalist static portfolio; 125 tests and live desktop/mobile checks |
 
@@ -995,8 +1073,8 @@ assertions pass unchanged on this machine.
 
 Older documents still mention six HTML pages, earlier cue/loop/test counts and
 smaller bundles. They are dated records of those revisions. Current artifact
-inventory is **four HTML documents, nine checked local links, seven chapters**
-and the preserved PDF. Static build checking without a preview URL has no HTTP
+inventory is **four HTML documents, nine checked local links, six chapters**
+and no public PDF. Static build checking without a preview URL has no HTTP
 coverage (`served: []`). A served-asset match is not a gameplay test or a test of
 Vercel redirects.
 

@@ -1,9 +1,9 @@
 import type {ActivityDefinition,ActivityResult} from '../interactions/activities';
+import {CUBE_COLORS,CubeRecall,type CubeColor} from '../interactions/minigames';
+import {PokerDraw,HAND_SCORES,SUIT_SYMBOLS,cardRank,cardName} from '../interactions/poker-draw';
 import {escape} from './content-markup';
 import {keepDialogFocus} from './dialog-focus';
 
-// World feedback never steals focus or pauses movement. Only the signal game
-// needs a dialog, with its own cabinet controls instead of a station template.
 export function feedbackMarkup(result:ActivityResult) {
   const {definition:d,on,count,message}=result;
   const heading=`<div class="feedback-heading"><strong>${escape(d.name)}</strong><button aria-label="Dismiss interaction feedback" data-dismiss-feedback>×</button></div>`;
@@ -21,27 +21,38 @@ export function feedbackMarkup(result:ActivityResult) {
 }
 
 export class ActivityUI {
-  readonly arcade=document.createElement('dialog');
+  readonly game=document.createElement('dialog');
   readonly feedback=document.createElement('aside');
   active:string|null=null;
-  private timer=0;private lastPhase='';private lastSignal=-1;
+  onCue:((cue:'select'|'signal-win'|'signal-miss')=>void)|null=null;
+  onRender:(()=>void)|null=null;
+  private timer=0;private lastPhase='';
   private previousFocus:HTMLElement|null=null;
-  constructor(parent:HTMLElement,private command:(id:string,command:string)=>void,private onClose:()=>void) {
-    this.arcade.className='arcade-console';this.arcade.setAttribute('aria-labelledby','arcade-title');
-    keepDialogFocus(this.arcade);
+  private cube=new CubeRecall();private poker=new PokerDraw();
+  constructor(parent:HTMLElement,private onClose:()=>void) {
+    this.game.className='game-console';this.game.setAttribute('aria-labelledby','game-title');
+    keepDialogFocus(this.game);
     this.feedback.className='activity-feedback';this.feedback.hidden=true;
-    parent.append(this.feedback,this.arcade);
+    parent.append(this.feedback,this.game);
     this.feedback.addEventListener('click',e=>{if((e.target as HTMLElement).closest('[data-dismiss-feedback]')){const focused=this.feedback.contains(document.activeElement);this.hideFeedback();if(focused)document.querySelector<HTMLCanvasElement>('canvas[role="application"]')?.focus();}});
-    this.arcade.addEventListener('click',e=>{
+    this.game.addEventListener('click',e=>{
       const button=(e.target as HTMLElement).closest<HTMLButtonElement>('button');
-      if(button?.dataset.command)this.command(this.arcade.dataset.activity!,button.dataset.command);
-      if(button?.hasAttribute('data-close-arcade'))this.closeArcade();
-      if(e.target===this.arcade){const r=this.arcade.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)this.closeArcade();}
+      if(button?.dataset.gameAction)this.gameAction(button.dataset.gameAction,button.dataset.color??button.dataset.pokerIndex);
+      if(button?.hasAttribute('data-close-game'))this.closeGame();
+      if(e.target===this.game){const r=this.game.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)this.closeGame();}
     });
-    this.arcade.addEventListener('cancel',e=>{e.preventDefault();this.closeArcade();});
-    this.arcade.addEventListener('keydown',e=>{
-      const command=e.code==='Space'?'stop':e.code==='KeyR'?'restart':e.code==='ArrowRight'?'step':null;
-      if(command){e.preventDefault();e.stopPropagation();if(!e.repeat)this.command(this.arcade.dataset.activity!,command);}
+    this.game.addEventListener('cancel',e=>{e.preventDefault();this.closeGame();});
+    this.game.addEventListener('keydown',e=>{
+      if(e.repeat)return;const kind=this.game.dataset.kind;
+      if(kind==='cube') {
+        const color=CUBE_COLORS[Number(e.code.replace('Digit',''))-1];
+        const action=color?`cube-${color}`:e.code==='KeyH'?'cube-hide':e.code==='KeyN'?'cube-next':e.code==='KeyR'?'cube-retry':null;
+        if(action){e.preventDefault();e.stopPropagation();this.gameAction(action);}
+      } else if(kind==='poker-game') {
+        const index=Number(e.code.replace('Digit',''))-1;
+        const action=index>=0&&index<5?`poker-card-${index}`:e.code==='KeyD'?'poker-draw':e.code==='KeyB'?'poker-bank':e.code==='KeyN'?'poker-next':e.code==='KeyR'?'poker-restart':null;
+        if(action){e.preventDefault();e.stopPropagation();this.gameAction(action);}
+      }
     });
   }
   showFeedback(result:ActivityResult) {
@@ -55,23 +66,54 @@ export class ActivityUI {
     const output=this.feedback.querySelector('.feedback-phase');if(output)output.textContent=message;
   }
   hideFeedback(){clearTimeout(this.timer);this.feedback.hidden=true;this.active=null;}
-  openArcade(d:ActivityDefinition,status:string) {
-    this.hideFeedback();if(!this.arcade.open)this.previousFocus=document.activeElement as HTMLElement;
-    this.arcade.dataset.activity=d.id;this.lastSignal=-1;
-    this.arcade.innerHTML=`<div class="arcade-top"><span>OFF DUTY / SIGNAL CABINET</span><button class="close-button" data-close-arcade aria-label="Close signal game">×</button></div><h2 id="arcade-title">Signal match</h2><p>Stop on <strong>amber</strong> to synchronize the cabinet.</p><div class="signal-readout" role="group" aria-label="Signal lamps. Target amber.">${['Cyan','Amber','Orange'].map((name,i)=>`<span data-lamp="${i}"><i aria-hidden="true"></i>${name}${i===1?'<small>Target</small>':''}</span>`).join('')}</div><output class="current-signal" data-signal-text aria-live="off">Signal: Cyan</output><p class="signal-result" role="status" data-activity-status>${escape(status)}</p><div class="arcade-actions"><button class="button" data-command="stop">Stop the signal</button><button class="button" data-command="step">Next signal</button><button class="button" data-command="restart">Restart sweep</button></div><p class="arcade-keys"><kbd>Space</kbd> Stop · <kbd>→</kbd> Step · <kbd>R</kbd> Restart<br><kbd>Esc</kbd> Back to the world</p>`;
-    if(!this.arcade.open)this.arcade.showModal();this.arcade.querySelector<HTMLButtonElement>('[data-command="stop"]')!.focus();
+  openGame(d:ActivityDefinition) {
+    this.hideFeedback();if(!this.game.open)this.previousFocus=document.activeElement as HTMLElement;
+    this.game.dataset.activity=d.id;this.game.dataset.kind=d.kind;
+    if(d.kind==='cube')this.cube.restart();else if(d.kind==='poker-game')this.poker.restart();
+    this.renderGame();
+    if(!this.game.open)this.game.showModal();
+    this.game.querySelector<HTMLButtonElement>('[data-close-game]')!.focus({preventScroll:true});
   }
-  setSignal(index:number) {
-    if(!this.arcade.open||index===this.lastSignal)return;this.lastSignal=index;
-    this.arcade.querySelector('[data-signal-text]')!.textContent=`Signal: ${['Cyan','Amber','Orange'][index]}`;
-    this.arcade.querySelectorAll<HTMLElement>('[data-lamp]').forEach((lamp,i)=>lamp.classList.toggle('lit',i===index));
+  private gameHeader(label:string,title:string,description:string,closeLabel:string){return `<div class="game-top"><span>${label}</span><button class="close-button" data-close-game aria-label="${closeLabel}">×</button></div><h2 id="game-title">${title}</h2><p>${description}</p>`;}
+  private renderGame() {
+    const kind=this.game.dataset.kind;
+    if(kind==='cube'){
+      const c=this.cube,visible=c.phase==='preview';
+      const sequence=c.pattern.map((color,i)=>`<span class="cube-tile ${visible?`is-${color}`:'is-hidden'}"><b>${visible?escape(color):'?'}</b><small>${i+1}</small></span>`).join('');
+      const chosen=c.input.map(color=>`<span class="cube-choice is-${color}">${escape(color)}</span>`).join('')||'<span class="cube-empty">No tiles entered yet.</span>';
+      const controls=c.phase==='preview'?'<button class="button" data-primary-game-action data-game-action="cube-hide">Hide &amp; play</button>':c.phase==='play'?CUBE_COLORS.map((color,i)=>`<button class="cube-color is-${color}" data-game-action="cube-color" data-color="${color}"><span>${i+1}</span>${color}</button>`).join(''):c.phase==='won'?'<button class="button" data-primary-game-action data-game-action="cube-next">Next round</button><button class="button secondary-game-action" data-game-action="cube-restart">Start over</button>':'<button class="button" data-primary-game-action data-game-action="cube-retry">Retry round</button><button class="button secondary-game-action" data-game-action="cube-restart">Start over</button>';
+      this.game.innerHTML=`${this.gameHeader('OFF DUTY / CUBE SHELF','Cube recall','Memorize the color order, hide it, then rebuild the sequence.','Close cube recall')}<div class="game-score"><span>Round ${c.round} / 3</span><span>Score ${c.score}</span></div><div class="cube-sequence" aria-label="${visible?'Sequence to memorize':'Hidden sequence'}">${sequence}</div>${c.phase!=='preview'?`<div class="cube-input" aria-label="Your sequence">${chosen}</div>`:''}<p class="game-result" data-outcome="${c.phase}" role="status">${escape(c.message)}</p><div class="cube-actions">${controls}</div><p class="game-keys"><kbd>1–4</kbd> Choose tile · <kbd>H</kbd> Hide · <kbd>N</kbd> Next · <kbd>R</kbd> Retry<br><kbd>Esc</kbd> Back to the world</p>`;
+      return;
+    }
+    this.renderPoker();
   }
-  updateStatus(message:string) {
-    const status=this.arcade.querySelector<HTMLElement>('[data-activity-status]');
-    if(status){status.textContent=message;status.dataset.outcome=message.includes('Synchronized')?'win':message.includes('Almost')?'miss':'ready';}
+  private renderPoker(){
+    const p=this.poker,playing=p.phase==='playing';
+    const cards=p.cards.map((card,index)=>`<button class="playing-card ${card.suit==='hearts'||card.suit==='diamonds'?'red-card':''}" data-game-action="poker-card" data-poker-index="${index}" aria-label="${cardName(card)}. ${p.discards.has(index)?'Replace':'Keep'}" aria-pressed="${p.discards.has(index)}" ${playing?'':'disabled'}><b>${cardRank(card.rank)}</b><span aria-hidden="true">${SUIT_SYMBOLS[card.suit]}</span><small>${p.discards.has(index)?'replace':'keep'}</small></button>`).join('');
+    const actions=playing?`<button class="button" data-primary-game-action data-game-action="poker-draw" ${!p.drawsLeft||!p.discards.size?'disabled':''}>Draw · ${p.drawsLeft} left</button><button class="button secondary-game-action" data-game-action="poker-bank">Bank ${p.bankValue}</button>`:p.phase==='banked'?'<button class="button" data-primary-game-action data-game-action="poker-next">Next hand</button>':'<button class="button" data-primary-game-action data-game-action="poker-restart">Deal again</button>';
+    this.game.innerHTML=`${this.gameHeader('REDSHIFT / CREW TABLE','Redshift Draw','Three hands. Two redraws each. Bank 150 chips to clear the crew’s cargo.','Close Redshift Draw')}<div class="game-score"><span>Hand ${p.round} / 3</span><span>Bank ${p.score} / ${p.target}</span></div><div class="draw-contract"><span>contract / ${escape(p.contract.name)}</span><strong>${escape(p.contract.description)} · +${p.contract.bonus}</strong><small>${p.contractComplete?'✓ Ready to claim':'Build the bonus before banking'}</small></div><div class="poker-hand" role="group" aria-label="Your five cards. Select cards to replace.">${cards}</div><div class="draw-hand-value"><strong>${p.hand.name}</strong><span>${p.bankValue} chips ${p.contractComplete?'including bonus':''}</span></div><p class="game-result" data-outcome="${p.phase==='won'?'won':p.phase==='lost'?'missed':'ready'}" role="status">${escape(p.message)}</p><div class="poker-actions">${actions}</div><details class="poker-guide"><summary>hand values</summary><ul>${Object.entries(HAND_SCORES).map(([name,points])=>`<li><span>${name}</span><b>${points}</b></li>`).join('')}</ul></details><p class="game-keys"><kbd>1–5</kbd> Select · <kbd>D</kbd> Draw · <kbd>B</kbd> Bank · <kbd>N</kbd> Next · <kbd>R</kbd> Replay<br><kbd>Esc</kbd> Back to the world</p>`;
   }
-  closeArcade() {
-    if(!this.arcade.open)return;this.arcade.close();this.onClose();
+  private gameAction(action:string,color?:string) {
+    if(action==='cube-hide')this.cube.hide();
+    else if(action==='cube-color'||action.startsWith('cube-')&&CUBE_COLORS.includes(action.slice(5) as CubeColor)){
+      const value=(color??action.slice(5)) as CubeColor;if(!CUBE_COLORS.includes(value))return;
+      const correct=this.cube.choose(value);this.onCue?.(this.cube.phase==='won'?'signal-win':correct?'select':'signal-miss');
+    } else if(action==='cube-retry')this.cube.retry();
+    else if(action==='cube-next')this.cube.next();
+    else if(action==='cube-restart')this.cube.restart();
+    else if(action==='poker-card'||action.startsWith('poker-card-'))this.poker.toggle(Number(color??action.slice(11)));
+    else if(action==='poker-draw'){if(!this.poker.draw())return;this.onCue?.('select');}
+    else if(action==='poker-bank'){if(!this.poker.bank())return;this.onCue?.(this.poker.phase==='lost'?'signal-miss':'signal-win');}
+    else if(action==='poker-next')this.poker.next();
+    else if(action==='poker-restart')this.poker.restart();
+    else return;
+    this.renderGame();
+    this.onRender?.();
+    const focus=action.startsWith('poker-card')?`[data-poker-index="${Number(color??action.slice(11))}"]`:'[data-primary-game-action]:not(:disabled), [data-game-action]:not(:disabled)';
+    this.game.querySelector<HTMLButtonElement>(focus)?.focus();
+  }
+  closeGame() {
+    if(!this.game.open)return;this.game.close();this.onClose();
     if(this.previousFocus?.isConnected)this.previousFocus.focus({preventScroll:true});
   }
 }

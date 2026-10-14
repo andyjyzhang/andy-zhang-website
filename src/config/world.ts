@@ -1,5 +1,5 @@
 export type LandmarkId = 'house' | 'garage' | 'poker' | 'hobby' | 'campus';
-export type Section = 'about' | 'experience' | 'projects' | 'education' | 'hobbies' | 'poker' | 'contact';
+export type Section = 'about' | 'experience' | 'projects' | 'education' | 'hobbies' | 'poker';
 export interface Landmark { id: LandmarkId; name: string; subtitle: string; number: string; x: number; z: number; width: number; depth: number; color: string; section: Section; entry: [number, number]; facing?: number }
 export const landmarks: Landmark[] = [
   { id:'house',name:"Andy's flight studio",subtitle:'A little about me',number:'01',x:-38.4,z:-28.16,width:19.2,depth:15.36,color:'#6074a1',section:'about',entry:[-38.4,-17.92] },
@@ -14,7 +14,8 @@ export const playerAppearance:Appearance = { hair:'cap',hairColor:'#0a3463',capF
 export { ACTIVE_BOUNDS as WORLD_BOUNDS } from './station';
 export const SPAWN = { x: 0, z: 10 };
 export const SHIP = { x:55.68,z:-30.72,entry:[55.68,-23.04] as [number,number] };
-export const sectionLandmark: Record<Section, LandmarkId> = { about: 'house', contact: 'house', experience: 'garage', projects: 'garage', education: 'campus', hobbies: 'hobby', poker: 'poker' };
+export const sectionLandmark: Record<Section, LandmarkId> = { about: 'house', experience: 'garage', projects: 'garage', education: 'campus', hobbies: 'hobby', poker: 'poker' };
 export function isSection(value:string):value is Section {return Object.hasOwn(sectionLandmark,value);}
+export function resolveSection(value:string):Section|null{return value==='contact'?'about':isSection(value)?value:null;}
 import { snapStud,STUD } from '../world/part-catalog';
 import type { Appearance } from './characters';

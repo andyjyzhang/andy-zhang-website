@@ -41,7 +41,11 @@ are retained. No deployment is performed by local build commands.
   original custom prints. `src/player/minifigure-rig.ts` defines shared mold and
   joint measurements. Caps, hands and crew space helmets use calibrated mounts.
 - `src/world/city-layout.ts`: authored mixed-height parcels, road segments, gate and transit configuration.
-- `public/AndyZhangResume.pdf`: original resume, preserved unchanged.
+- `assets/content/AndyZhangResume.pdf`: original document archived outside public
+  assets. Résumé links and downloads were removed at Andy's request.
+- `src/ui/portfolio-panels.css`: in-world portfolio/directory theme, using dark
+  ink blue, amber, Manrope and IBM Plex Mono. Compact pages size to their content;
+  long pages scroll between a fixed heading and footer.
 - `public/portfolio.html`: concise accessible portfolio index, generated from
   shared content by `npm run build`. It is a lowercase black-on-white,
   single-column view that works without JavaScript or WebGL.
@@ -54,15 +58,15 @@ WASD move, Shift run, Space jump; drag mouse or use arrow keys to rotate the
 camera, scroll to zoom or enter first person. E explores blue-stud landmarks or launches the ship.
 F enters/exits driveable cars. Esc opens/closes the menu or returns from space.
 The enlarged bottom-right portfolio link, directory and Contact control provide
-direct professional access; the résumé remains in the directory.
+direct professional access.
 Small screens have movement/action buttons and responsive content panels.
 Controls & settings includes a persistent Low graphics option for weaker PCs.
 It lowers render density, caps rendering near 30 FPS, disables real-time shadows
 and reflections, and starts future visits with a non-antialiased low-power canvas.
 
-Five landmarks: studio (about/contact), workshop (experience/projects), campus
+Five landmarks: studio (about with contact links), workshop (experience/projects), campus
 (education), poker lounge, hobby hub. The launch bay beside the workshop leads
-to an independent small space-flight prototype with a return button.
+to Salvage Run, an independent three-mission cargo-recovery flight game.
 
 ## Andy's Orbital Station
 
@@ -74,25 +78,47 @@ freight lanes and a dramatic brick-built orbital gate remain freely explorable.
 `/?view=world` opens the overview. Drag or use arrow keys to orbit, scroll to zoom, and lower the view to inspect the underside. Overview controls are
 independent from the street camera.
 
-E interacts with street equipment and station crew; E plays the signal cabinet.
+E interacts with street equipment and station crew; E plays the cube shelf
+and poker table.
 Simple actions execute directly in the world with distinct cooling, telemetry,
 dispatch, receipt, receiver, beacon or crew feedback. They do not pause movement.
-The signal cabinet uses a compact game panel: Space stops, the right arrow steps,
-R restarts and Esc closes. Named colors and manual steps support reduced motion.
+Two compact games live in the world: Cube Recall (1–4/H/N/R)
+and Redshift Draw (1–5/D/B/N/R). Esc closes every game. Named
+colors, text outcomes and manual controls support reduced motion and keyboard use.
 Directory → More station stops exposes every facade, crew member and driveable
-vehicle; professional chapters and résumé remain immediately accessible.
+vehicle; professional chapters remain immediately accessible.
 The reactor changes cooling state, a drone performs a test flight, a loading
 crane dispatches cargo, a noodle hatch serves a bowl, and a receiver tunes its
 dish. Facade consoles switch arrival beacons. A three-car express follows a
 rounded rail loop over 600 world units long through several districts, with
-supports clear of streets and entrances. It offers a short ride;
-the orbital gate has a charging sequence and a separate observation destination.
-Both have an immediate Return/Escape flow. The observation deck and flight prototype
-support scroll zoom, first-person free look and a visible POV button. Scrolling
-out releases mouse capture without leaving the destination. Their movement and
-camera respect solid scenery. The signal cabinet also offers Next signal, so
-amber remains reachable with reduced motion enabled. Crew deliver, repair, scan, dispatch
-and signal loading operations. Reduced motion freezes ambient routines.
+supports clear of streets and entrances. It offers a short ride.
+The orbital gate now toggles a navigation beacon; the observatory destination
+has been removed. Salvage Run is a three-sector space-combat salvage game with a
+brick-built foil-wing courier, patrol drones, hangar, capital-ship wreck, floating
+panels and a distant moon. Blasters disable cargo guards and destroy debris;
+patrols shoot back. Recover three pods at different heights, then return to the
+green dock at 8m. Each 120-second mission has three shields, rechargeable boost,
+weapon heat, altitude guidance, radar and scored deliveries. Delivery restores
+shields; win/failure offer replay. WASD flies, E rises, Q descends, Space fires,
+Shift boosts and R restarts. Mouse/touch drag or arrows aim through a fixed
+screen-centre crosshair. Shots compensate for the trailing camera's offset and
+travel toward the crosshair, with no off-axis target snapping. There is no
+separate aim/look mode. Hold buttons cover fire/altitude/boost on touch.
+Scroll zoom/cockpit view and immediate Return/Escape remain available. Reduced
+motion/low graphics suppress decorative motion and bursts, not combat mechanics.
+Crew deliver, repair, scan and dispatch. Reduced motion freezes ambient routines.
+
+For development, `/?dev=ui` opens a persistent UI gallery with direct access to
+all six portfolio panels, the directory, both compact games, Salvage Run
+and the express stop. About ends with plain email, github and linkedin links;
+legacy `#contact` opens that merged page. Game views can be deep-linked with
+`/?dev=ui#game-cube`, `#game-poker-game` and `#flight`. The gallery is not
+rendered on the normal visitor URL.
+
+Redshift Draw is a three-hand poker score challenge. Mark cards to replace,
+redraw up to twice, then bank the hand. Poker combinations and per-hand crew
+contracts add chips toward a 150-chip target. The game explains hand values,
+supports card buttons/number keys, and deals a new shuffled run on replay.
 
 Scroll all the way in for first person, with a hidden cursor and mouse free look;
 scroll out to restore third person (maximum distance 46). First-person sensitivity
@@ -128,7 +154,7 @@ in Controls & settings. `?intro=1` replays the intro, `?debug=1` displays measur
 rendering statistics and player state, and `?fallback=1` checks the fallback.
 
 Original game sound covers construction, walking/running, jumps and landings,
-vehicle entry/exit and motors, station equipment, arcade results, UI and journeys.
+vehicle entry/exit and motors, station equipment, game results and blaster/combat effects, UI and journeys.
 Footsteps follow actual movement and machinery fades with distance. The Sound
 button mutes immediately, including during construction and travel;
 Directory → Controls & settings includes a saved volume slider. Sound starts
@@ -153,7 +179,7 @@ lazy destinations and hidden-tab pause limit rendering cost. Low graphics uses a
 0.75 pixel-ratio cap, a plain background and reduced decorative animation without
 removing gameplay or portfolio content.
 
-The suite contains 125 tests in 19 files, covering part assemblies, architecture,
+The suite contains 150 tests in 19 files, covering part assemblies, architecture,
 movement, camera/collision, vehicles, intro, interactions, accessible UI and audio
 lifecycle, plus graphics preference persistence and quality caps. Validation
 records are in:
@@ -162,18 +188,22 @@ records are in:
 - [`docs/BUILD_AUDIO_VALIDATION.md`](docs/BUILD_AUDIO_VALIDATION.md)
 - [`docs/FIGURE_FOLEY_VALIDATION.md`](docs/FIGURE_FOLEY_VALIDATION.md)
 - [`docs/MINIGAME_BOOSTER_VALIDATION.md`](docs/MINIGAME_BOOSTER_VALIDATION.md)
+- [`docs/PORTFOLIO_PAGE_VALIDATION.md`](docs/PORTFOLIO_PAGE_VALIDATION.md)
+- [`docs/FLIGHT_DRAW_VALIDATION.md`](docs/FLIGHT_DRAW_VALIDATION.md)
+- [`docs/SALVAGE_COMBAT_VALIDATION.md`](docs/SALVAGE_COMBAT_VALIDATION.md)
+- [`docs/MANUAL_FLIGHT_AIM_VALIDATION.md`](docs/MANUAL_FLIGHT_AIM_VALIDATION.md)
+- [`docs/CENTRED_AIM_PUBLISH_CHECK.md`](docs/CENTRED_AIM_PUBLISH_CHECK.md)
 
-`node scripts/audition-sounds.mjs` renders 28 original cues and nine textures into
+`node scripts/audition-sounds.mjs` renders 30 original cues and nine textures into
 an ignored local WAV and timestamp index. `node scripts/character-review.mjs`
 creates an ignored front/side cast gallery for local appearance review.
 
-`npm run check:build` verifies the four HTML documents, links, resume and model
-attribution. With a preview URL it also checks served assets byte for byte:
+`npm run check:build` verifies the four HTML documents, links, model attribution
+and absence of résumé links/PDFs. With a preview URL it also checks served assets byte for byte:
 `npm run check:build -- http://localhost:4173/`.
 Vercel redirects `/work.html` and `/projects.html` directly to their current
 portfolio chapters; no separate page implementations are required.
 
-Exact Ontario Government role/dates and personal avatar customization remain
-content inputs. The space destination is a small prototype. Model geometry uses
+Personal avatar customization remains a content input. Model geometry uses
 attributed parts, while a complete physical connection/stability and part/color
 availability audit remains outside the digital model's validation.

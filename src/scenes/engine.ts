@@ -24,6 +24,9 @@ import {GameAudio} from '../audio/game-audio';
 import {WorldAudio} from '../audio/world-audio';
 import {ENGINE_PODS} from '../world/station-hull';
 import {graphicsPixelRatio,loadLowGraphics,saveLowGraphics} from '../config/graphics';
+import {freezeStaticTransforms} from '../world/consolidate';
+import {FramePacer,worldFrameRate} from './frame-pacer';
+import {StaticShadowCache} from './static-shadow-cache';
 
 export class Engine {
   readonly audio=new GameAudio();readonly sound=new WorldAudio(this.audio);
@@ -60,7 +63,8 @@ export class Engine {
   private readonly sun:T.DirectionalLight;
   private environmentTexture:T.Texture|null=null;
   private skyTexture:T.CanvasTexture|null=null;
-  private lowFrameTime=0;
+  private readonly framePacer=new FramePacer();
+  private readonly staticShadows:StaticShadowCache;
   private active: Interactable | null = null;
   constructor(parent: HTMLElement) {
     document.documentElement.dataset.graphics=this.graphicsLow?'low':'standard';
@@ -80,6 +84,8 @@ export class Engine {
     this.scene.background = new T.Color(WORLD_STYLE.background);
     this.scene.add(new T.HemisphereLight(WORLD_STYLE.sky, '#1c2948', WORLD_STYLE.ambient));
     const sun = this.sun = new T.DirectionalLight(WORLD_STYLE.sun, WORLD_STYLE.sunlight); sun.position.set(-65, 145, 75); sun.castShadow = !this.graphicsLow; sun.shadow.mapSize.setScalar(this.coarsePointer ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -145, right: 145, top: 125, bottom: -125, far:350 }); sun.shadow.normalBias = .18; sun.shadow.bias = -.0002; this.scene.add(sun);
+    this.staticShadows=new StaticShadowCache(this.renderer,sun,!(new URLSearchParams(location.search).get('debug')==='1'&&new URLSearchParams(location.search).get('shadowCache')==='0'));
+    this.renderer.domElement.addEventListener('webglcontextrestored',()=>this.staticShadows.invalidate(true));
     if(WORLD_STYLE.id==='orbital') {
       const fill=new T.DirectionalLight('#ffa35a',1.3);fill.position.set(50,35,35);this.scene.add(fill);
       if(!this.graphicsLow)this.scene.background=this.createSkyTexture();
@@ -122,7 +128,10 @@ export class Engine {
     if(new URLSearchParams(location.search).get('dev')==='ui')this.ui.enableDevGallery(this.activities.definitions);
     this.setMotion(this.reducedMotion);
     window.addEventListener('resize', () => { this.camera.aspect = innerWidth / innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(innerWidth, innerHeight); this.space?.resize(); });
-    document.addEventListener('visibilitychange', () => { this.input.clear(); this.lastTime = 0; });
+    document.addEventListener('visibilitychange', () => {
+      this.input.clear();this.lastTime=0;this.framePacer.reset();
+      this.renderer.setAnimationLoop(document.hidden?null:t=>this.update(t));
+    });
     window.addEventListener('hashchange',()=>{
       const hash=location.hash.slice(1),section=resolveSection(hash);
       if(section)this.openSection(section);
@@ -130,6 +139,8 @@ export class Engine {
       else if(hash.startsWith('game-')&&new URLSearchParams(location.search).get('dev')==='ui')this.previewActivity(hash.slice(5));
       else if(!hash)this.ui.closePanel();
     });
+    for(const stage of this.town.stages)freezeStaticTransforms(stage);
+    for(const building of this.buildings)freezeStaticTransforms(building.root,[building.animated]);
     this.bindTouch(); this.renderer.setAnimationLoop(t => this.update(t));
     const hash = location.hash.slice(1),section=resolveSection(hash);
     if (section) this.openSection(section);
@@ -149,9 +160,10 @@ export class Engine {
     this.skyTexture=new T.CanvasTexture(canvas);this.skyTexture.mapping=T.EquirectangularReflectionMapping;this.skyTexture.colorSpace=T.SRGBColorSpace;return this.skyTexture;
   }
   private setGraphics(enabled:boolean){
+    this.staticShadows.invalidate(enabled);
     this.graphicsLow=enabled;saveLowGraphics(enabled);document.documentElement.dataset.graphics=enabled?'low':'standard';
     this.renderer.setPixelRatio(graphicsPixelRatio(enabled,devicePixelRatio,this.coarsePointer));this.renderer.setSize(innerWidth,innerHeight);
-    this.renderer.shadowMap.enabled=!enabled;this.sun.castShadow=!enabled;this.lowFrameTime=0;
+    this.renderer.shadowMap.enabled=!enabled;this.sun.castShadow=!enabled;this.framePacer.reset();
     if(enabled){this.scene.environment=null;this.environmentTexture?.dispose();this.environmentTexture=null;this.skyTexture?.dispose();this.skyTexture=null;this.scene.background=new T.Color(WORLD_STYLE.background);}
     else{this.enableEnvironment();if(WORLD_STYLE.id==='orbital')this.scene.background=this.createSkyTexture();}
     this.ui.setGraphics(enabled);this.ui.notify(enabled?'Low graphics on · lower resolution, 30 FPS, no real-time shadows.':'Standard graphics restored.');
@@ -281,8 +293,7 @@ export class Engine {
     this.follow.focus = null; this.input.clear(); this.renderer.domElement.focus({preventScroll:true});
   }
   private update(time: number) {
-    if(this.graphicsLow&&this.lowFrameTime&&time-this.lowFrameTime<30)return;
-    this.lowFrameTime=this.graphicsLow?time:0;
+    if(document.hidden||!this.framePacer.ready(time,worldFrameRate(this.graphicsLow,this.ui.paused&&!this.intro.active)))return;
     this.diagnostics.startFrame();
     const elapsed = Math.min(this.lastTime ? (time - this.lastTime) / 1000 : .016, 2);
     const dt = Math.min(elapsed, .05); this.lastTime = time;this.soundDt=dt;
@@ -359,6 +370,9 @@ export class Engine {
     const position=mode==='space'&&this.space?this.space.position:this.player.position;
     this.sound.update(this.soundDt,{mode,x:position.x,z:position.z,paused:this.ui.paused||(mode==='space'&&this.space?.game.phase!=='playing'),airborne:mode==='town'&&this.player.airborne,verticalSpeed:this.player.velocityY,driving:!!this.driving,vehicleSpeed:this.driving?.speed,vehicleThrottle:Number(this.input.down('KeyW'))-Number(this.input.down('KeyS')),running:this.input.down('ShiftLeft','ShiftRight'),yaw:this.activeView?.yaw,cooling:this.props.coolingActive,drone:this.props.busy('repair'),cargo:this.props.busy('cargo'),train:this.life.train.position,progress:mode==='intro'?this.intro.buildTime:this.launch?.elapsed,building:this.intro.building,boosters:ENGINE_PODS,overview:this.follow.overview});
     this.diagnostics.audio(this.audio.stats);
-    this.diagnostics.beforeRender(this.renderer); this.renderer.render(scene, camera); this.diagnostics.afterRender(this.renderer);
+    this.diagnostics.beforeRender(this.renderer);
+    if(scene===this.scene)this.staticShadows.render(scene,camera,!this.intro.active);
+    else this.renderer.render(scene,camera);
+    this.diagnostics.afterRender(this.renderer);
   }
 }

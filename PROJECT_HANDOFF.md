@@ -1,6 +1,6 @@
 # Andy's World — complete project handoff
 
-Snapshot date: **2026-10-14**. This document is intended for Andy or a new coding
+Snapshot date: **2026-10-15**. This document is intended for Andy or a new coding
 agent continuing the project on another device without the previous conversation.
 It records the current implementation, the product decisions behind it, practical
 setup instructions, validation history, and work that remains unverified.
@@ -8,6 +8,22 @@ setup instructions, validation history, and work that remains unverified.
 Read this file together with the repository. Source code takes precedence over
 older measurements and historical completion reports. Update this handoff when a
 future change makes its descriptions stale.
+
+Latest entry/performance update (2026-10-15): `/` now serves the existing minimal
+portfolio without any world assets, WebGL or animation loop. `/portfolio.html`
+remains compatible; `world` opens the complete WIP world at `/world.html`.
+Use `/world.html?dev=ui`, `/world.html?view=world`, and world hashes for game and
+chapter tooling. Older audit URLs below describe the former world-at-root setup.
+World optimizations preserve all pieces, controls and games: spatial detail
+culling, fixed transforms, stationary shadow color/depth caching with live moving
+shadows, lazy/released construction buffers, 60/30 FPS caps, 20 FPS paused-dialog
+backgrounds and hidden-tab suspension. 165 tests in 21 files pass. See
+`docs/WORLD_PERFORMANCE_VALIDATION.md` for measurements and publication status.
+This update is live on https://andyzhang.vercel.app/ as deployment
+`dpl_5daeLhBN9wj3pTseMvFjqYBhbiF1`. All five documents and seven assets match the
+local build; anonymous native-input live checks pass, including pixel-identical
+cached/uncached shadows. The updated workspace was deployed directly, without a
+Git commit or push; new source modules and current changes remain uncommitted.
 
 Current portfolio-page update (2026-10-14): in-world pages and the directory use
 an ink-blue/amber Manrope/IBM Plex Mono theme. About no longer has a Contact tab
@@ -52,8 +68,14 @@ third-person parallax and no off-axis target snapping. Independent IJKL aim,
 C centering and the touch look toggle are removed. The flight camera trails
 above the ship and preserves view direction when zooming into the cockpit.
 150 tests, type checking, lint, build, served assets and production browser smoke
-checks pass. The working tree remains uncommitted; new source files must be
-included in a Git deployment. No deployment or live-account verification occurred.
+checks pass. Source commit `f7c9210` was deployed through the Vercel CLI to the
+existing `andy-zhang-s-projects2/personalweb` project on 2026-10-14. Production is
+live at https://andyzhang.vercel.app/. All four HTML pages and seven referenced
+assets match the local build; legacy redirects and analytics respond correctly.
+Anonymous production Chromium checks passed for six portfolio chapters, normal
+ship launch/Return, centred shooting, intro skip, mobile reading and fallback,
+with no browser exceptions. Local Vercel linkage and authentication environment
+files are ignored; the CLI added `.env*` to `.gitignore` to protect credentials.
 See `docs/CENTRED_AIM_PUBLISH_CHECK.md`.
 
 ### Navigation

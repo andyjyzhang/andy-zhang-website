@@ -29,6 +29,7 @@ export class PerformanceMonitor {
     if (this.pending.length < 2) { this.query = gl.createQuery(); if (this.query) gl.beginQuery(this.timer.TIME_ELAPSED_EXT, this.query); }
   }
   afterRender(renderer: WebGLRenderer) {
+    if(!this.enabled)return;
     const gl = renderer.getContext();
     if (this.query && this.timer && gl instanceof WebGL2RenderingContext) { gl.endQuery(this.timer.TIME_ELAPSED_EXT); this.pending.push(this.query); this.query = null; }
   }

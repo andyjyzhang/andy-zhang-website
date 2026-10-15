@@ -1,7 +1,7 @@
 # Andy's World
 
-Andy's Orbital Station: a playable LEGO-style spaceport and Andy Zhang's professional
-portfolio.
+Andy Zhang's minimal portfolio is the landing page. The `world` link opens
+Andy's Orbital Station, the work-in-progress playable LEGO-style spaceport.
 Built with TypeScript, Vite and Three.js; no React or physics engine.
 
 Continuing on another device? Read the [complete project handoff](PROJECT_HANDOFF.md)
@@ -16,7 +16,8 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. Production checks:
+Open http://127.0.0.1:5173 for the portfolio or
+http://127.0.0.1:5173/world.html for the world. Production checks:
 
 ```sh
 npm run typecheck
@@ -46,9 +47,11 @@ are retained. No deployment is performed by local build commands.
 - `src/ui/portfolio-panels.css`: in-world portfolio/directory theme, using dark
   ink blue, amber, Manrope and IBM Plex Mono. Compact pages size to their content;
   long pages scroll between a fixed heading and footer.
-- `public/portfolio.html`: concise accessible portfolio index, generated from
-  shared content by `npm run build`. It is a lowercase black-on-white,
-  single-column view that works without JavaScript or WebGL.
+- `index.html` and `public/portfolio.html`: the same concise portfolio, generated
+  from shared content by `scripts/build-fallback.mjs` before `npm run build`.
+  The lowercase black-on-white view works without JavaScript or WebGL. It does
+  not load, preload or construct the world. Analytics is preserved on Vercel.
+- `world.html`: the independent Vite entry for the complete interactive world.
 - `assets/ldraw/`: attributed physical part data; `npm run build:parts` regenerates
   the bundled geometry offline. Credits are available at `/model-credits.html`.
 
@@ -75,7 +78,7 @@ underside and connected load-bearing beams. Six architectural families use
 recessed bays, balconies, pressure vessels, stepped crowns and native specialist
 pieces. Each portfolio landmark has its own entrance assembly. Offset streets,
 freight lanes and a dramatic brick-built orbital gate remain freely explorable.
-`/?view=world` opens the overview. Drag or use arrow keys to orbit, scroll to zoom, and lower the view to inspect the underside. Overview controls are
+`/world.html?view=world` opens the overview. Drag or use arrow keys to orbit, scroll to zoom, and lower the view to inspect the underside. Overview controls are
 independent from the street camera.
 
 E interacts with street equipment and station crew; E plays the cube shelf
@@ -108,11 +111,11 @@ Scroll zoom/cockpit view and immediate Return/Escape remain available. Reduced
 motion/low graphics suppress decorative motion and bursts, not combat mechanics.
 Crew deliver, repair, scan and dispatch. Reduced motion freezes ambient routines.
 
-For development, `/?dev=ui` opens a persistent UI gallery with direct access to
+For development, `/world.html?dev=ui` opens a persistent UI gallery with direct access to
 all six portfolio panels, the directory, both compact games, Salvage Run
 and the express stop. About ends with plain email, github and linkedin links;
 legacy `#contact` opens that merged page. Game views can be deep-linked with
-`/?dev=ui#game-cube`, `#game-poker-game` and `#flight`. The gallery is not
+`/world.html?dev=ui#game-cube`, `#game-poker-game` and `#flight`. The gallery is not
 rendered on the normal visitor URL.
 
 Redshift Draw is a three-hand poker score challenge. Mark cards to replace,
@@ -179,7 +182,16 @@ lazy destinations and hidden-tab pause limit rendering cost. Low graphics uses a
 0.75 pixel-ratio cap, a plain background and reduced decorative animation without
 removing gameplay or portfolio content.
 
-The suite contains 150 tests in 19 files, covering part assemblies, architecture,
+Fixed world transforms are calculated once. Dense roof/stud batches are split
+into bounded regions for frustum culling without removing pieces. The stationary
+station's shadow color/depth is cached; moving casters still render real-time
+shadows at the original resolution. Intro buffers are created only on demand
+and released after build/skip. Rendering caps at 60 FPS (30 in low graphics),
+20 FPS behind paused dialogs, and stops in hidden tabs. See
+[`docs/WORLD_PERFORMANCE_VALIDATION.md`](docs/WORLD_PERFORMANCE_VALIDATION.md)
+for measurements, GPU cache tradeoffs and regression coverage.
+
+The suite contains 165 tests in 21 files, covering part assemblies, architecture,
 movement, camera/collision, vehicles, intro, interactions, accessible UI and audio
 lifecycle, plus graphics preference persistence and quality caps. Validation
 records are in:

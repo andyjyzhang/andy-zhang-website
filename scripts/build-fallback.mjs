@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { build } from 'esbuild';
 
 // Build the static reading view from the same facts used by the in-world panels.
@@ -99,8 +99,10 @@ const html = `<!doctype html>
   <meta name="color-scheme" content="light"/>
   <meta name="description" content="Andy Zhang, University of Waterloo Computer Science. Experience, projects, education, other work and hobbies."/>
   <title>Andy Zhang &mdash; Portfolio</title>
+  <meta property="og:title" content="Andy Zhang — Portfolio"/>
   <link rel="icon" href="/favicon.svg"/>
   <style>${styles}</style>
+  <script>if(!['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname)){window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};var analytics=document.createElement('script');analytics.src='/_vercel/insights/script.js';analytics.defer=true;document.head.append(analytics)}</script>
 </head>
 <body id="top" data-layout="minimal">
   <a class="skip-link" href="#experience">Skip to portfolio</a>
@@ -113,7 +115,7 @@ const html = `<!doctype html>
       <a href="mailto:${escape(contact.email)}">email</a>
       <a href="${escape(contact.github)}" target="_blank" rel="noopener noreferrer">github</a>
       <a href="${escape(contact.linkedin)}" target="_blank" rel="noopener noreferrer">linkedin</a>
-      <a class="world-link" href="/">world</a>
+      <a class="world-link" href="/world.html">world</a>
     </nav>
   </header>
   <main class="portfolio-stack">
@@ -146,4 +148,4 @@ const html = `<!doctype html>
 </html>`;
 
 writeFileSync('public/portfolio.html', html);
-if (existsSync('dist')) writeFileSync('dist/portfolio.html', html);
+writeFileSync('index.html', html);

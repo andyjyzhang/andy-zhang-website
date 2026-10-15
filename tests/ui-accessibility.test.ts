@@ -51,7 +51,7 @@ describe('real interface keyboard and routing',()=>{
     const {ui}=fixture();
     expect(ui.root.querySelector('.world-meta')).toBeNull();expect(ui.root.querySelector('[data-pov]')).toBeNull();
     expect(ui.root.querySelector('.portfolio-button')).toBeNull();expect(ui.root.querySelector('.resume-button')).toBeNull();
-    expect(ui.root.querySelector<HTMLAnchorElement>('.fallback-link')!.href).toBe('http://localhost/portfolio.html');
+    expect(ui.root.querySelector<HTMLAnchorElement>('.fallback-link')!.href).toBe('http://localhost/');
     expect(ui.root.querySelector('[data-controls]')).not.toBeNull();
   });
   it.each(Object.keys(sectionLabels) as Section[])('opens/closes %s with a named dialog and focus return',section=>{
@@ -100,7 +100,7 @@ describe('real interface keyboard and routing',()=>{
     const {ui}=fixture();ui.openPanel('about');
     ui.openMenu();const closedSettings=ui.menu.querySelector('[data-motion]')!;
     ui.openGame(new StationActivities().find('poker-game')!);
-    for(const [dialog,firstSelector,lastSelector] of [[ui.panel,'[data-close-panel]','.panel-footer button'],[ui.menu,'[data-close-menu]','a[href="/portfolio.html"]'],[ui.activity,'[data-close-game]','.poker-guide summary']] as const) {
+    for(const [dialog,firstSelector,lastSelector] of [[ui.panel,'[data-close-panel]','.panel-footer button'],[ui.menu,'[data-close-menu]','a[href="/"]'],[ui.activity,'[data-close-game]','.poker-guide summary']] as const) {
       if(dialog===ui.panel)ui.openPanel('about');else if(dialog===ui.menu)ui.openMenu();else ui.openGame(new StationActivities().find('poker-game')!);
       const first=dialog.querySelector<HTMLElement>(firstSelector)!,last=dialog.querySelector<HTMLElement>(lastSelector)!;
       last.focus();last.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Tab',code:'Tab',bubbles:true,cancelable:true}));expect(document.activeElement).toBe(first);

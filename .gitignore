@@ -10,3 +10,4 @@ artifacts/
 
 # Local development assets
 /references/
+.env*

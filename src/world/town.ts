@@ -38,7 +38,7 @@ export function createTown() {
   stages.push(hardware.build(root,'concourse-equipment'));
   const city=new T.Group();root.add(city);stages.push(city);addCity(city,obstacles,surface);surface.build(street);
   root.traverse(o=>{if(o.userData.colliders)obstacles.push(...o.userData.colliders as Obstacle[]);});
-  stages.forEach(consolidateStatic);
+  stages.forEach(stage=>consolidateStatic(stage,48));
   const boosters=new BoosterExhaust(stages[0]);
   return{root,stages,obstacles,boosters};
 }

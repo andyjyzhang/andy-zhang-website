@@ -25,12 +25,18 @@ for(const [page,dom] of documents) {
     assert.ok((await stat(path)).isFile(),`${page}: missing ${target}`);local.add(target);
     if(url.hash) {
       const id=decodeURIComponent(url.hash.slice(1));
-      if(target==='index.html')assert.ok(chapters.includes(id),`${page}: unknown world chapter ${id}`);
+      if(target==='world.html')assert.ok(chapters.includes(id),`${page}: unknown world chapter ${id}`);
       else if(documents.has(target))assert.ok(documents.get(target).window.document.getElementById(id),`${page}: missing anchor ${target}#${id}`);
     }
   }
 }
 const reading=documents.get('portfolio.html').window.document;
+const landing=documents.get('index.html').window.document;
+assert.equal(landing.body.dataset.layout,'minimal','Landing page must be the static portfolio');
+assert.equal(landing.querySelector('canvas,#app,script[type="module"],link[rel="modulepreload"]'),null,'Landing page must not boot or preload the world');
+assert.equal(landing.querySelector('.world-link')?.getAttribute('href'),'/world.html');
+assert.equal(landing.querySelector('main').innerHTML,reading.querySelector('main').innerHTML,'Both portfolio routes share content');
+assert.ok(documents.get('world.html').window.document.querySelector('#app'));
 assert.deepEqual([...reading.querySelectorAll('main section')].map(s=>s.id),readingChapters);
 assert.equal(reading.body.dataset.layout,'minimal');assert.ok(reading.querySelector('.portfolio-stack'));
 assert.ok(reading.querySelector('a[href="mailto:andy.jy.zhang@gmail.com"]'));

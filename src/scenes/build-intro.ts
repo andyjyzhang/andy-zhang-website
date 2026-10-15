@@ -16,9 +16,9 @@ export class BuildIntro {
   private elapsed=0;private second=new T.Group();private cluster=new T.Group();
   private nextSnap=0;private secondSnapped=false;private revealed=false;private landed=false;
   private lookTarget=new T.Vector3();private arrival:T.Object3D|undefined;
-  private assemblies:PieceAssembly[];private extras:{object:T.Object3D;visible:boolean}[];
+  private assemblies:PieceAssembly[]|null=null;private extras:{object:T.Object3D;visible:boolean}[];
   private ray=new T.Raycaster();private pointer=new T.Vector2();
-  constructor(world:T.Group,stages:T.Group[],parent:HTMLElement,scene:T.Scene,private camera:T.PerspectiveCamera,private complete:()=>void,private hooks:BuildHooks={}) {
+  constructor(world:T.Group,private stages:T.Group[],parent:HTMLElement,scene:T.Scene,private camera:T.PerspectiveCamera,private complete:()=>void,private hooks:BuildHooks={}) {
     const first=libraryPart('brick','#f2cd37');first.scale.setScalar(LDRAW_SCALE);first.rotation.x=Math.PI;first.position.y=3*H;this.brick.add(first);
     const second=libraryPart('brick','#0a3463');second.scale.setScalar(LDRAW_SCALE);second.rotation.x=Math.PI;second.position.y=6*H;this.second.add(second);this.brick.add(this.second);
     const pieces=new BrickBatch();
@@ -30,11 +30,11 @@ export class BuildIntro {
     this.overlay.querySelector('.intro-sound')!.addEventListener('click',()=>this.hooks.toggleSound?.());
     this.extras=world.children.filter(child=>!stages.includes(child as T.Group)).map(object=>({object,visible:object.visible}));
     this.arrival=this.extras.find(e=>e.object.name==='Andy')?.object;
-    this.assemblies=stages.map((stage,i)=>{const {start,duration}=buildStageTiming(i);return new PieceAssembly(stage,start,duration);});
   }
   setSound(enabled:boolean){const b=this.overlay.querySelector<HTMLButtonElement>('.intro-sound')!;b.setAttribute('aria-label',enabled?'Mute sound':'Unmute sound');b.setAttribute('aria-pressed',String(enabled));b.textContent=enabled?'♪ Sound':'♪ Muted';}
   show(reducedMotion:boolean) {
     if(reducedMotion){this.finish();return;}
+    this.assemblies??=this.stages.map((stage,i)=>{const {start,duration}=buildStageTiming(i);return new PieceAssembly(stage,start,duration);});
     this.active=true;this.building=false;this.elapsed=0;this.brick.visible=true;this.second.visible=this.cluster.visible=false;this.brick.rotation.set(0,0,0);
     this.overlay.hidden=false;this.overlay.classList.remove('is-building','is-ready');
     this.nextSnap=0;this.secondSnapped=this.revealed=this.landed=false;
@@ -53,7 +53,7 @@ export class BuildIntro {
     if(t>=.45&&!this.secondSnapped){this.secondSnapped=true;this.hooks.cue?.('snap');}
     this.cluster.visible=t>.58&&t<2.35;this.cluster.position.y=Math.max(0,1.2*(1-Math.min(1,(t-.58)/.22))**3);
     this.brick.visible=t<2.35;
-    let snaps=0;for(const assembly of this.assemblies)snaps+=assembly.update(t);
+    let snaps=0;for(const assembly of this.assemblies!)snaps+=assembly.update(t);
     if(snaps&&t>=this.nextSnap&&t<7.7){this.hooks.cue?.('snap');this.nextSnap=t+.075;}
     buildCamera(t,this.camera.position,this.lookTarget,this.camera.aspect);this.camera.lookAt(this.lookTarget);
     if(t>=7.65)this.extras.forEach(({object,visible})=>{if(object!==this.arrival)object.visible=visible;});
@@ -64,7 +64,7 @@ export class BuildIntro {
   }
   finish(assembled=false) {
     const wasActive=this.active;if(wasActive)this.hooks.cue?.(assembled?'finish':'skip');
-    this.active=this.building=false;this.brick.visible=this.cluster.visible=false;this.overlay.hidden=true;this.assemblies.forEach(a=>a.restore());this.extras.forEach(({object,visible})=>object.visible=visible);
+    this.active=this.building=false;this.brick.visible=this.cluster.visible=false;this.overlay.hidden=true;this.assemblies?.forEach(a=>a.restore());this.assemblies=null;this.extras.forEach(({object,visible})=>object.visible=visible);
     document.documentElement.dataset.intro='false';try{localStorage.setItem(VISITED_KEY,'yes');}catch{/* Still usable without persistence. */}this.complete();
   }
 }

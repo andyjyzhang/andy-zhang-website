@@ -1,7 +1,8 @@
 # Centred crosshair and Vercel readiness check
 
 Date: 2026-10-14. This supersedes the independent aim/look controls in the prior
-manual-aim record. No deployment was performed.
+manual-aim record. The initial audit was local; subsequent production deployment
+and verification are recorded below.
 
 ## Current aiming
 
@@ -51,15 +52,37 @@ The analytics bootstrap is retained; its host-specific endpoint cannot be
 verified on localhost. No frontend secret/environment-variable requirement was
 found in the application source.
 
-The working tree is uncommitted and includes untracked game/UI modules. Include
-the new source files with the modified files before a Git-triggered deployment;
-otherwise Vercel will not receive the locally checked implementation.
+## Production deployment and verification
 
-`.vercel/project.json` is absent locally. That does not prevent an already linked
-Git deployment, but the intended Vercel account, project settings and live URL
-were not supplied or independently verified. Local preview does not execute
-Vercel redirects; their definitions were checked, not live responses. Nothing
-was staged, committed, pushed, linked or deployed.
+After Andy committed the implementation as `f7c9210` and authorized Vercel,
+the CLI confirmed the existing `andy-zhang-s-projects2/personalweb` project owns
+`andyzhang.vercel.app`. The repository was linked to that project and deployed
+with `vercel deploy --prod --yes --scope andy-zhang-s-projects2`. No new project,
+domain reassignment, Git push or Git integration change was made.
+
+- Production: https://andyzhang.vercel.app/
+- Deployment ID: `dpl_7QktCBhD1CHJQ7uYDohV8qQz4b26`; Vercel reported `READY`.
+- Immutable deployment: https://personalweb-o8j0yiaud-andy-zhang-s-projects2.vercel.app/
+- Inspector: https://vercel.com/andy-zhang-s-projects2/personalweb/7QktCBhD1CHJQ7uYDohV8qQz4b26
+
+Lint, 150 tests and the production build were rerun successfully before upload.
+`npm run check:build -- https://andyzhang.vercel.app/` passed: all four HTML
+documents and seven referenced assets returned HTTP 200 and matched local build
+bytes, including the lazy flight chunk, film thumbnail and model attribution.
+Anonymous requests to `/` and `/portfolio.html` returned HTTP 200;
+`/work.html` and `/projects.html` returned HTTP 308 to `/#experience` and
+`/#projects`. `/_vercel/insights/script.js` returned HTTP 200 JavaScript.
+
+Production Chromium checks used native input and passed for all six chapters,
+normal ship launch and Return, a centred crosshair at exactly the viewport
+centre, a deliberate miss followed by disabling a patrol, intro skip, mobile
+reading without overflow, and the forced reading fallback. No browser exceptions
+occurred; developer controls were absent on the normal visitor URL.
+
+`.vercel/project.json` now records the existing project and is ignored. The CLI
+also generated a local authentication environment file and added `.env*` to
+`.gitignore`; credentials must remain local and must not be committed. Handoff
+documentation was updated after publishing and does not alter the deployed app.
 
 Ignored browser evidence: `artifacts/publish-centred-review.mjs` and
 `artifacts/publish-*.png`.

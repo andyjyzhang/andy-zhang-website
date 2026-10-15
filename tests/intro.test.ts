@@ -20,6 +20,14 @@ function fixture() {
 afterEach(()=>{dom?.window.close();vi.unstubAllGlobals();});
 
 describe('real build intro lifecycle',()=>{
+  it('allocates replay buffers only while building and releases them after completion or skip',()=>{
+    const {intro,pieces,original}=fixture();expect(Reflect.get(intro,'assemblies')).toBeNull();
+    for(let replay=0;replay<2;replay++){
+      intro.show(false);expect(Reflect.get(intro,'assemblies')).not.toBeNull();intro.start();intro.update(1.8);intro.finish();
+      expect(Reflect.get(intro,'assemblies')).toBeNull();expect(pieces.instanceMatrix.array).toEqual(original);
+    }
+    intro.show(true);expect(Reflect.get(intro,'assemblies')).toBeNull();
+  });
   it('keeps the reveal camera above the deck and matches the follow view without a handoff jump',()=>{
     const eye=new T.Vector3(),target=new T.Vector3();
     for(const aspect of [16/9,320/568])for(let time=0;time<=BUILD_DURATION;time+=1/60){buildCamera(time,eye,target,aspect);expect(eye.y).toBeGreaterThan(4);expect([...eye,...target].every(Number.isFinite)).toBe(true);}

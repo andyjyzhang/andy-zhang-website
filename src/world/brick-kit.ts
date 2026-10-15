@@ -4,6 +4,7 @@ import { partGeometry,partLayers,partLayerColor, type LibraryPart } from './part
 import sourceNames from '../assets/ldraw-catalog.json';
 import { coverRectangle, LDRAW_SCALE, STUD, PLATE, legoColor, snapStud, snapPlate, type RectPart } from './part-catalog';
 import type { Obstacle } from './collision';
+import {PlacementStore} from './placement-store';
 export { material } from './plastic';
 export const palette={curb:'#9ba19d',cream:'#e4cd9e',ink:'#05131d',wood:'#582a12',white:'#f4f4f4'};
 const geometryCache=new Map<string,T.BufferGeometry>();
@@ -23,22 +24,24 @@ function rectangularGeometry(p:RectPart) {
   if(!geometryCache.has(key))geometryCache.set(key,new T.BoxGeometry(p.w*STUD-.012,p.h*PLATE-.008,p.d*STUD-.012));
   return geometryCache.get(key)!;
 }
-interface Piece {matrix:T.Matrix4;color:T.Color}
-interface Bucket {geometry:T.BufferGeometry;pieces:Piece[];color:string;stud:boolean}
+interface Bucket {geometry:T.BufferGeometry;matrices:number[];colors:number[];color:string;stud:boolean}
 export class BrickBatch {
   readonly colliders:Obstacle[]=[];
   obstacle(o:Obstacle){this.colliders.push({...o,x:o.x+this.offset.x,z:o.z+this.offset.z,height:o.height+this.offset.y,bottom:(o.bottom??0)+this.offset.y});}
   private buckets=new Map<string,Bucket>(); private dummy=new T.Object3D();
+  private tint=new T.Color();
   private offset=new T.Vector3();
   readonly counts:Record<string,number>={};
-  readonly placements:{file:string;color:string;matrix:T.Matrix4}[]=[];
-  private placed(file:string,color:string,x:number,y:number,z:number,rotation=0,rotationX=Math.PI) {const p=new T.Object3D();p.position.set(x,y,z).add(this.offset);p.rotation.set(rotationX,rotation,0);p.scale.setScalar(LDRAW_SCALE);p.updateMatrix();this.placements.push({file,color:legoColor(color),matrix:p.matrix.clone()});}
+  readonly placements=new PlacementStore();
+  private placed(file:string,color:string,x:number,y:number,z:number,rotation=0,rotationX=Math.PI) {this.placements.add(file,legoColor(color),x+this.offset.x,y+this.offset.y,z+this.offset.z,rotationX,rotation);}
   private record(id:string,color:string){const key=`${id}/${color}`;this.counts[key]=(this.counts[key]||0)+1;}
   private put(key:string,geometry:T.BufferGeometry,color:string,x:number,y:number,z:number,rotation=0,rotationX=0,stud=false) {
     color=legoColor(color);const finishKey=color.startsWith('@')?color:'solid';key+=`/${finishKey}`;
     this.dummy.position.set(x,y,z).add(this.offset);this.dummy.scale.setScalar(1);this.dummy.rotation.set(rotationX,rotation,0);this.dummy.updateMatrix();
-    if(!this.buckets.has(key))this.buckets.set(key,{geometry,pieces:[],color,stud});
-    this.buckets.get(key)!.pieces.push({matrix:this.dummy.matrix.clone(),color:new T.Color(color.startsWith('@')?'white':color)});
+    if(!this.buckets.has(key))this.buckets.set(key,{geometry,matrices:[],colors:[],color,stud});
+    const bucket=this.buckets.get(key)!;
+    this.dummy.matrix.toArray(bucket.matrices,bucket.matrices.length);
+    this.tint.set(color.startsWith('@')?'white':color).toArray(bucket.colors,bucket.colors.length);
   }
   withOffset(x:number,y:number,z:number,assemble:()=>void) {const previous=this.offset.clone();this.offset.add(new T.Vector3(x,y,z));try{assemble();}finally{this.offset.copy(previous);}}
   mold(name:LibraryPart,color:string,x:number,y:number,z:number,rotation=0,rotationX=Math.PI) {
@@ -82,10 +85,12 @@ export class BrickBatch {
     for(let i=0;i<count;i++)this.mold(name,color,snapStud(x),bottom+(i+1)*height,snapStud(z),rotation);
   }
   build(parent:T.Object3D,name='bricks') {
+    this.placements.compact();
     const group=new T.Group();group.name=name;group.userData.parts=this.counts;group.userData.placements=this.placements;group.userData.colliders=this.colliders;
     for(const bucket of this.buckets.values()) {
-      const mesh=new T.InstancedMesh(bucket.geometry,finish(bucket.color),bucket.pieces.length);
-      bucket.pieces.forEach((p,i)=>{mesh.setMatrixAt(i,p.matrix);mesh.setColorAt(i,p.color);});
+      const mesh=new T.InstancedMesh(bucket.geometry,finish(bucket.color),bucket.matrices.length/16);
+      mesh.instanceMatrix.array.set(bucket.matrices);
+      mesh.instanceColor=new T.InstancedBufferAttribute(new Float32Array(bucket.colors),3);
       mesh.castShadow=!bucket.stud;mesh.receiveShadow=true;mesh.computeBoundingSphere();group.add(mesh);
     }
     parent.add(group);return group;

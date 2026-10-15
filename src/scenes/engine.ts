@@ -61,7 +61,7 @@ export class Engine {
   private uiTime = 0;
   private soundDt=.016;
   private readonly sun:T.DirectionalLight;
-  private environmentTexture:T.Texture|null=null;
+  private environmentTarget:T.WebGLRenderTarget|null=null;
   private skyTexture:T.CanvasTexture|null=null;
   private readonly framePacer=new FramePacer();
   private readonly staticShadows:StaticShadowCache;
@@ -150,8 +150,8 @@ export class Engine {
     else {this.follow.overview=new URLSearchParams(location.search).get('view')==='world';this.ui.notify(`Welcome to ${WORLD_STYLE.name}. WASD to explore; scroll in for first person.`);}
   }
   private enableEnvironment(){
-    if(!this.environmentTexture){const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environmentTexture=pmrem.fromScene(environment,.04).texture;environment.dispose();pmrem.dispose();}
-    this.scene.environment=this.environmentTexture;this.scene.environmentIntensity=.45;
+    if(!this.environmentTarget){const environment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(this.renderer);this.environmentTarget=pmrem.fromScene(environment,.04);environment.dispose();pmrem.dispose();}
+    this.scene.environment=this.environmentTarget.texture;this.scene.environmentIntensity=.45;
   }
   private createSkyTexture(){
     if(this.skyTexture)return this.skyTexture;
@@ -164,7 +164,7 @@ export class Engine {
     this.graphicsLow=enabled;saveLowGraphics(enabled);document.documentElement.dataset.graphics=enabled?'low':'standard';
     this.renderer.setPixelRatio(graphicsPixelRatio(enabled,devicePixelRatio,this.coarsePointer));this.renderer.setSize(innerWidth,innerHeight);
     this.renderer.shadowMap.enabled=!enabled;this.sun.castShadow=!enabled;this.framePacer.reset();
-    if(enabled){this.scene.environment=null;this.environmentTexture?.dispose();this.environmentTexture=null;this.skyTexture?.dispose();this.skyTexture=null;this.scene.background=new T.Color(WORLD_STYLE.background);}
+    if(enabled){this.scene.environment=null;this.environmentTarget?.dispose();this.environmentTarget=null;this.skyTexture?.dispose();this.skyTexture=null;this.scene.background=new T.Color(WORLD_STYLE.background);}
     else{this.enableEnvironment();if(WORLD_STYLE.id==='orbital')this.scene.background=this.createSkyTexture();}
     this.ui.setGraphics(enabled);this.ui.notify(enabled?'Low graphics on · lower resolution, 30 FPS, no real-time shadows.':'Standard graphics restored.');
   }

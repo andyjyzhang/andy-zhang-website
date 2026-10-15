@@ -191,7 +191,12 @@ and released after build/skip. Rendering caps at 60 FPS (30 in low graphics),
 [`docs/WORLD_PERFORMANCE_VALIDATION.md`](docs/WORLD_PERFORMANCE_VALIDATION.md)
 for measurements, GPU cache tradeoffs and regression coverage.
 
-The suite contains 165 tests in 21 files, covering part assemblies, architecture,
+CAD placement transforms use compact full-precision storage and decode only for
+export. Shadow blits preserve unrelated renderer state, and graphics toggles
+dispose complete reflection targets. The additional memory/timing measurements
+are recorded in [`docs/WORLD_PERFORMANCE_PASS_TWO.md`](docs/WORLD_PERFORMANCE_PASS_TWO.md).
+
+The suite contains 168 tests in 22 files, covering part assemblies, architecture,
 movement, camera/collision, vehicles, intro, interactions, accessible UI and audio
 lifecycle, plus graphics preference persistence and quality caps. Validation
 records are in:
@@ -210,7 +215,7 @@ records are in:
 an ignored local WAV and timestamp index. `node scripts/character-review.mjs`
 creates an ignored front/side cast gallery for local appearance review.
 
-`npm run check:build` verifies the four HTML documents, links, model attribution
+`npm run check:build` verifies the five HTML documents, links, model attribution
 and absence of résumé links/PDFs. With a preview URL it also checks served assets byte for byte:
 `npm run check:build -- http://localhost:4173/`.
 Vercel redirects `/work.html` and `/projects.html` directly to their current

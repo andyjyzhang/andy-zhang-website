@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { LDRAW_SCALE,legoColor } from './part-catalog';
-interface Placement {file:string;color:string;matrix:T.Matrix4}
+import type {Placement} from './placement-store';
 // LDraw color codes; printed signs are custom stickers and exported as plain tiles.
 const colors:Record<string,number>={'#05131d':0,'#f4f4f4':15,'#9ba19d':71,'#6c6e68':72,'#e4cd9e':19,'#958a73':28,'#a0bcac':378,'#9b9a5a':330,'#6074a1':379,'#0a3463':272,'#5a93db':73,'#078bc9':321,'#008f9b':3,'#582a12':70,'#a95500':484,'#fe8a18':25,'#f2cd37':14,'#720e0f':320,'#c91a09':4,'#237841':2,'#4b9f4a':10,'#bbe90b':27,'#d67572':12,'@cyan':43,'@clear':47,'@amber':46,'@red':36};
 const coordinate=new T.Matrix4().makeScale(1/LDRAW_SCALE,-1/LDRAW_SCALE,-1/LDRAW_SCALE);
@@ -15,7 +15,7 @@ export function exportBuild(root:T.Object3D,name:string) {
   };
   root.traverse(o=>{
     for(let ancestor:T.Object3D|null=o;ancestor;ancestor=ancestor.parent)if(!ancestor.visible)return;
-    const pieces=o.userData.placements as Placement[]|undefined;if(pieces)pieces.forEach(p=>emit(p,o.matrixWorld));
+    const pieces=o.userData.placements as Iterable<Placement>|undefined;if(pieces)for(const piece of pieces)emit(piece,o.matrixWorld);
     const part=o.userData.ldrawPart as {file:string;color:string}|undefined;
     if(part)emit({...part,matrix:new T.Matrix4()},o.matrixWorld);
   });

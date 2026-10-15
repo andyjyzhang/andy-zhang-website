@@ -9,6 +9,19 @@ Read this file together with the repository. Source code takes precedence over
 older measurements and historical completion reports. Update this handoff when a
 future change makes its descriptions stale.
 
+Further performance pass (2026-10-15, based on committed `b391978`): CAD placement
+metadata uses compact Float64 storage instead of 110k retained matrix objects;
+render-batch construction avoids per-piece temporary objects. Shadow cache blits
+preserve renderer state, and low graphics disposes complete reflection targets.
+Browser retained heap/buffers drop about 37% versus the first optimization pass;
+the entire station's CAD export remains byte-identical. Geometry, details,
+controls and games are unchanged. Wider body culling was measured and rejected
+because extra draws increased CPU overhead. 168 tests in 22 files pass. See
+`docs/WORLD_PERFORMANCE_PASS_TWO.md` for evidence and current release status.
+This second pass is deployed as `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP` on the same
+Vercel alias. Live assets and anonymous gameplay/intro/mobile checks pass. Current
+changes remain uncommitted; no Git push or integration change was performed.
+
 Latest entry/performance update (2026-10-15): `/` now serves the existing minimal
 portfolio without any world assets, WebGL or animation loop. `/portfolio.html`
 remains compatible; `world` opens the complete WIP world at `/world.html`.

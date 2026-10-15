@@ -9,7 +9,7 @@ function fixture() {
   const gl={FRAMEBUFFER_BINDING:1,READ_FRAMEBUFFER:2,DRAW_FRAMEBUFFER:3,COLOR_BUFFER_BIT:4,DEPTH_BUFFER_BIT:8,NEAREST:16,
     getParameter:vi.fn(()=>target),bindFramebuffer:vi.fn(),blitFramebuffer:vi.fn()};
   const renderer={
-    shadowMap:{enabled:true},clear:vi.fn(),initRenderTarget:vi.fn(),getContext:()=>gl,resetState:()=>{target=null;},
+    shadowMap:{enabled:true},clear:vi.fn(),initRenderTarget:vi.fn(),getContext:()=>gl,state:{bindFramebuffer:gl.bindFramebuffer},resetState:vi.fn(),
     getRenderTarget:()=>target,setRenderTarget:(next:T.WebGLRenderTarget|null)=>{target=next;},
     render:vi.fn(()=>{target=sun.shadow.map;renderer.clear();passes.push([fixed.castShadow,moving.castShadow]);target=null;renderer.clear();}),
   };
@@ -26,6 +26,7 @@ describe('exact stationary shadow caching',()=>{
     expect(gl.blitFramebuffer).toHaveBeenLastCalledWith(0,0,16,16,0,0,16,16,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
     expect(gl.getParameter).toHaveBeenCalledTimes(2);
     cache.render(scene,camera,true);expect(passes.at(-1)).toEqual([false,true]);expect(passes).toHaveLength(3);expect(gl.getParameter).toHaveBeenCalledTimes(2);
+    expect(renderer.resetState).not.toHaveBeenCalled();
     cache.invalidate();expect(fixed.castShadow&&moving.castShadow).toBe(true);
   });
   it('restores casters for intro/replay and frees textures when low graphics disables shadows',()=>{

@@ -83,13 +83,14 @@ export class StaticShadowCache {
     };
     try{
       const from=framebuffer(source),to=framebuffer(target);
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER,from);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,to);
+      renderer.state.bindFramebuffer(gl.READ_FRAMEBUFFER,from);renderer.state.bindFramebuffer(gl.DRAW_FRAMEBUFFER,to);
       gl.blitFramebuffer(0,0,source.width,source.height,0,0,target.width,target.height,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
     }finally{
-      // Use Three's supported raw-WebGL interop reset. The two framebuffer
-      // handles are queried once, not every frame: texture-copy helpers query
-      // unpack state repeatedly and otherwise introduce GPU/CPU sync stalls.
-      renderer.resetState();renderer.setRenderTarget(previous);
+      // Only framebuffer bindings changed. Keep Three's binding cache coherent
+      // using its state manager, rather than resetting programs, VAOs, textures
+      // and all material state on every frame. Mirrors Three's texture-copy path.
+      renderer.state.bindFramebuffer(gl.READ_FRAMEBUFFER,null);renderer.state.bindFramebuffer(gl.DRAW_FRAMEBUFFER,null);
+      renderer.setRenderTarget(previous);
     }
   }
 }

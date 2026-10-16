@@ -124,5 +124,8 @@ Street/overview/reading screenshots before/after matched pixel-for-pixel.
 Type checking, lint, 168 tests in 22 files, build, local/live artifact checks and
 anonymous native gameplay/intro/mobile flows passed. Published to the original
 https://andyzhang.vercel.app/ project as `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP`.
-Changes remain uncommitted locally. No dependencies or public personal facts
-changed. Timing figures are comparative samples, not a low-end GPU guarantee.
+Changes were uncommitted at publication time and were subsequently committed
+as `a60af9f` (`more optimizing`), observed during the 2026-10-15 documentation
+handoff. No dependencies or public personal facts changed. Timing figures are
+comparative samples, not a low-end GPU guarantee. See `PROJECT_HANDOFF.md` for
+current continuation guidance rather than treating this completed plan as a TODO.

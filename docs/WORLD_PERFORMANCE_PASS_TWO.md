@@ -85,8 +85,12 @@ The same expanded native gameplay checks passed anonymously on production,
 including both minigames, driving, flight combat/return, full build/replay,
 mobile/no-JS reading and fallback. Cached/uncached shadows again matched exactly,
 with no WebGL errors, runtime exceptions, console warnings or errors.
-Source was uploaded directly from the current workspace; no commit, push, new project or Git integration
-change was made. Current source/documentation changes remain uncommitted.
+Source was uploaded directly from the workspace; no commit, push, new project or
+Git integration change was made by that deployment workflow. It was uncommitted
+at publication time. The subsequent 2026-10-15 handoff inspection found these
+changes committed as `a60af9ff81c22d382805f9532c1891e4db52f39a` (`more optimizing`).
+This is a release record, not a live Git-status or latest-deployment assertion;
+see [the current handoff](../PROJECT_HANDOFF.md) and inspect Git/Vercel before publishing.
 
 Ignored evidence: `artifacts/performance-pass2-before.json`,
 `artifacts/performance-pass2-packed.json`, `artifacts/world-memory-pass2-*.json`,

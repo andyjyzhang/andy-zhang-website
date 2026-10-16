@@ -1,17 +1,21 @@
 # Andy's World — Repository Instructions
 
-This repository contains Andy's personal portfolio: an interactive 3D
-LEGO-style orbital station with direct access to professional content.
+This repository contains Andy's personal portfolio and an optional interactive
+3D LEGO-style orbital station.
 
 Preserve useful factual content, links, analytics, deployment configuration,
-resume information, and infrastructure where appropriate.
+archived source documents, asset licenses, and infrastructure where appropriate.
 
 ## Product Goal
 
 Build a polished, performant, explorable LEGO-style world that also functions
 as a practical professional portfolio.
 
-The world itself is the primary interface.
+Current product decision (2026-10-15): `/` is the minimal lowercase black-on-white
+portfolio. The `world` link opens the complete WIP world at `/world.html`.
+`/portfolio.html` remains a reading-view compatibility URL. Do not boot, preload,
+or construct Three.js/world assets on either reading route. Do not move the world
+back to the homepage without Andy's request.
 
 The experience must remain useful to a recruiter who does not want to play the
 game.
@@ -22,8 +26,11 @@ Before making major product decisions:
 
 1. Inspect the existing repository.
 2. Read `/docs/PORTFOLIO_CONTENT.md` if it exists.
-3. Read `/README.md` for the current architecture and development workflow.
-4. For large work, follow `.agents/PLANS.md`.
+3. Read `/README.md` and `/PROJECT_HANDOFF.md` for the current architecture,
+   product decisions, deployment target, and development workflow.
+4. Use `/docs/README.md` to distinguish current guidance from historical audits.
+   For a fresh computer, follow `/docs/NEW_LAPTOP_SETUP.md`.
+5. For large work, follow `.agents/PLANS.md`.
 
 Do not invent personal facts when they can be obtained from existing repository
 content.
@@ -100,6 +107,15 @@ Be deliberate with:
 
 Do not use an expensive solution merely because it is more physically accurate.
 
+Preserve the measured optimizations documented in
+`docs/WORLD_PERFORMANCE_VALIDATION.md` and `docs/WORLD_PERFORMANCE_PASS_TWO.md`:
+shared/instanced geometry, static-transform boundaries, lazy/released intro
+buffers, frame pacing, hidden-tab suspension, cached stationary shadows, compact
+full-precision CAD metadata, and complete render-target disposal. Never freeze
+moving roots, reset all renderer state every shadow blit, or trade a lower
+triangle count for higher draw/CPU cost without measurements. Profile on the
+target device and preserve geometry, controls, games, and appearance.
+
 ## Interaction Conventions
 
 Use these interaction conventions consistently:
@@ -114,6 +130,11 @@ Use these interaction conventions consistently:
 - `Space` — Jump
 - `Esc` — Menu
 
+Salvage Run uses different contextual controls: WASD fly, E rise, Q descend,
+Space fire, Shift boost, R restart. Mouse/touch drag or arrows aim through the
+fixed screen-centre crosshair. No off-axis auto-aim or independent aim/look mode.
+There is no POV button; scroll into first person/cockpit view.
+
 Contextual UI text should make the current action explicit.
 
 Major portfolio landmarks use subtle translucent blue LEGO studs to communicate
@@ -125,7 +146,7 @@ Do not permanently cover the world in interaction labels.
 
 Important professional content must remain quickly accessible.
 
-Maintain a quick-access portfolio navigation method for:
+Maintain in-world quick access to:
 
 - About
 - Experience
@@ -133,8 +154,24 @@ Maintain a quick-access portfolio navigation method for:
 - Education
 - Hobbies
 - Poker
-- Resume
-- Contact
+
+About ends with email, github, and linkedin links. `#contact` is a compatibility
+alias for About, not a separate panel. Résumé links/downloads were explicitly
+removed; keep the source PDF only at `assets/content/AndyZhangResume.pdf`, outside
+public/deployable assets. Do not restore Ontario Government experience, Lawly or
+Memo Lab project entries, Signal Match, Pot Odds, or the observatory destination.
+Current games are Cube Recall, Redshift Draw, and Salvage Run.
+
+The minimal homepage has experience, projects, education, other (High Stakes),
+and hobbies, including poker. Keep its single-column layout, lowercase styling,
+short descriptions, and direct GitHub project links. Update shared facts in
+`src/content/portfolio.ts`; static-only copy/style/film metadata lives in
+`scripts/build-fallback.mjs`. Regenerate both tracked HTML outputs with
+`node scripts/build-fallback.mjs` or `npm run build`; do not hand-edit them.
+
+Use `/world.html?dev=ui` for the opt-in page/game gallery. Historical audit URLs
+using `/?dev=ui`, `/?intro=1`, or world chapter hashes at `/` predate the entry split;
+use `/world.html` for those world queries/hashes now.
 
 A user must not be required to drive, complete a minigame, or search the map in
 order to access professional information.
@@ -152,7 +189,8 @@ Avoid excessive:
 - giant hero text
 - decorative particles
 
-The LEGO world should provide the site's visual identity.
+The LEGO world provides the interactive world's visual identity. Keep the
+separate reading homepage deliberately minimal, lowercase, black on white.
 
 Keep the world playful, clean, detailed, and professional.
 
@@ -197,21 +235,26 @@ Fix errors rather than suppressing them without justification.
 For interactive systems, verify the actual user flow rather than relying only
 on successful compilation.
 
+`docs/TESTING.md` records the commands and portable manual checks. A local build
+does not deploy. Publish only when requested, to the existing
+`andy-zhang-s-projects2/personalweb` Vercel project (`andyzhang.vercel.app`), not a
+new project. Keep `.env*`, `.vercel/`, private references, browser profiles, and
+credentials out of Git. Do not assume a Git push automatically publishes.
+
 ## Scope Discipline
 
 Complete the core experience before optional minigames.
 
 Priority implementation order:
 
-1. world
-2. player/camera
-3. landmark interaction
-4. portfolio content
-5. vehicles
-6. intro
-7. ambient life
-8. spaceship transition
-9. optional minigames
+1. minimal portfolio, factual content, and direct professional access
+2. world
+3. player/camera and landmark interaction
+4. vehicles
+5. intro
+6. ambient life
+7. spaceship transition
+8. optional minigames
 
 Do not allow the hidden game or minor decorative features to block completion
 of the portfolio.

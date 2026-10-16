@@ -72,6 +72,11 @@ Include:
 - constraints
 - known issues
 
+Record the current entry points, not just historical world URLs: `/` is the
+minimal portfolio and `/world.html` is the optional WIP world. Consult
+`PROJECT_HANDOFF.md` and `docs/README.md` for superseded controls/features and
+dated evidence before planning replacements.
+
 Do not guess when the repository can be inspected.
 
 ## Non-Goals
@@ -308,19 +313,20 @@ Prefer concrete decisions based on the existing repository.
 
 For Andy's World, optional features must not block the core portfolio.
 
-The core experience has priority:
+The core experience has priority. Since the 2026-10-15 portfolio-first change,
+preserve the minimal homepage and its zero-world-assets loading boundary first;
+the world is an optional independent entry, not the landing page. For world work:
 
-1. base world
-2. player movement
-3. third-person camera
-4. landmark interaction
-5. professional portfolio content
-6. quick-access navigation
-7. vehicles
-8. intro sequence
-9. restrained ambient life
-10. spaceship transition
-11. optional minigames
+1. usable factual portfolio and direct reading/quick access
+2. base world
+3. player movement
+4. third-person camera
+5. landmark interaction and in-world content
+6. vehicles
+7. intro sequence
+8. restrained ambient life
+9. spaceship transition
+10. optional minigames
 
 Do not spend large amounts of time on the hidden game before the portfolio itself works.
 

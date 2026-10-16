@@ -4,8 +4,10 @@ Andy Zhang's minimal portfolio is the landing page. The `world` link opens
 Andy's Orbital Station, the work-in-progress playable LEGO-style spaceport.
 Built with TypeScript, Vite and Three.js; no React or physics engine.
 
-Continuing on another device? Read the [complete project handoff](PROJECT_HANDOFF.md)
-for product decisions, source maps, setup, validation history and remaining work.
+Continuing on another device? Start with [new-laptop setup](docs/NEW_LAPTOP_SETUP.md),
+then the [project handoff](PROJECT_HANDOFF.md) for current decisions and source maps.
+The [documentation index](docs/README.md) separates current guidance from historical
+audits; [testing](docs/TESTING.md) covers repeatable checks and browser flows.
 
 ## Run locally
 
@@ -30,6 +32,9 @@ npm run preview
 
 Vercel builds `dist/` using `vercel.json`. Existing project linkage and analytics
 are retained. No deployment is performed by local build commands.
+Production: https://andyzhang.vercel.app/ in the existing
+`andy-zhang-s-projects2/personalweb` project. No `.env` file, account login,
+database, or backend service is needed for local development.
 
 ## Content and appearance
 
@@ -49,6 +54,8 @@ are retained. No deployment is performed by local build commands.
   long pages scroll between a fixed heading and footer.
 - `index.html` and `public/portfolio.html`: the same concise portfolio, generated
   from shared content by `scripts/build-fallback.mjs` before `npm run build`.
+  Do not edit the generated HTML directly. Run `node scripts/build-fallback.mjs`
+  after editing content when using the dev server; builds run it automatically.
   The lowercase black-on-white view works without JavaScript or WebGL. It does
   not load, preload or construct the world. Analytics is preserved on Vercel.
 - `world.html`: the independent Vite entry for the complete interactive world.
@@ -78,7 +85,8 @@ underside and connected load-bearing beams. Six architectural families use
 recessed bays, balconies, pressure vessels, stepped crowns and native specialist
 pieces. Each portfolio landmark has its own entrance assembly. Offset streets,
 freight lanes and a dramatic brick-built orbital gate remain freely explorable.
-`/world.html?view=world` opens the overview. Drag or use arrow keys to orbit, scroll to zoom, and lower the view to inspect the underside. Overview controls are
+`/world.html?view=world` opens the overview after the first-visit intro has been
+completed/skipped. Drag or use arrow keys to orbit, scroll to zoom, and lower the view to inspect the underside. Overview controls are
 independent from the street camera.
 
 E interacts with street equipment and station crew; E plays the cube shelf
@@ -126,8 +134,9 @@ supports card buttons/number keys, and deals a new shuffled run on replay.
 Scroll all the way in for first person, with a hidden cursor and mouse free look;
 scroll out to restore third person (maximum distance 46). First-person sensitivity
 is 0.0015 radians/pixel. Walking/running are 8.4/14.4
-units per second; tune them in `src/config/controls.ts`. The POV button also
-requests pointer capture for unlimited mouse turning. Escape releases it for
+units per second; tune them in `src/config/controls.ts`. Scrolling into first person
+requests pointer capture for unlimited mouse turning; clicking the canvas can
+retry if a browser requires a click. There is no POV button. Escape releases capture for
 navigation. Browsers that reject capture still support unheld mouse movement
 inside the canvas. No gameplay is required to read the portfolio.
 
@@ -171,6 +180,10 @@ have a clearer speed-responsive engine, rolling tires and braking feedback.
 The express has distance-based rumble/clatter, one approach bell per pass and
 a carriage-door cue when boarding.
 
+Saved browser settings are local to the browser/device; a fresh laptop will show
+the world intro again. Reduced motion follows the OS initially and its in-app
+toggle is session-only. Low graphics and sound preferences persist separately.
+
 ## Architecture and validation
 
 The engine owns the update loop and scene state. Rendering, collision, player,
@@ -196,10 +209,14 @@ export. Shadow blits preserve unrelated renderer state, and graphics toggles
 dispose complete reflection targets. The additional memory/timing measurements
 are recorded in [`docs/WORLD_PERFORMANCE_PASS_TWO.md`](docs/WORLD_PERFORMANCE_PASS_TWO.md).
 
-The suite contains 168 tests in 22 files, covering part assemblies, architecture,
-movement, camera/collision, vehicles, intro, interactions, accessible UI and audio
-lifecycle, plus graphics preference persistence and quality caps. Validation
-records are in:
+At the 2026-10-15 handoff the suite contains 168 tests in 22 files, covering part
+assemblies, architecture, movement, camera/collision, vehicles, intro,
+interactions, accessible UI and audio lifecycle, plus graphics preference
+persistence and quality caps. Validation
+records are listed below. These are dated evidence, not current routing/control
+specifications. In older records the world was at `/`; it is now at
+`/world.html`. The independent aiming record was superseded by centred-crosshair
+aiming.
 
 - [`docs/FEATURE_AUDIT.md`](docs/FEATURE_AUDIT.md)
 - [`docs/BUILD_AUDIO_VALIDATION.md`](docs/BUILD_AUDIO_VALIDATION.md)

@@ -1,6 +1,6 @@
 # Andy's World — project handoff
 
-Updated **2026-10-19** after station curation and world-interface work. This is current continuation guidance,
+Updated **2026-10-19** after the authorized station/interface production release. This is current continuation guidance,
 not a backlog or a claim that every device has been tested. Read it with
 [AGENTS.md](AGENTS.md), [README.md](README.md), and the actual source. Use
 [new-laptop setup](docs/NEW_LAPTOP_SETUP.md) for migration, [testing](docs/TESTING.md)
@@ -14,14 +14,15 @@ for repeatable checks, and the [documentation map](docs/README.md) for history.
 | Branch | `main` |
 | Base HEAD for the interface pass | `418df4962244b329a2c09e8cb6016dc98e2ef03d` — `update docs` |
 | Base commit time | `2026-10-15T23:34:00-04:00` |
-| Working tree when the pass began | Clean; local `origin/main` matched HEAD. This pass leaves local source/docs changes uncommitted. |
+| Released source | `d4d5a94f1febc72e32e9317304e3413d3aeb1834` — `feat: fixed up world assets` |
+| Working tree when the pass began | Clean; local `origin/main` matched HEAD. The implementation was subsequently committed and pushed as `d4d5a94`; release notes are a documentation-only follow-up. |
 | Runtime inspected | Node `v24.16.0`, npm `11.13.0`; required Node major is 24 |
-| Last recorded production release | `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP`, 2026-10-15 |
+| Last recorded production release | `dpl_aKhXnJUWArKudLmGpzdyTpz1JvgP`, 2026-10-19 |
 
-Git tracking state was read locally, not refreshed by a network fetch. These
-source/documentation changes need their own commit/push or deliberate transfer.
-Do not infer current Git status or Vercel state from a frozen snapshot. This
-local implementation pass does not deploy or transfer account credentials.
+At publication, a live `git ls-remote origin refs/heads/main` matched the released
+source `d4d5a94`. The deployment and served files were checked separately; a Git
+push alone does not publish this project. Do not infer future Git/Vercel status
+from this snapshot or transfer account credentials between devices.
 
 ## Product decisions to preserve
 
@@ -352,9 +353,12 @@ reintroduce it on triangle count alone. The world remains substantial and Vite's
 large-chunk warning remains. Measure foreground performance on the new device.
 
 The 2026-10-19 `scripts/profile-world.mjs` scope includes town plus main activity
-props, excluding landmarks/actors/vehicles: 4,211,454 → 3,823,136 triangles,
-270 → 163 colliders, 231 → 223 meshes, 110,526 → 110,142 placements. These are
-authorized removed objects, not identical-geometry parity. Current activity
+props, excluding landmarks/actors/vehicles. After the curated street-furniture
+correction, the final inventory is 4,008,212 triangles, 251 colliders, 228 meshes
+and 110,985 placements. The pre-curation baseline was 4,211,454 triangles,
+270 colliders and 231 meshes. The full-removal intermediate numbers in the
+validation report are historical; do not remove all streetlights to reproduce
+them. These are changed objects, not identical-geometry parity. Current activity
 definitions are nine before adding crew. Cached DOM references/change-only
 HUD/map writes eliminate stationary telemetry mutations and queries; cargo cable
 uploads/bounds update only when the crate moves. Flight keeps its existing 10 Hz
@@ -435,22 +439,32 @@ Both static reading routes retain inline Vercel analytics bootstrapping; world
 uses `src/analytics.ts`. Localhost is skipped; non-local deployment expects
 `/_vercel/insights/script.js`. No analytics token needed. Recheck if changing hosts.
 
-**Last recorded release**, not a fresh Vercel inspection for this local change:
+**Latest verified release — 2026-10-19**, explicitly requested by Andy:
 
-- 2026-10-15, deployment `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP` (`READY` at release).
-- Immutable URL: `https://personalweb-639ze46kf-andy-zhang-s-projects2.vercel.app/`.
-- Inspector: `https://vercel.com/andy-zhang-s-projects2/personalweb/EgYeUSjPYT2uzawWo1bqubWP25UP`.
-- Workspace upload before commit; source was subsequently committed as `a60af9f`.
-  Deployment Git metadata alone does not establish byte-identical source for an
-  uncommitted upload. Published HTML/resources were explicitly compared to local
-  build bytes at release. No new project, Git integration change, commit or push
-  was made by that publishing workflow.
+- Source `d4d5a94f1febc72e32e9317304e3413d3aeb1834` was already committed/pushed.
+  Deployed from a clean workspace using Vercel CLI `64.7.0`, with the existing
+  project/organization IDs verified before publishing. No Git integration or
+  project configuration changes were made.
+- Deployment `dpl_aKhXnJUWArKudLmGpzdyTpz1JvgP`, target `production`, `READY`;
+  public alias `https://andyzhang.vercel.app/` resolves to this deployment.
+- Immutable URL: `https://personalweb-7odq9ayiv-andy-zhang-s-projects2.vercel.app/`.
+- Inspector: `https://vercel.com/andy-zhang-s-projects2/personalweb/aKhXnJUWArKudLmGpzdyTpz1JvgP`.
+- `npm run check:build -- https://andyzhang.vercel.app/` passed: all five HTML
+  documents and linked HTML/JS/CSS/supporting resources match local `dist/` bytes.
+  `/` still loads no world bootstrap/preload; `/world.html` has title `Andy's World`.
+  Legacy `/work.html` and `/projects.html` return the intended 308 redirects;
+  `/_vercel/insights/script.js` returns 200 without deployment credentials.
+- Live Chrome checked the reading homepage → world link → Directory → About,
+  factual/contact links and return behavior. This is a release smoke check;
+  the full local interaction/accessibility review remains separately scoped.
+- Previous release was `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP` on 2026-10-15.
 
 ## Verification status and remaining limits
 
 At the 2026-10-19 interface/furniture pass, typecheck, lint, **176 tests / 22 files**, build,
-and served production artifact checks passed. Current source changes are local;
-no new production deployment or universal gameplay certification is implied.
+and served production artifact checks passed. Those changes and the shorter
+world tab title are published in the release above. This does not imply
+universal gameplay certification.
 Desktop and 390px/short-landscape UI checks, computed contrast, native focus,
 intro/skip/returning visit, main equipment, both tabletop games, rover exit/move,
 ship launch/restart/cockpit/return, and fallback are detailed in

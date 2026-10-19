@@ -1,7 +1,8 @@
 # Station curation and world-interface validation
 
 Date: 2026-10-19. Base source: `418df4962244b329a2c09e8cb6016dc98e2ef03d`.
-These are local changes and local validation, not a production deployment.
+Initial implementation checks were local. The subsequently authorized
+production release is recorded below; its source is `d4d5a94`.
 The implementation plan is
 [world-curation-and-interface.md](../.agents/plans/world-curation-and-interface.md).
 
@@ -204,9 +205,32 @@ do not require those artifacts or old browser profiles on a new device.
 
 ## Remaining limits
 
-No production deployment or commit was made. The old 2026-10-15 release remains
-the last recorded publication. Real-device GPU/FPS profiling, physical touch,
+The initial implementation review did not commit or deploy. It was subsequently
+committed/pushed as `d4d5a94` and published as recorded below. Real-device GPU/FPS profiling, physical touch,
 screen readers/high-contrast modes, subjective audio listening and complete
 three-sector combat playthroughs across browsers remain a broader test matrix.
 The unchanged part inventory/export limitations still apply: this is a digital
 brick model, not a certified physical construction kit.
+
+## Authorized production release (2026-10-19)
+
+Andy explicitly requested publishing the current changes. Source commit
+`d4d5a94f1febc72e32e9317304e3413d3aeb1834` was already on GitHub `main`.
+Vercel CLI `64.7.0` deployed the clean workspace to the verified existing
+`andy-zhang-s-projects2/personalweb` project. No new project, domain, Git
+integration, dependency or application change was needed for the release.
+
+- Deployment: `dpl_aKhXnJUWArKudLmGpzdyTpz1JvgP`, `production`, `READY`.
+- Public site: <https://andyzhang.vercel.app/>.
+- Immutable URL: <https://personalweb-7odq9ayiv-andy-zhang-s-projects2.vercel.app/>.
+- Inspector: <https://vercel.com/andy-zhang-s-projects2/personalweb/aKhXnJUWArKudLmGpzdyTpz1JvgP>.
+
+The configured remote production build passed. The public alias was inspected
+and resolves to this deployment. `check:build` against the public site passed
+byte comparisons for all five HTML documents and their JS/CSS/supporting
+resources. Explicit HTTP checks confirmed the world title `Andy's World`, both
+legacy 308 redirects and analytics-script HTTP 200. Chrome smoke checks covered
+the minimal reading homepage, world link, rendered station, directory, About
+contact links and close/return behavior. The larger local test matrix above
+was not repeated as an exhaustive live gameplay audit. Release notes are a
+documentation-only follow-up to the deployed source commit.

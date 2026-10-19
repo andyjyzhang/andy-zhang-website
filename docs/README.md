@@ -42,8 +42,8 @@ Important supersessions:
 
 | Record | Scope / current relevance |
 | --- | --- |
-| [Station curation / interfaces](STATION_INTERFACE_VALIDATION.md) | Current world screens, generic facade removal, curated street furniture, idle-work reduction and 2026-10-19 local checks; not deployed |
-| [World performance pass two](WORLD_PERFORMANCE_PASS_TWO.md) | Latest recorded release; compact CAD storage, state-preserving shadow blit, target disposal, measurements and browser parity |
+| [Station curation / interfaces](STATION_INTERFACE_VALIDATION.md) | Current world screens, generic facade removal, curated street furniture, idle-work reduction, local checks and authorized 2026-10-19 production release |
+| [World performance pass two](WORLD_PERFORMANCE_PASS_TWO.md) | 2026-10-15 release; compact CAD storage, state-preserving shadow blit, target disposal, measurements and browser parity |
 | [Portfolio-first/performance pass one](WORLD_PERFORMANCE_VALIDATION.md) | Entry split, static transforms, bounded detail, stationary shadow cache, intro-buffer lifecycle, frame pacing |
 | [Centred aim / publication](CENTRED_AIM_PUBLISH_CHECK.md) | Current aiming model; predates entry split and performance passes |
 | [Manual aim](MANUAL_FLIGHT_AIM_VALIDATION.md) | Historical independent aiming, superseded by centred aim; minimap clearance remains relevant |

@@ -269,3 +269,13 @@ licenses, deployment/analytics and established rendering optimizations remain.
 No publish/commit was requested. Remaining limits are real-device GPU/FPS,
 physical touch/screen-reader coverage and cross-browser complete combat runs;
 the report does not claim those were performed.
+
+## Subsequent authorized release (2026-10-19)
+
+Andy requested publishing after the implementation was committed/pushed as
+`d4d5a94`. Verified the existing Vercel project/link, then deployed the clean
+workspace. Production deployment `dpl_aKhXnJUWArKudLmGpzdyTpz1JvgP` is `READY`
+at `https://andyzhang.vercel.app/`. Live HTML/assets match the local build;
+the shorter world title, redirects, analytics and reading/world/Directory/About
+smoke flow were checked. Current release details and the limited live-check
+scope are in `PROJECT_HANDOFF.md` and `docs/STATION_INTERFACE_VALIDATION.md`.

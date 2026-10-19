@@ -31,9 +31,11 @@ describe('complete live station inventory',()=>{
     ...vehicles.filter(v=>v.spec.driveable).map(v=>({id:v.spec.id,name:v.spec.name,action:'Drive' as const,key:'F' as const,x:v.position.x,z:v.position.z,radius:4.6}))];
     vi.unstubAllGlobals();
   });
-  it('accounts for every facade, activity, crew member and driveable vehicle',()=>{
-    expect(activities.definitions).toHaveLength(43);
-    expect(activities.definitions.filter(d=>d.kind==='facility')).toHaveLength(29);
+  it('keeps authored activities, crew and vehicles without generic facade clutter',()=>{
+    expect(activities.definitions).toHaveLength(14);
+    expect(activities.definitions.some(d=>d.id.startsWith('facility-'))).toBe(false);
+    expect(obstacles.some(o=>/facility console/i.test(o.label??''))).toBe(false);
+    expect(obstacles.filter(o=>o.label==='streetlight post')).toHaveLength(36);
     expect(activities.definitions.filter(d=>d.kind==='crew')).toHaveLength(5);
     expect(vehicles.filter(v=>v.spec.driveable)).toHaveLength(3);
   });
@@ -53,16 +55,27 @@ describe('complete live station inventory',()=>{
       expect(nearestInteraction(point!.x,point!.z,items)?.id,`${v.spec.id}: exit prompt`).toBe(v.spec.id);
     }
   });
-  it('toggles every facade on and off, greets all crew, and rejects invalid commands',()=>{
+  it('runs every authored activity, greets all crew, and rejects invalid commands',()=>{
     for(const d of activities.definitions){
       expect(activities.command(d.id,'invalid')).toBeNull();
       for(const c of d.commands)expect(activities.command(d.id,c.id)?.definition.id).toBe(d.id);
-      if(d.kind==='facility')expect(activities.command(d.id,'toggle')?.on).toBe(false);
     }
   });
 });
 
 describe('activity completion and retry safety',()=>{
+  it('leaves the cargo cable GPU buffer and bounds untouched while idle, then updates on movement',()=>{
+    labels();const props=new SpaceportProps(new T.Group(),new StationActivities().definitions);
+    const cable=props.root.children.find(o=>o instanceof T.Line) as T.Line;
+    props.update(1/60,false);const positions=cable.geometry.getAttribute('position') as T.BufferAttribute;
+    const version=positions.version,bounds=vi.spyOn(cable.geometry,'computeBoundingSphere');
+    for(let i=0;i<600;i++)props.update(1/60,false);
+    expect(positions.version).toBe(version);expect(bounds).not.toHaveBeenCalled();
+    props.activate('cargo',false,'load',false);props.update(.5,false);
+    expect(positions.version).toBeGreaterThan(version);expect(bounds).toHaveBeenCalledTimes(1);
+    const movingVersion=positions.version;props.update(1/60,true,{x:0,y:.512,z:10});
+    expect(positions.version).toBeGreaterThan(movingVersion);
+  });
   it('finishes drone and cargo runs despite repeated attempts to restart them',()=>{
     labels();const props=new SpaceportProps(new T.Group(),new StationActivities().definitions);
     for(const [id,command] of [['repair','test'],['cargo','load']]){

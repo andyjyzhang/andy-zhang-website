@@ -1,13 +1,14 @@
 import * as T from 'three';
-import {BrickBatch,lamp,sign} from './brick-kit';
+import {BrickBatch} from './brick-kit';
 import {WORLD_STYLE as style} from '../config/station';
 import {STUD as S,PLATE as H} from './part-catalog';
-import {CITY_LOTS,STREETS,lotEntrance} from './city-layout';
+import {CITY_LOTS,STREETS} from './city-layout';
 import {spaceBuilding,facilitySign,buildingColor} from './city-buildings';
 import {buildOrbitalGate} from './orbital-gate';
 import type {SurfaceGrid} from './surface-grid';
 import type {Obstacle} from './collision';
 import {buildTransit} from './transit';
+import {addStreetFurniture} from './street-furniture';
 
 export function addCity(root:T.Group,obstacles:Obstacle[],surface:SurfaceGrid) {
   const detail=new BrickBatch();
@@ -17,21 +18,18 @@ export function addCity(root:T.Group,obstacles:Obstacle[],surface:SurfaceGrid) {
     surface.box(style.road,street.x,.384,street.z,street.w,H,street.d);
     const length=vertical?street.d:street.w;
     for(let a=-length/2+3.84;a<length/2;a+=7.68)surface.stack('#f2cd37',street.x+(vertical?0:a),H,street.z+(vertical?a:0),vertical?1:4,1,vertical?4:1,'tile');
-    for(let a=-length/2+8.96;a<length/2;a+=23.04)lamp(detail,street.x+(vertical?street.w/2+1.28:a),street.z+(vertical?a:street.d/2+1.28),true);
   }
   for(const x of [-58.88,38.4,99.84])for(const z of [16.64,52.48])for(let i=-3;i<=3;i++)surface.stack('#f4f4f4',x+i*1.28,H,z,1,1,12,'tile');
   CITY_LOTS.forEach((lot,i)=>{
-    const [ex,ez]=lotEntrance(lot),color=buildingColor(lot.design,i);
+    const color=buildingColor(lot.design,i);
     surface.stack(style.paving,lot.x,H,lot.z,lot.w+4,1,lot.d+4,'tile');
     const building=new T.Group();building.position.set(lot.x,0,lot.z);building.rotation.y=lot.facing??0;root.add(building);
     const bricks=new BrickBatch(),roof=spaceBuilding(bricks,0,0,.512,lot.w,lot.d,lot.floors,color,lot.design,i);
     bricks.build(building,'city-parcel');facilitySign(building,lot.name,0,0,lot.d,lot.w);
     obstacles.push({x:lot.x,z:lot.z,w:(lot.w+2)*S,d:(lot.d+2)*S,height:roof+10,label:lot.name});
-    // Every parcel has an operable airlock/lighting console, connected to its facade.
-    detail.stack('#05131d',ex,.512,ez,2,9,2,'stud');detail.stack('@amber',ex,2.048,ez+S,2,2,1,'tile');
-    detail.obstacle({x:ex,z:ez,w:1.28,d:1.28,height:2.816,bottom:.512,label:'facility console'});
   });
   buildTransit(root);
+  addStreetFurniture(detail,surface);
   // Sidewall docking collars and radiator banks make the plinth a station hull.
   for(let i=-5;i<=5;i++) {
     const x=i*19.2;detail.stack('#0a3463',x,.512,99.84,20,12,4,'stud');
@@ -40,5 +38,4 @@ export function addCity(root:T.Group,obstacles:Obstacle[],surface:SurfaceGrid) {
   }
   detail.build(root,'city-transit-and-details');
   buildOrbitalGate(root,obstacles);
-  sign(root,'GATE / NORTH     WORKSHOP / 02',0,2.56,-55.04,12.8,.64);
 }

@@ -26,6 +26,42 @@ function fixture() {
 afterEach(()=>{dom?.window.close();vi.unstubAllGlobals();});
 
 describe('real interface keyboard and routing',()=>{
+  it('switches directory pages with arrow keys and opens settings directly',()=>{
+    const {ui}=fixture();ui.openMenu();
+    const tabs=ui.menu.querySelectorAll<HTMLButtonElement>('[role="tab"]');tabs[0].focus();
+    tabs[0].dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+    expect(document.activeElement).toBe(tabs[1]);expect(tabs[1].getAttribute('aria-selected')).toBe('true');
+    expect(ui.menu.querySelector<HTMLElement>('#directory-portfolio')!.hidden).toBe(true);
+    expect(ui.menu.querySelector<HTMLElement>('#directory-station')!.hidden).toBe(false);
+    ui.closeMenu();ui.root.querySelector<HTMLButtonElement>('[data-controls]')!.click();
+    expect(ui.menu.querySelector<HTMLElement>('#directory-settings')!.hidden).toBe(false);
+    expect(ui.menu.querySelector('[role="tab"][aria-selected="true"]')!.textContent).toBe('Settings');
+  });
+  it('does no repeated DOM lookup, layout read or mutation for stationary telemetry',()=>{
+    const {ui}=fixture(),game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game);
+    vi.stubGlobal('innerWidth',1440);vi.stubGlobal('innerHeight',900);
+    game.start();hud.refresh();hud.targetLabel(50,55,true);ui.updateLocation(0,10);
+    const query=vi.spyOn(hud.root,'querySelector'),layout=vi.spyOn(dom.window.Element.prototype,'getBoundingClientRect');
+    const observer=new dom.window.MutationObserver(()=>{});observer.observe(document.querySelector('#app')!,{attributes:true,childList:true,characterData:true,subtree:true});
+    for(let i=0;i<600;i++){hud.refresh();hud.targetLabel(50,55,true);ui.updateLocation(0,10);}
+    expect(query).not.toHaveBeenCalled();expect(layout).not.toHaveBeenCalled();expect(observer.takeRecords()).toHaveLength(0);
+    game.position.y+=1;hud.refresh();expect(observer.takeRecords().length).toBeGreaterThan(0);
+    observer.disconnect();hud.dispose();query.mockRestore();layout.mockRestore();
+  });
+  it('keeps flight briefing actions keyboard reachable and clears held controls when focus leaves',()=>{
+    fixture();const game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game),reset=vi.fn();hud.onReset=reset;
+    const launch=()=>hud.root.querySelector<HTMLButtonElement>('[data-flight-action="start"]')!;
+    expect(document.activeElement).toBe(launch());launch().click();
+    expect(game.phase).toBe('playing');expect(document.activeElement?.tagName).toBe('CANVAS');expect(reset).toHaveBeenCalledOnce();
+    const boost=hud.root.querySelector<HTMLButtonElement>('[data-flight-hold="boost"]')!;
+    boost.dispatchEvent(new dom.window.KeyboardEvent('keydown',{code:'Space',bubbles:true,cancelable:true}));expect(hud.held('boost')).toBe(true);
+    window.dispatchEvent(new dom.window.Event('blur'));expect(hud.held('boost')).toBe(false);expect(boost.classList.contains('is-held')).toBe(false);
+    hud.root.querySelector<HTMLButtonElement>('[data-flight-action="restart"]')!.click();
+    expect(game.phase).toBe('briefing');expect(document.activeElement).toBe(launch());
+    const back=vi.fn();hud.onReturn=back;hud.root.querySelector<HTMLButtonElement>('[data-flight-exit]')!.click();
+    expect(back).toHaveBeenCalledOnce();expect(game.phase).toBe('briefing');
+    hud.dispose();
+  });
   it('provides labeled mute and volume controls and retains the saved setting when reopening',()=>{
     const {ui,actions}=fixture();ui.setSound(false,.25,'muted');ui.openMenu();
     const slider=ui.menu.querySelector<HTMLInputElement>('[data-sound-volume]')!,checkbox=ui.menu.querySelector<HTMLInputElement>('[data-sound-enabled]')!;
@@ -68,7 +104,8 @@ describe('real interface keyboard and routing',()=>{
     expect(ui.menu.querySelector('a[href$=".pdf"]')).toBeNull();
     const choices=ui.menu.querySelectorAll<HTMLButtonElement>('[data-travel]');expect(new Set([...choices].map(b=>b.dataset.travel)).size).toBe(choices.length);
     expect(ui.menu.querySelector('[data-travel="crew-test"]')).not.toBeNull();
-    ui.menu.querySelector<HTMLButtonElement>('[data-travel="facility-0"]')!.click();expect(actions.travel).toHaveBeenCalledWith('facility-0');expect(ui.menu.open).toBe(false);
+    expect(ui.menu.querySelector('[data-travel^="facility-"]')).toBeNull();
+    ui.menu.querySelector<HTMLButtonElement>('[data-travel="crew-test"]')!.click();expect(actions.travel).toHaveBeenCalledWith('crew-test');expect(ui.menu.open).toBe(false);
     for(const section of Object.keys(sectionLabels)){ui.openMenu();ui.menu.querySelector<HTMLButtonElement>(`[data-section="${section}"]`)!.click();expect(actions.openSection).toHaveBeenCalledWith(section);}
   });
   it('provides an opt-in gallery for every panel, compact game and destination',()=>{
@@ -90,7 +127,7 @@ describe('real interface keyboard and routing',()=>{
   it('shows distinct simple feedback without pausing or stealing canvas focus',()=>{
     const {ui}=fixture(),station=new StationActivities(),canvas=document.querySelector('canvas')!;canvas.focus();
     const unique=new Set<string>();
-    for(const id of ['reactor','repair','cargo','noodles','radio','facility-0']) {
+    for(const id of ['reactor','repair','cargo','noodles','radio','gate']) {
       const result=station.command(id,station.find(id)!.commands[0].id)!;unique.add(feedbackMarkup(result));ui.activityUI.showFeedback(result);
       expect(ui.paused).toBe(false);expect(document.activeElement).toBe(canvas);expect(ui.activityUI.feedback.querySelector('[role="status"]')).not.toBeNull();
     }
@@ -131,7 +168,7 @@ describe('structural accessibility',()=>{
       expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
     };
     for(const section of Object.keys(sectionLabels) as Section[]){ui.openPanel(section);await run();ui.closePanel();}
-    ui.openMenu();ui.menu.querySelector('details')!.open=true;await run();ui.closeMenu();
+    for(const tab of ['portfolio','station','settings'] as const){ui.openMenu(tab);await run();ui.closeMenu();}
     const station=new StationActivities();ui.activityUI.showFeedback(station.command('noodles','order')!);await run();ui.activityUI.hideFeedback();
     for(const id of ['cube','poker-game']){ui.openGame(station.find(id)!);await run();ui.closeActivity();}
     const game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game);ui.setScene(true,true);

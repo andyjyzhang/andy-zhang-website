@@ -52,6 +52,9 @@ database, or backend service is needed for local development.
 - `src/ui/portfolio-panels.css`: in-world portfolio/directory theme, using dark
   ink blue, amber, Manrope and IBM Plex Mono. Compact pages size to their content;
   long pages scroll between a fixed heading and footer.
+- `src/ui/directory-markup.ts`: Portfolio / Station / Settings pages, chapter
+  descriptions and curated travel destinations. `src/style.css` owns shared
+  world UI tokens; tabletop games and flight have their own layouts/styles.
 - `index.html` and `public/portfolio.html`: the same concise portfolio, generated
   from shared content by `scripts/build-fallback.mjs` before `npm run build`.
   Do not edit the generated HTML directly. Run `node scripts/build-fallback.mjs`
@@ -70,7 +73,7 @@ F enters/exits driveable cars. Esc opens/closes the menu or returns from space.
 The enlarged bottom-right portfolio link, directory and Contact control provide
 direct professional access.
 Small screens have movement/action buttons and responsive content panels.
-Controls & settings includes a persistent Low graphics option for weaker PCs.
+Directory → Settings includes a persistent Low graphics option for weaker PCs.
 It lowers render density, caps rendering near 30 FPS, disables real-time shadows
 and reflections, and starts future visits with a non-antialiased low-power canvas.
 
@@ -96,11 +99,15 @@ dispatch, receipt, receiver, beacon or crew feedback. They do not pause movement
 Two compact games live in the world: Cube Recall (1–4/H/N/R)
 and Redshift Draw (1–5/D/B/N/R). Esc closes every game. Named
 colors, text outcomes and manual controls support reduced motion and keyboard use.
-Directory → More station stops exposes every facade, crew member and driveable
-vehicle; professional chapters remain immediately accessible.
+The visible Directory button opens Portfolio, Station and Settings pages.
+Station offers the authored activities, crew and driveable vehicles;
+professional chapters remain immediately accessible on Portfolio.
 The reactor changes cooling state, a drone performs a test flight, a loading
 crane dispatches cargo, a noodle hatch serves a bowl, and a receiver tunes its
-dish. Facade consoles switch arrival beacons. A three-car express follows a
+dish. Generic facade consoles were removed in the 2026-10-19 curation pass.
+Street furniture is deliberately placed: 36 sidewalk/concourse lamps, six extra
+benches and four supply crates, clear of roads and entrances. Integrated
+building/gate lighting remains. A three-car express follows a
 rounded rail loop over 600 world units long through several districts, with
 supports clear of streets and entrances. It offers a short ride.
 The orbital gate now toggles a navigation beacon; the observatory destination
@@ -151,7 +158,7 @@ vehicles and furniture. Roads and markings replace cells in a shared surface
 grid. `src/world/part-catalog.ts` lists the rectangular parts; specialist source
 IDs are generated in `src/assets/ldraw-catalog.json`.
 
-**Directory → Controls & settings → Download this build (.ldr)** exports placed
+**Directory → Settings → Download this build (.ldr)** exports placed
 catalog parts for LDraw CAD. Prints are custom stickers; gantry cord, character
 prints and background stars are presentation details. An export is not a
 certified construction kit; see `/build-notes.html` for the CAD-review limits.
@@ -162,14 +169,14 @@ the camera pulls back to reveal the propulsion deck before approaching Andy.
 He lands before control begins, with a matching third-person camera, or visitors
 can skip. Returning
 visitors skip automatically. Motion preferences are respected and can be changed
-in Controls & settings. `?intro=1` replays the intro, `?debug=1` displays measured
+in Directory → Settings. `?intro=1` replays the intro, `?debug=1` displays measured
 rendering statistics and player state, and `?fallback=1` checks the fallback.
 
 Original game sound covers construction, walking/running, jumps and landings,
 vehicle entry/exit and motors, station equipment, game results and blaster/combat effects, UI and journeys.
 Footsteps follow actual movement and machinery fades with distance. The Sound
 button mutes immediately, including during construction and travel;
-Directory → Controls & settings includes a saved volume slider. Sound starts
+Directory → Settings includes a saved volume slider. Sound starts
 after interaction, quiets while reading and suspends in hidden tabs. It uses
 cached synthesized effects and Web Audio, with no additional sound downloads.
 Construction now has a continuous shuffled-brick layer that advances with the
@@ -209,7 +216,15 @@ export. Shadow blits preserve unrelated renderer state, and graphics toggles
 dispose complete reflection targets. The additional memory/timing measurements
 are recorded in [`docs/WORLD_PERFORMANCE_PASS_TWO.md`](docs/WORLD_PERFORMANCE_PASS_TWO.md).
 
-At the 2026-10-15 handoff the suite contains 168 tests in 22 files, covering part
+The 2026-10-19 station/interface pass removes generic facade interactions,
+replaces indiscriminate streetlamp placement with curated sidewalk furniture,
+removes an unsupported sign, and avoids idle HUD/map DOM mutations and
+cargo-cable uploads. `node scripts/profile-world.mjs` reports a repeatable
+town-plus-props inventory; it is not a GPU/FPS benchmark. See
+[station/interface validation](docs/STATION_INTERFACE_VALIDATION.md) for scope,
+before/after counts, skill sources and browser checks.
+
+At the 2026-10-19 validation the suite contains 176 tests in 22 files, covering part
 assemblies, architecture, movement, camera/collision, vehicles, intro,
 interactions, accessible UI and audio lifecycle, plus graphics preference
 persistence and quality caps. Validation

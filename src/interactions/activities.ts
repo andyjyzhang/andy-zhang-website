@@ -1,6 +1,6 @@
-import {CITY_LOTS,lotEntrance,GATE} from '../world/city-layout';
+import {GATE} from '../world/city-layout';
 import type {Interactable} from './detection';
-export type ActivityKind='reactor'|'repair'|'cargo'|'noodles'|'radio'|'transit'|'gate'|'cube'|'poker-game'|'facility'|'crew';
+export type ActivityKind='reactor'|'repair'|'cargo'|'noodles'|'radio'|'transit'|'gate'|'cube'|'poker-game'|'crew';
 export interface ActivityDefinition {id:string;name:string;kind:ActivityKind;x:number;z:number;description:string;commands:{id:string;label:string}[]}
 export interface ActivityResult {definition:ActivityDefinition;on:boolean;count:number;message:string;command:string}
 export function isGameActivity(kind:ActivityKind){return kind==='cube'||kind==='poker-game';}
@@ -14,7 +14,6 @@ export const ACTIVITY_DEFINITIONS:ActivityDefinition[]=[
   {id:'gate',name:'Orbital station / gate beacon',kind:'gate',x:GATE.entry[0],z:GATE.entry[1],description:'Switch the orbital gate navigation beacon so incoming crews can find the station.',commands:[{id:'toggle',label:'Switch gate beacon'}]},
   {id:'cube',name:'Off duty / cube recall',kind:'cube',x:-28.8,z:34.56,description:'Memorize a short sequence of colored cube tiles, hide it, then rebuild it from memory.',commands:[{id:'play',label:'Play cube recall'}]},
   {id:'poker-game',name:'Redshift / draw',kind:'poker-game',x:65.28,z:.64,description:'Build poker hands with two redraws, claim crew contracts, and bank 150 chips across three rounds.',commands:[{id:'play',label:'Play Redshift Draw'}]},
-  ...CITY_LOTS.filter(l=>l.name!=='NOODLE / 24H').map((l,i)=>{const[x,z]=lotEntrance(l);return{id:`facility-${i}`,name:l.name,kind:'facility' as const,x,z,description:'Use the facade intercom to switch this block’s arrival beacon. Its street console changes colour so incoming crews can spot the entrance.',commands:[{id:'toggle',label:'Switch arrival beacon'}]};}),
 ];
 export class StationActivities {
   readonly definitions=[...ACTIVITY_DEFINITIONS];
@@ -27,7 +26,7 @@ export class StationActivities {
     const d=this.find(id),s=this.state.get(id);
     if(!d||!s||!d.commands.some(c=>c.id===command))return null;
     s.count++;
-    if(d.kind==='reactor'||d.kind==='facility'||d.kind==='gate')s.on=!s.on;
+    if(d.kind==='reactor'||d.kind==='gate')s.on=!s.on;
     const messages:Record<ActivityKind,string>={
       reactor:s.on?'Cooling cycle online. The core is running.':'Cooling cycle on standby.',
       repair:'Engine test running. Watch the drone lift off and settle onto its cradle.',
@@ -37,7 +36,7 @@ export class StationActivities {
       transit:'Express boarding. Escape or Return ends your ride.',gate:s.on?'Gate navigation beacon online.':'Gate navigation beacon on standby.',
       cube:'Cube recall opened.',
       'poker-game':'Redshift Draw opened.',
-      facility:s.on?'Arrival beacon active.':'Arrival beacon on standby.',crew:'The crew member acknowledges you and resumes their station work.',
+      crew:'The crew member acknowledges you and resumes their station work.',
     };
     s.message=messages[d.kind];return{definition:d,on:s.on,count:s.count,message:s.message,command};
   }

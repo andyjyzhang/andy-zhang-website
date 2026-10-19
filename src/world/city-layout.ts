@@ -39,4 +39,3 @@ export const CITY_LOTS:CityLot[]=[
   ...[-69.12,-30.72,1.28,35.84,73.6].map((z,i)=>({name:`WEST SERVICE / ${i+1}`,x:-116.48,z,w:10,d:28,floors:3+i%3,design:('factory') as BuildingDesign})),
   ...[-70.4,-32.64,1.28,35.84,73.6].map((z,i)=>({name:`DOCKSIDE / ${i+1}`,x:113.28,z,w:14,d:28,floors:4+i%4,design:('warehouse') as BuildingDesign})),
 ];
-export function lotEntrance(l:CityLot):[number,number]{return[l.x,l.z+(l.facing?-1:1)*(l.d*.32+2.56)];}

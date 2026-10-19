@@ -1,6 +1,6 @@
 # Andy's World — project handoff
 
-Updated **2026-10-15** for a laptop move. This is current continuation guidance,
+Updated **2026-10-19** after station curation and world-interface work. This is current continuation guidance,
 not a backlog or a claim that every device has been tested. Read it with
 [AGENTS.md](AGENTS.md), [README.md](README.md), and the actual source. Use
 [new-laptop setup](docs/NEW_LAPTOP_SETUP.md) for migration, [testing](docs/TESTING.md)
@@ -12,16 +12,16 @@ for repeatable checks, and the [documentation map](docs/README.md) for history.
 | --- | --- |
 | Repository | `https://github.com/andyjyzhang/andy-zhang-website.git` |
 | Branch | `main` |
-| HEAD | `a60af9ff81c22d382805f9532c1891e4db52f39a` — `more optimizing` |
-| Commit time | `2026-10-15T01:23:18-04:00` |
-| Working tree before this docs update | Clean; local `origin/main` matched HEAD (`0 / 0` ahead/behind) |
-| Runtime inspected | Node `v24.11.0`, npm `11.6.1`; required Node major is 24 |
+| Base HEAD for the interface pass | `418df4962244b329a2c09e8cb6016dc98e2ef03d` — `update docs` |
+| Base commit time | `2026-10-15T23:34:00-04:00` |
+| Working tree when the pass began | Clean; local `origin/main` matched HEAD. This pass leaves local source/docs changes uncommitted. |
+| Runtime inspected | Node `v24.16.0`, npm `11.13.0`; required Node major is 24 |
 | Last recorded production release | `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP`, 2026-10-15 |
 
 Git tracking state was read locally, not refreshed by a network fetch. These
-documentation changes need their own commit/push or deliberate transfer. Do not
-infer current Git status or Vercel state from a frozen snapshot. This docs-only
-task does not deploy, change runtime behavior, or transfer account credentials.
+source/documentation changes need their own commit/push or deliberate transfer.
+Do not infer current Git status or Vercel state from a frozen snapshot. This
+local implementation pass does not deploy or transfer account credentials.
 
 ## Product decisions to preserve
 
@@ -33,11 +33,18 @@ task does not deploy, change runtime behavior, or transfer account credentials.
 - **The optional world remains complete at `/world.html`.** One LEGO-style
   orbital station, not a world selector. Preserve its architecture, detail,
   molded parts, controls, vehicles, intro, crew, machinery, express, and games.
-  The latest optimization request was to reduce resource use without changing
-  functionality or major UI/UX. Do not silently remove features to claim a win.
+  The 2026-10-19 request explicitly authorized removing misplaced streetlights,
+  generic facade interactions and redesigning the major world screens. Keep
+  the curated nine authored activities plus five crew; do not restore the 29
+  generic facade toggles or uniform streetlamp placement loops. Andy clarified
+  that only misplaced furniture should go: retain the 36 curated lamps, six
+  added benches and four supply crates in `src/world/street-furniture.ts`.
+  Preserve the
+  measured optimizations and purposeful gameplay.
 - **Professional information never requires playing.** The world has a directory,
   six chapters, Contact shortcut opening About (contact links at its bottom),
-  and enlarged bottom-right link back to `/`. The low-graphics button is bottom left. The minimap sits
+  an always-visible Directory button with Portfolio / Station / Settings pages,
+  and a bottom-right link back to `/`. The low-graphics button is bottom left. The minimap sits
   above the reading button. The old top-left station-status bar, résumé tab,
   portfolio tab, and POV button were removed.
 - **Content removals are intentional.** No public résumé links/PDF; keep the
@@ -137,12 +144,13 @@ directory; inspect them there, not at repository root.
 | `src/scenes/space-game.ts`, `salvage-models.ts`, `salvage-environment.ts`, `spaceship.ts` | Lazy flight integration, original ship/scenery and launch sequence |
 | `src/scenes/build-intro.ts`, `build-timeline.ts`, `piece-assembly.ts` | Intro lifecycle, scheduling/camera, lazy instance-course animation/restoration |
 | `src/scenes/frame-pacer.ts`, `static-shadow-cache.ts`, `performance-monitor.ts` | Frame cadence, stationary shadow color/depth cache, debug measurements |
-| `src/ui/interface.ts`, `content-markup.ts`, `activity-ui.ts`, `flight-hud.ts`, `dialog-focus.ts` | Directory/HUD/panels/gallery, content, compact games, flight UI, keyboard focus |
+| `src/ui/interface.ts`, `directory-markup.ts`, `content-markup.ts`, `activity-ui.ts`, `flight-hud.ts`, `dialog-focus.ts` | HUD/panels/gallery state, curated directory pages, content, compact games, flight UI, keyboard focus |
 | `src/style.css`, `src/ui/*.css` | World HUD and ink-blue/amber Manrope/IBM Plex Mono panels; not the static Arial page |
 | `src/audio/` | Gesture unlock, preferences/graph lifecycle, contextual mixing, cached original synthesis |
 | `scripts/build-parts.mjs`, `src/assets/`, `assets/ldraw/`, `public/models/` | Offline model bake, runtime geometry/catalog, attributed sources, published credits |
 | `scripts/check-build.mjs` | Artifact/anchor/removed-content checks and optional served-byte comparison |
 | `scripts/character-review.mjs`, `audition-sounds.mjs` | Optional locally generated cast gallery and WAV audition |
+| `scripts/profile-world.mjs` | Reproducible CPU-side town/main-props geometry, placement and collider inventory; not an FPS benchmark |
 
 Internal names `town`, `city`, and `car` refer to this station, not alternate
 world implementations. Avoid introducing a second content/simulation source.
@@ -198,9 +206,20 @@ Five blue-stud landmarks: studio/About, workshop/Experience+Projects,
 campus/Education, hobby hub/Hobbies, redshift lounge/Poker. The gate is a
 navigation-beacon toggle only, not a destination. No sixth professional landmark.
 
-There are 43 activities (nine authored, 29 facade consoles, five crew), separate
+There are 14 activities (nine authored and five crew), separate
 from landmarks/vehicles. Equipment feedback is nonmodal and does not pause
 movement. Drone/cargo have busy guards; cargo must not enter an occupied pad.
+All 30 generic lot consoles, 29 facade-toggle definitions and one unsupported
+floating sign were removed. The initial removal of all 77 streetlights was
+superseded by Andy's clarification: remove misplaced fixtures, not all lamps.
+There are now 36 authored sidewalk/concourse lamps, six additional benches and
+four supply crates, with paved pockets and collision. Data/assembly live in
+`src/world/street-furniture.ts`, using the existing city static batch and native
+parts; no new real-time lights or interactions. Tests protect every road at
+intersections, buildings, entrances, equipment, transit piers and the courier's
+route. Keep lamps out of driving lanes; do not restore uniform placement loops.
+Building signage, integrated lighting, main machinery and the five blue-stud
+entrances remain. Do not turn cosmetic parcels back into repeated prompts.
 Three of four rover models are driveable (`car-0`, `car-1`, `car-3`); `car-2`
 is scenery. Safe exit includes the occupied vehicle's rotated body plus other
 obstacles. A blocked exit keeps the driver seated with feedback, not stuck outside.
@@ -209,6 +228,32 @@ Express is a short scenic ride with automatic or immediate Return.
 Five crew have distinct physical faces/accessories/custom uniforms and routines:
 Mira dispatches, Jax delivers, Rook repairs, Sol handles cargo, Vega scans.
 Reduced motion freezes ambient routines. Do not freeze dynamic roots permanently.
+
+### World interfaces
+
+Shared world UI tokens live in `src/style.css`: hull/raised blue, paper text,
+muted text, amber actions and signal blue. Manrope is the main family; IBM Plex
+Mono is for keys, telemetry and location metadata. The reading page remains
+independent Arial/black-on-white. Directory defaults to Portfolio; Station
+contains curated travel groups; Settings contains motion/sound/graphics,
+controls, replay, CAD export and credit links. Tabs support arrows/Home/End.
+
+Six chapters retain a side panel, scrollable body, fixed title/footer and native
+focus wrapping. About has an identity/contact layout; experience a timeline;
+projects linked source entries; education a scholarship/courses layout; hobbies
+individual interest symbols; poker a study list. The two tabletop games differ
+in width, color and structure: tile workbench versus five-card table. Flight
+uses a mission manifest/results, a separately scrolling briefing body, always
+visible primary action and an explicit Return control, then compact
+instruments/radar/centered reticle in play.
+
+Landmark/game cameras use the real building footprint. Their own lintels do not
+shorten the cinematic shot into a close-up of a sign; neighboring structures
+still obstruct it. Do not apply that cinematic exception to walking collision.
+Intro/loading/launch/fallback share the station identity. Small actions keep
+their compact feedback. Mobile spacing separates feedback, tools, prompts and
+movement controls. See [validation](docs/STATION_INTERFACE_VALIDATION.md) and
+[the plan](.agents/plans/world-curation-and-interface.md) for design/skill sources.
 
 ### Input and camera
 
@@ -298,13 +343,24 @@ Pass two browser retained JS heap+backing fell **50,710,204 → 31,824,855 bytes
 samples, not total browser/GPU memory or guaranteed FPS on another laptop.
 The separate controlled Node allocation metric measures a different scope.
 
-Station-only benchmark retains 110,416 catalog placements / 154,978 instances;
-its baseline-named CAD export SHA-256 stayed
+At pass two, before the authorized curation, the station-only benchmark retained
+110,416 catalog placements / 154,978 instances; its baseline-named CAD export SHA-256 stayed
 `81fc8a08d8a450aabc71bac9b4f8f1bfef159c752e2552247ef134998a7a9824`.
 Dynamic actors/export names affect a different full live export. A rejected
 body-culling experiment reduced triangles but increased draws/CPU; do not
 reintroduce it on triangle count alone. The world remains substantial and Vite's
 large-chunk warning remains. Measure foreground performance on the new device.
+
+The 2026-10-19 `scripts/profile-world.mjs` scope includes town plus main activity
+props, excluding landmarks/actors/vehicles: 4,211,454 → 3,823,136 triangles,
+270 → 163 colliders, 231 → 223 meshes, 110,526 → 110,142 placements. These are
+authorized removed objects, not identical-geometry parity. Current activity
+definitions are nine before adding crew. Cached DOM references/change-only
+HUD/map writes eliminate stationary telemetry mutations and queries; cargo cable
+uploads/bounds update only when the crate moves. Flight keeps its existing 10 Hz
+UI pacing. Layout reads occur on resize, not every target-label refresh. Resize
+observers/listeners are disposed on flight exit. No FPS improvement is claimed
+from the throttled automation-browser samples; see the new report for limits.
 
 ## Physical parts, licenses and export
 
@@ -324,7 +380,7 @@ Heads use physical patterned shells with fixed ink colors; hiding print triangle
 can leave holes. Preserve shell/skin/ink separation, uniform rig scale and
 calibrated hats/hands/visors. Custom clothing/sticker prints are original.
 
-Directory → Controls & settings → Download this build (.ldr) exports source
+Directory → Settings → Download this build (.ldr) exports source
 IDs/colors/transforms at LDraw scale. Signs/screens become plain tiles; custom
 stickers, cord, stars and lighting are presentation. The digital model is **not
 a certified physical kit**: connections, clutch, support, stability, build order
@@ -379,7 +435,7 @@ Both static reading routes retain inline Vercel analytics bootstrapping; world
 uses `src/analytics.ts`. Localhost is skipped; non-local deployment expects
 `/_vercel/insights/script.js`. No analytics token needed. Recheck if changing hosts.
 
-**Last recorded release**, not a fresh Vercel inspection for this docs task:
+**Last recorded release**, not a fresh Vercel inspection for this local change:
 
 - 2026-10-15, deployment `dpl_EgYeUSjPYT2uzawWo1bqubWP25UP` (`READY` at release).
 - Immutable URL: `https://personalweb-639ze46kf-andy-zhang-s-projects2.vercel.app/`.
@@ -392,9 +448,14 @@ uses `src/analytics.ts`. Localhost is skipped; non-local deployment expects
 
 ## Verification status and remaining limits
 
-At this documentation handoff, typecheck, lint, **168 tests / 22 files**, build,
-and disk artifact checks were rerun. Only Markdown guidance changed; no new
-production deployment or full gameplay certification is implied.
+At the 2026-10-19 interface/furniture pass, typecheck, lint, **176 tests / 22 files**, build,
+and served production artifact checks passed. Current source changes are local;
+no new production deployment or universal gameplay certification is implied.
+Desktop and 390px/short-landscape UI checks, computed contrast, native focus,
+intro/skip/returning visit, main equipment, both tabletop games, rover exit/move,
+ship launch/restart/cockpit/return, and fallback are detailed in
+[station/interface validation](docs/STATION_INTERFACE_VALIDATION.md). Treat that
+report's explicit scope separately from previous release evidence below.
 
 Previous pass-two release evidence covers local/live served-byte checks, root
 no-JS/mobile reading, all six chapters, graphics toggles, both compact games,

@@ -19,7 +19,7 @@ export class WorldAudio {
   activity(result:ActivityResult) {
     const kind=result.definition.kind;
     if(kind==='cube'||kind==='poker-game')this.sink.play('select');
-    else this.sink.play(kind==='reactor'||kind==='facility'?'switch':kind==='repair'?'drone':kind==='transit'?'ride':kind);
+    else this.sink.play(kind==='reactor'?'switch':kind==='repair'?'drone':kind==='transit'?'ride':kind);
   }
   update(dt:number,s:SoundFrame) {
     const previous=this.last;this.cooldown=Math.max(0,this.cooldown-dt);this.collisionCooldown=Math.max(0,this.collisionCooldown-dt);

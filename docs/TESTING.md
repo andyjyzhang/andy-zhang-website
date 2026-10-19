@@ -1,6 +1,6 @@
 # Testing and release checks
 
-Current handoff baseline: 2026-10-15, 168 Vitest tests in 22 files. Counts are an
+Current validation baseline: 2026-10-19, 176 Vitest tests in 22 files. Counts are an
 observation, not a reason to remove future tests. Run all commands from the
 repository root after `npm ci` with Node 24.x.
 
@@ -65,7 +65,7 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
    Skip before/during build, replay from settings, then reload as a returning
    visitor. `/world.html?intro=1` forces replay. Reduced motion hands off without
    the animated sequence. Check geometry/shadows restored after replay/skip.
-3. **Movement/camera:** WASD/Shift/Space, diagonal speed, walls, lamps, curbs,
+3. **Movement/camera:** WASD/Shift/Space, diagonal speed, walls, curbs,
    benches, overhead structures and hangar clearance. Drag/arrows rotate; scroll
    into first person, free-look with hidden cursor, scroll out without leaving
    the scene. Escape releases capture safely. Overview orbit/zoom exposes hull.
@@ -74,15 +74,24 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
    Shift+Tab wrapping, focus restoration and resumed movement. About has contact
    links at the bottom; `/world.html#contact` opens About. Direct hashes bypass
    intro. Selecting a chapter from flight returns cleanly to the station.
+   Directory pages support arrow keys/Home/End; Settings opens directly from
+   the toolbar. At 390×844 and 844×390, check scrolling and visible close/back
+   controls. Flight briefing text scrolls while launch/next/replay remains visible.
 5. **Graphics/lifecycle:** toggle low → standard repeatedly, reload to check
    persistence, open/close a reading panel, hide/resume the tab. Verify scene,
    input, sound and timing recover without jumps, black shadows or accumulated
    render targets. Low graphics changes presentation/cadence, not game rules.
-6. **Equipment/vehicles:** directory shortcuts reach core, drone, cargo, noodles,
-   radio, gate beacon, express, crew, facade consoles and all three driveable
+6. **Equipment/vehicles:** Directory → Station shortcuts reach core, drone, cargo, noodles,
+   radio, gate beacon, express, crew and all three driveable
    vehicles (`car-0`, `car-1`, `car-3`). Check repeated/busy actions, cargo with
    an occupied pad, F enter, W/S drive/reverse, A/D steering, safe F exit and
    walking afterward. Express returns automatically or immediately on Return.
+   No generic facade console/arrival-beacon prompt should remain. Curated lamps,
+   seats and supply crates should enliven sidewalks without blocking roads,
+   intersections, entrances, transit piers or the courier route. Check that
+   posts/seats/crates stop walking and that pedestrians can pass beside lamps.
+   On mobile, feedback, world toolbar, contextual prompt and
+   movement controls must not cover one another.
 7. **Cube Recall:** `/world.html?dev=ui#game-cube`; reveal/hide, correct/incorrect
    named-color inputs (1–4), H hide, N next, R retry, Start over button and Esc. Reduced motion
    must not change whether the sequence can be completed.
@@ -102,7 +111,7 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
     footsteps/jumps and distinct motor/rail cues. Touch movement/action/flight
     buttons, reduced motion, visible focus and readable contrast. Force
     `/world.html?fallback=1`; direct reading/contact links remain usable.
-11. **Export:** Directory → Controls & settings → Download this build (.ldr).
+11. **Export:** Directory → Settings → Download this build (.ldr).
     File contains source IDs/colors/transforms; check credits/build notes remain.
     The export is not a certified physical construction kit.
 
@@ -126,6 +135,13 @@ state. Preserve exact visible pieces, export precision and dynamic shadows.
 Latest measurements/tradeoffs: [pass one](WORLD_PERFORMANCE_VALIDATION.md) and
 [pass two](WORLD_PERFORMANCE_PASS_TWO.md). Wider body culling was rejected for
 extra draw/CPU cost; fewer triangles alone is not proof of an improvement.
+
+`node scripts/profile-world.mjs` measures CPU-side town-plus-main-props inventory
+without landmarks/actors/vehicles. It reports geometry, colliders, placements
+and activities; construction timing varies with local load. It does not claim
+GPU, FPS or total-browser-memory improvements. See
+[station/interface validation](STATION_INTERFACE_VALIDATION.md) for the authorized
+clutter-removal comparison and idle-update regression coverage.
 
 ## Production checks
 

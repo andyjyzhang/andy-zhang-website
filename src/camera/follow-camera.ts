@@ -16,6 +16,7 @@ export class FollowCamera {
   overviewPitch = Math.asin(this.overviewOffset.y/this.overviewOffset.length());
   overviewDistance = this.overviewOffset.length();
   focus: { position: T.Vector3; target: T.Vector3 } | null = null;
+  private focusFootprint:{x:number;z:number;width:number;depth:number}|null=null;
   private target = new T.Vector3();
   private lookPoint = new T.Vector3(0, 2, 10);
   private desired = new T.Vector3();
@@ -33,8 +34,10 @@ export class FollowCamera {
   setObstacles(obstacles: Obstacle[]) {
     this.boxes = obstacles.map(o => new T.Box3(new T.Vector3(o.x - o.w / 2 - .35, o.bottom??0, o.z - o.d / 2 - .35), new T.Vector3(o.x + o.w / 2 + .35, o.height + .3, o.z + o.d / 2 + .35)));
   }
-  frameLandmark(x: number, z: number, facing = 0) {
-    this.focus = { position: new T.Vector3(x + 7 * Math.cos(facing), 13, z + 16 * Math.cos(facing)), target: new T.Vector3(x, 3, z) };
+  frameLandmark(x: number, z: number, facing = 0, width=20, depth=16) {
+    const distance=Math.max(29,width*1.4),side=width*.4;
+    this.focusFootprint={x,z,width,depth};
+    this.focus = { position: new T.Vector3(x+side*Math.cos(facing)+distance*Math.sin(facing),24,z+distance*Math.cos(facing)-side*Math.sin(facing)), target: new T.Vector3(x,8,z) };
   }
   update(dt: number, input: Input, subject: T.Vector3, driving: boolean, enabled: boolean, reducedMotion: boolean) {
     const wasFirstPerson=this.firstPerson;
@@ -63,7 +66,12 @@ export class FollowCamera {
       // Furniture is deliberately inside the composition. Only tall structural
       // obstacles may shorten a landmark shot; a chair must not pull it into
       // the room and fill the screen while the visitor reads the portfolio.
-      for(const box of this.boxes)if(box.max.y>8&&!box.containsPoint(this.target)&&this.ray.intersectBox(box,this.hit))distance=Math.min(distance,Math.max(2.8,this.target.distanceTo(this.hit)-.55));
+      for(const box of this.boxes){
+        const f=this.focusFootprint,ownFacade=f&&box.min.x>=f.x-f.width/2-1&&box.max.x<=f.x+f.width/2+1&&box.min.z>=f.z-f.depth/2-1&&box.max.z<=f.z+f.depth/2+1;
+        // Frame from outside the selected building. Its lintel must not shorten
+        // the shot into a close-up of the sign; neighboring structures still clip.
+        if(!ownFacade&&box.max.y>8&&!box.containsPoint(this.target)&&this.ray.intersectBox(box,this.hit))distance=Math.min(distance,Math.max(2.8,this.target.distanceTo(this.hit)-.55));
+      }
       this.desired.copy(this.target).addScaledVector(this.direction,distance);
     }
     else if (this.overview) {

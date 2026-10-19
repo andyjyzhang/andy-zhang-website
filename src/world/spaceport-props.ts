@@ -12,6 +12,7 @@ export class SpaceportProps {
   private droneTime=10;private cargoTime=10;private dishTime=10;private cooling=false;
   private indicator:T.InstancedMesh;private indicators=new Map<string,number>();
   private cargoReturning=false;
+  private tetherPosition=new T.Vector3(Number.NaN,Number.NaN,Number.NaN);
   private tether=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:'#05131d'}));
   get coolingActive(){return this.cooling;}
   busy(id:string){return id==='repair'?this.droneTime<7:id==='cargo'?this.cargoTime<8:false;}
@@ -37,11 +38,9 @@ export class SpaceportProps {
     this.indicator=new T.InstancedMesh(partGeometry('roundTile').clone().scale(LDRAW_SCALE,-LDRAW_SCALE,-LDRAW_SCALE),new T.MeshStandardMaterial({color:'white',emissive:'white',emissiveIntensity:.2,roughness:.2}),selected.length);
     const matrix=new T.Matrix4(),dummy=new T.Object3D();
     selected.forEach((a,i)=>{
-      if(a.kind!=='facility') {
-        b.stack('#0a3463',a.x,.512,a.z,2,9,2,'stud');
-        b.obstacle({x:a.x,z:a.z,w:1.28,d:1.28,height:2.816,bottom:.512,label:`${a.kind} console`});
-        sign(fixed,a.kind.toUpperCase(),a.x,2.304,a.z+.672,1.28,.64,'#05131d','#aee9ef');
-      }
+      b.stack('#0a3463',a.x,.512,a.z,2,9,2,'stud');
+      b.obstacle({x:a.x,z:a.z,w:1.28,d:1.28,height:2.816,bottom:.512,label:`${a.kind} console`});
+      sign(fixed,a.kind.toUpperCase(),a.x,2.304,a.z+.672,1.28,.64,'#05131d','#aee9ef');
       dummy.position.set(a.x,3.072,a.z);dummy.rotation.set(0,0,0);dummy.updateMatrix();matrix.copy(dummy.matrix);
       this.indicator.setMatrixAt(i,matrix);this.indicator.setColorAt(i,new T.Color('#f2cd37'));this.indicators.set(a.id,i);
     });
@@ -98,6 +97,11 @@ export class SpaceportProps {
         this.crane.rotation.y=this.cargoReturning?0:Math.PI/2;this.cargoTime=10;
       }
     }
-    const positions=this.tether.geometry.getAttribute('position');positions.setXYZ(0,this.crate.position.x,8.192,this.crate.position.z);positions.setXYZ(1,this.crate.position.x,this.crate.position.y+1.536,this.crate.position.z);positions.needsUpdate=true;this.tether.geometry.computeBoundingSphere();
+    // Most frames have no cargo movement. Keep the uploaded cable and its bounds
+    // until the crate really moves (including immediate reduced-motion moves).
+    if(!this.tetherPosition.equals(this.crate.position)) {
+      this.tetherPosition.copy(this.crate.position);
+      const positions=this.tether.geometry.getAttribute('position');positions.setXYZ(0,this.crate.position.x,8.192,this.crate.position.z);positions.setXYZ(1,this.crate.position.x,this.crate.position.y+1.536,this.crate.position.z);positions.needsUpdate=true;this.tether.geometry.computeBoundingSphere();
+    }
   }
 }

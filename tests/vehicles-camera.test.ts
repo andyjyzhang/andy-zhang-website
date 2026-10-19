@@ -75,11 +75,18 @@ describe('camera wall mitigation', () => {
     expect(follow.firstPerson).toBe(false);expect(camera.position.distanceTo(new T.Vector3(0,2.312,10))).toBeCloseTo(19);
   });
   it('keeps landmark focus cameras out of intervening buildings',()=>{
-    const camera=new T.PerspectiveCamera(),follow=new FollowCamera(camera,[{x:3,z:7,w:10,d:2,height:30}]);
+    const camera=new T.PerspectiveCamera(),follow=new FollowCamera(camera,[{x:3,z:15,w:10,d:2,height:30}]);
     follow.frameLandmark(0,0);follow.update(1/60,controls(),new T.Vector3(),false,false,true);
-    expect(camera.position.z).toBeLessThan(6);
+    expect(camera.position.z).toBeLessThan(14);
     follow.setObstacles([{x:0,z:1,w:3,d:2,height:4}]);follow.update(1/60,controls(),new T.Vector3(),false,false,true);
-    expect(camera.position.z).toBe(16);expect(camera.position.y).toBe(13);
+    expect(camera.position.z).toBe(29);expect(camera.position.y).toBe(24);
+  });
+  it('frames the selected facade without letting its own lintel crop the shot',()=>{
+    const camera=new T.PerspectiveCamera(),follow=new FollowCamera(camera,[{x:0,z:8,w:20,d:1,height:14,bottom:6}]);
+    follow.frameLandmark(0,0,0,20,16);follow.update(1/60,controls(),new T.Vector3(),false,false,true);
+    expect(camera.position.z).toBe(29);expect(camera.position.y).toBe(24);
+    follow.frameLandmark(0,0,Math.PI,20,16);follow.update(1/60,controls(),new T.Vector3(),false,false,true);
+    expect(camera.position.z).toBeCloseTo(-29);expect(camera.position.x).toBeCloseTo(-8);
   });
   it('scrolls into eye-level POV and back out without entering the ground',()=>{
     const camera=new T.PerspectiveCamera(),follow=new FollowCamera(camera,[]),subject=new T.Vector3(0,.512,20);

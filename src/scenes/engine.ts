@@ -184,7 +184,7 @@ export class Engine {
     if (this.intro.active) this.intro.finish();
     this.exitVehicle(true);
     const l = landmarks.find(l => l.id === sectionLandmark[section])!;
-    this.player.teleport(l.entry[0], l.entry[1]); this.follow.frameLandmark(l.x, l.z, l.facing); this.follow.overview = false;
+    this.player.teleport(l.entry[0], l.entry[1]); this.follow.frameLandmark(l.x, l.z, l.facing,l.width,l.depth); this.follow.overview = false;
     this.input.clear(); this.ui.openPanel(section); history.replaceState(null, '', `${location.pathname}${location.search}#${section}`);
   }
   private previewActivity(id:string){
@@ -194,7 +194,9 @@ export class Engine {
     else this.commandActivity(activity.id,activity.commands[0].id);
   }
   private openActivityGame(activity:ActivityDefinition){
-    this.input.clear();this.ui.openGame(activity);
+    const location=landmarks.find(l=>l.id===(activity.kind==='cube'?'hobby':'poker'))!;
+    this.follow.frameLandmark(location.x,location.z,location.facing,location.width,location.depth);
+    this.follow.overview=false;this.input.clear();this.ui.openGame(activity);
   }
   private previewFlight(){
     this.ui.closePanel();this.ui.closeMenu();this.ui.closeActivity();this.travel('ship');this.startLaunch(true);
@@ -258,8 +260,9 @@ export class Engine {
     try {
       const destination = await this.destinationPromise!;
       if (this.mode !== 'launch' || this.launch !== sequence) return;
-      this.space = new destination.SpaceGame(this.ui.root.parentElement!,cue=>this.audio.play(cue)); this.mode = 'space';this.ui.setScene(true,true);
-      this.launch.dispose(); this.launch = null; this.input.clear(); this.renderer.domElement.focus();
+      this.space = new destination.SpaceGame(this.ui.root.parentElement!,cue=>this.audio.play(cue));
+      this.space.hud.onReturn=()=>this.returnToTown();this.mode = 'space';this.ui.setScene(true,true);
+      this.launch.dispose(); this.launch = null; this.input.clear(); this.space.hud.focusPrimaryAction();
     } catch (error) { console.error('Destination unavailable:', error); this.returnToTown(); this.ui.notify('The outpost is unavailable. Your world is still here.'); }
   }
   private returnToTown() {

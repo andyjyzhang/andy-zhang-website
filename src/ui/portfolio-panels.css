@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;650;700&display=swap');
-
 /* Portfolio pages share a quiet station-console palette. World and game
    controls keep their own styles; the static reading view stays white. */
 .content-panel,.directory {
-  --page-bg: #101d2a;
-  --page-text: #f5f2e9;
-  --page-muted: #aab8c6;
-  --page-line: #334355;
-  --page-accent: #efbd76;
+  --page-bg: var(--hull);
+  --page-text: var(--paper);
+  --page-muted: var(--muted);
+  --page-line: var(--line);
+  --page-accent: var(--yellow);
   color-scheme: dark;
   color: var(--page-text);
   background: var(--page-bg);
@@ -15,7 +13,7 @@
   border: 1px solid #455467;
   border-radius: 4px;
   box-shadow: 0 24px 90px #030a1266;
-  width: min(580px,calc(100vw - 48px));
+  width: min(600px,calc(100vw - 48px));
   max-width: none;
   max-height: calc(100dvh - 48px);
   margin: auto 24px auto auto;
@@ -38,19 +36,19 @@
 .content-panel .panel-eyebrow,.directory .panel-eyebrow {
   display: block;
   color: var(--page-accent);
-  font: 10px 'IBM Plex Mono',monospace;
+  font: 12px 'IBM Plex Mono',monospace;
   letter-spacing: .04em;
   margin-bottom: 13px;
-  text-transform: lowercase;
+
 }
 .content-panel .panel-top h2,.directory .panel-top h2 {
   margin: 0;
   color: var(--page-text);
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 500;
   line-height: 1.1;
-  letter-spacing: -.055em;
-  text-transform: lowercase;
+  letter-spacing: -.04em;
+
 }
 .content-panel .close-button,.directory .close-button {
   flex: 0 0 44px;
@@ -63,77 +61,116 @@
 .content-panel .close-button:hover,.directory .close-button:hover { color: var(--page-text); background: #243345; }
 .content-panel :focus-visible,.directory :focus-visible { outline: 2px solid var(--page-accent); outline-offset: 4px; }
 .content-panel .panel-tabs { flex: 0 0 auto; display: flex; gap: 26px; padding: 0 34px; border-bottom: 1px solid var(--page-line); }
-.content-panel .panel-tabs button { min-height: 50px; padding: 10px 0; color: var(--page-muted); font-size: 12px; text-transform: lowercase; position: relative; }
+.content-panel .panel-tabs button { min-height: 50px; padding: 10px 0; color: var(--page-muted); font-size: 14px;  position: relative; }
 .content-panel .panel-tabs button[aria-current="page"] { color: var(--page-text); }
 .content-panel .panel-tabs button[aria-current="page"]::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--page-accent); }
-.content-panel .panel-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 28px 34px 10px; }
-.content-panel .panel-copy { font-size: 14px; line-height: 1.8; color: #c6d0da; }
+.content-panel .panel-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 28px 34px 10px; }
+.content-panel .panel-copy { font-size: 15px; line-height: 1.8; color: #c6d0da; }
 .content-panel .panel-copy p { margin: 0 0 17px; }
 .content-panel .panel-intro { color: var(--page-text); font-size: 18px; line-height: 1.75; letter-spacing: -.015em; }
-.content-panel .panel-copy h3 { color: var(--page-text); margin: 0; font-size: 20px; line-height: 1.45; font-weight: 600; letter-spacing: -.025em; text-transform: lowercase; }
+.content-panel .panel-copy h3 { color: var(--page-text); margin: 0; font-size: 20px; line-height: 1.45; font-weight: 600; letter-spacing: -.025em;  }
 .content-panel .content-entry { padding: 0 0 26px; margin: 0 0 26px; border-bottom: 1px solid var(--page-line); }
 .content-panel .content-entry:last-child { margin-bottom: 0; padding-bottom: 12px; border: 0; }
 .content-panel .entry-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 5px; }
-.content-panel .entry-heading > span { flex: 0 0 auto; color: var(--page-muted); font: 10px/1.6 'IBM Plex Mono',monospace; }
+.content-panel .entry-heading > span { flex: 0 0 auto; color: var(--page-muted); font: 12px/1.6 'IBM Plex Mono',monospace; }
 .content-panel .entry-heading > span:empty { display: none; }
-.content-panel .entry-role { color: var(--page-accent); font-size: 12px; text-transform: lowercase; margin-bottom: 15px; }
-.content-panel .entry-stack { color: var(--page-muted); font: 10px/1.85 'IBM Plex Mono',monospace; margin-top: 15px; margin-bottom: 0 !important; }
+.content-panel .entry-role { color: var(--page-accent); font-size: 14px;  margin-bottom: 15px; }
+.content-panel .entry-stack { color: var(--page-muted); font: 12px/1.85 'IBM Plex Mono',monospace; margin-top: 15px; margin-bottom: 0 !important; }
 .content-panel .entry-heading a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; text-decoration-color: #758594; }
 .content-panel .entry-heading a:hover { color: var(--page-accent); text-decoration-color: var(--page-accent); }
-.content-panel .project-summary { color: var(--page-accent); font: 11px/1.8 'IBM Plex Mono',monospace; margin-bottom: 16px; }
+.content-panel .project-summary { color: var(--page-accent); font: 12px/1.8 'IBM Plex Mono',monospace; margin-bottom: 16px; }
 .content-panel .about-contact { border-top: 1px solid var(--page-line); margin-top: 28px; padding-top: 6px; }
 .content-panel .panel-links { display: flex; gap: 24px; flex-wrap: wrap; margin: 10px 0; }
-.content-panel .panel-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--page-text); font-size: 13px; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: #758594; }
+.content-panel .panel-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--page-text); font-size: 14px; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: #758594; }
 .content-panel .panel-links a:hover { color: var(--page-accent); }
 .content-panel .scholarship-line { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; padding: 22px 0; border-bottom: 1px solid var(--page-line); }
 .content-panel .scholarship-line h3 { font-size: 14px; font-weight: 500; }
-.content-panel .scholarship-line p { margin: 0; color: var(--page-muted); font: 10px/1.8 'IBM Plex Mono',monospace; }
+.content-panel .scholarship-line p { margin: 0; color: var(--page-muted); font: 12px/1.8 'IBM Plex Mono',monospace; }
 .content-panel[data-section="education"] .content-entry { margin-bottom: 0; padding-bottom: 16px; }
 .content-panel .coursework { padding: 24px 0 10px; }
-.content-panel .coursework h3 { color: var(--page-muted); font: 10px 'IBM Plex Mono',monospace; margin-bottom: 12px; }
+.content-panel .coursework h3 { color: var(--page-muted); font: 12px 'IBM Plex Mono',monospace; margin-bottom: 12px; }
 .content-panel .coursework p { font: 12px/1.8 'IBM Plex Mono',monospace; }
-.content-panel .plain-list { list-style: none; margin: 24px 0; padding: 0; border-top: 1px solid var(--page-line); }
-.content-panel .plain-list li { color: var(--page-text); padding: 12px 0; border-bottom: 1px solid var(--page-line); }
-.content-panel .compact-note { color: var(--page-muted); font-size: 12px; margin-top: 22px; }
+.content-panel .compact-note { color: var(--page-muted); font-size: 14px; margin-top: 22px; }
 .content-panel .panel-footer { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0; padding: 12px 34px; border-top: 1px solid var(--page-line); }
-.content-panel .panel-footer span { color: var(--page-muted); font: 10px 'IBM Plex Mono',monospace; }
-.content-panel .panel-footer button { color: var(--page-text); min-height: 44px; padding: 6px 0; font-size: 12px; }
+.content-panel .panel-footer span { color: var(--page-muted); font: 12px 'IBM Plex Mono',monospace; }
+.content-panel .panel-footer button { color: var(--page-text); min-height: 44px; padding: 6px 0; font-size: 14px; }
 
-.directory { padding: 0 30px 28px; overflow-y: auto; overflow-x: clip; }
-.directory .panel-top { position: sticky; top: 0; z-index: 1; margin: 0 -30px 20px; padding: 28px 30px 24px; }
-.directory .chapter-grid { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; }
-.directory .chapter-grid button { display: flex; align-items: center; gap: 16px; min-height: 55px; padding: 10px 0; border-bottom: 1px solid var(--page-line); text-align: left; font-size: 13px; text-transform: lowercase; }
-.directory .chapter-grid button:hover { color: var(--page-accent); }
-.directory .chapter-grid button > span { color: var(--page-muted); font: 9px 'IBM Plex Mono',monospace; }
-.directory .world-settings,.directory .world-stops { border-top: 1px solid var(--page-line); padding: 15px 0; font-size: 12px; }
-.directory summary { cursor: pointer; min-height: 34px; text-transform: lowercase; }
-.directory .world-settings p { color: var(--page-muted); font-size: 11px; line-height: 2; }
-.directory label { display: flex; align-items: center; min-height: 44px; gap: 10px; }
-.directory input { accent-color: var(--page-accent); }
-.directory .setting-note { line-height: 1.65; margin: 2px 0 12px 25px; }
-.directory .sound-settings { margin: 10px 0; padding: 10px 0; border-block: 1px solid var(--page-line); }
+/* Chapters use the location identity without turning facts into a card grid. */
+.content-panel { border-top: 4px solid var(--page-accent); }
+.content-panel[data-section="hobbies"] { --page-accent: #ffb675; }
+.content-panel[data-section="education"] { --page-accent: #9bdde7; }
+.content-panel[data-section="poker"] { --page-accent: #ffa9ac; }
+.identity-band { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; padding-bottom: 25px; border-bottom: 1px solid var(--page-line); }
+.identity-band > span { display: grid; place-items: center; width: 60px; height: 64px; flex: 0 0 60px; border: 1px solid var(--page-line); border-bottom: 4px solid var(--page-accent); font: 26px var(--mono); color: var(--page-accent); }
+.identity-band p { margin: 5px 0 0 !important; color: var(--page-muted); font-size: 13px; }
+.content-panel[data-section="experience"] .content-entry { position: relative; padding-left: 22px; border-left: 1px solid var(--page-line); }
+.content-panel[data-section="experience"] .content-entry::before { content: ''; position: absolute; left: -4px; top: 7px; width: 7px; height: 7px; background: var(--page-accent); border-radius: 50%; }
+.content-panel .project-entry { padding: 20px 0 26px; }
+.content-panel .project-entry:first-child { padding-top: 0; }
+.project-entry h3 a::after { content: ' ↗'; color: var(--page-accent); font-size: 16px; }
+.content-panel .scholarship-line { margin-top: 18px; padding: 22px; border: 1px solid var(--page-line); border-left: 3px solid var(--page-accent); }
+.content-panel .scholarship-line h3 { font-size: 17px; }
+.hobby-entry { display: grid; grid-template-columns: 48px 1fr; gap: 18px; }
+.hobby-symbol { font-size: 37px; line-height: 1.2; color: var(--page-accent); }
+.content-panel .hobby-entry h3 { margin-bottom: 10px; }
+.content-panel .poker-principles { list-style: none; padding: 0; margin: 24px 0; border-block: 1px solid var(--page-line); }
+.poker-principles li { display: flex; align-items: center; gap: 14px; padding: 14px 0; }
+.poker-principles li + li { border-top: 1px solid var(--page-line); }
+.poker-principles span { color: var(--page-accent); font-size: 22px; }
+.content-panel .compact-note { padding: 16px; border-left: 2px solid var(--page-accent); background: var(--raised); line-height: 1.7; }
+
+.directory { padding: 0; overflow: visible; width: min(640px,calc(100vw - 48px)); border-top: 4px solid var(--page-accent); }
+.directory[open] { display: flex; flex-direction: column; }
+.directory .panel-top { padding: 26px 30px 24px; }
+.directory-tabs { display: flex; flex-shrink: 0; padding: 0 30px; gap: 28px; border-bottom: 1px solid var(--page-line); }
+.directory-tabs button { position: relative; padding: 15px 0; min-height: 50px; color: var(--page-muted); font-size: 14px; }
+.directory-tabs button[aria-selected="true"] { color: var(--page-text); }
+.directory-tabs button[aria-selected="true"]::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--page-accent); }
+.directory-scroll { overflow: auto; overscroll-behavior: contain; min-height: 0; padding: 26px 30px; scrollbar-gutter: stable; }
+.directory-intro { font-size: 21px; line-height: 1.6; margin: 0 0 24px; letter-spacing: -.02em; }
+.directory-intro span { color: var(--page-muted); font-size: 15px; letter-spacing: 0; }
+.chapter-grid { border-top: 1px solid var(--page-line); }
+.chapter-grid button { display: grid; grid-template-columns: 30px 1fr 22px; align-items: center; gap: 18px; width: 100%; min-height: 78px; padding: 15px 0; border-bottom: 1px solid var(--page-line); text-align: left; }
+.chapter-grid strong { font-size: 18px; font-weight: 600; }.chapter-grid small { display: block; color: var(--page-muted); font-size: 13px; line-height: 1.7; margin-top: 4px; }
+.chapter-location { font: 12px var(--mono); color: var(--blue); }.chapter-arrow { font-size: 20px; color: var(--page-accent); }
+.chapter-grid button:hover strong { color: var(--page-accent); }
+.directory-note { display: flex; align-items: center; gap: 10px; margin: 22px 0 0; color: var(--page-muted); font-size: 12px; }
+.station-group { margin-bottom: 28px; }.station-group:last-child { margin-bottom: 0; }
+.station-group h3,.world-settings h3 { margin: 0 0 15px; font-size: 18px; font-weight: 600; }
+.travel-shortcuts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.travel-shortcuts button { padding: 14px; border: 1px solid var(--page-line); border-radius: 3px; text-align: left; min-height: 78px; }
+.travel-shortcuts button:hover { background: var(--raised); border-color: var(--page-accent); }
+.travel-shortcuts strong { display: block; font-size: 14px; font-weight: 600; }
+.travel-shortcuts span { display: block; margin-top: 7px; font-size: 12px; line-height: 1.5; color: var(--page-muted); }
+.directory .panel-footer { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 30px; border-top: 1px solid var(--page-line); }
+.directory .panel-footer span { color: var(--page-muted); font-size: 12px; }
+.directory .panel-footer a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--page-accent); }
+.directory .world-settings { font-size: 15px; }
+.directory summary { cursor: pointer; min-height: 44px; display: list-item; padding: 12px 0; }
+.directory .setting-note,.sound-settings p { color: var(--page-muted); font-size: 13px; line-height: 1.8; margin: 0 0 15px; }
+.directory label { display: flex; align-items: center; min-height: 48px; gap: 12px; }
+.directory input { accent-color: var(--page-accent); }.directory input[type="checkbox"] { width: 18px; height: 18px; margin: 0; }
+.directory .sound-settings { margin: 12px 0; padding: 12px 0; border-block: 1px solid var(--page-line); }
 .directory .volume-setting { display: grid; grid-template-columns: auto minmax(0,1fr) 44px; }
 .directory input[type="range"] { width: 100%; min-width: 0; height: 44px; }
 .directory output { text-align: right; font-variant-numeric: tabular-nums; }
-.directory .text-button { min-height: 44px; display: inline-flex; align-items: center; color: var(--page-accent); font-size: 12px; }
-.directory kbd { color: var(--page-text); background: #243345; border-color: #566475; box-shadow: none; }
-.directory .travel-shortcuts { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
-.directory .travel-shortcuts > span { width: 100%; color: var(--page-muted); font: 10px 'IBM Plex Mono',monospace; text-transform: lowercase; margin-bottom: 5px; }
-.directory .travel-shortcuts button { min-height: 44px; padding: 8px 11px; color: #d1dae2; border: 1px solid var(--page-line); border-radius: 2px; font-size: 11px; }
-.directory .travel-shortcuts button:hover { color: var(--page-accent); border-color: #9a7c57; }
-
+.directory .text-button { min-height: 44px; display: inline-flex; align-items: center; color: var(--page-accent); font-size: 13px; padding: 7px 0; }
+.controls-reference { border-block: 1px solid var(--page-line); margin: 24px 0 16px; }
+.controls-reference dl { margin: 0 0 12px; }.controls-reference dl > div { display: grid; grid-template-columns: 140px 1fr; align-items: baseline; gap: 12px; padding: 8px 0; font-size: 13px; line-height: 1.7; }
+.controls-reference dd { margin: 0; color: var(--page-muted); }.controls-reference dt { font-size: 12px; }
+.build-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
 @media(max-width:760px) {
-  .content-panel,.directory { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); margin: auto 10px; }
-  .content-panel .panel-top { padding: 23px 23px 21px; }
-  .content-panel .panel-top h2,.directory .panel-top h2 { font-size: 32px; }
-  .content-panel .panel-tabs { padding: 0 23px; }
-  .content-panel .panel-scroll { padding: 23px 23px 8px; }
-  .content-panel .panel-footer { padding: 10px 23px; }
-  .content-panel .entry-heading { flex-wrap: wrap; gap: 2px 14px; }
-  .content-panel .panel-copy { font-size: 13px; }
-  .content-panel .panel-intro { font-size: 16px; }
-  .content-panel .panel-copy h3 { font-size: 18px; }
-  .content-panel .scholarship-line h3 { font-size: 14px; }
-  .directory { padding: 0 23px 23px; }
-  .directory .panel-top { margin-inline: -23px; padding: 23px; }
+  .content-panel,.directory { width: calc(100vw - 20px); max-height: calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); margin: auto 10px; }
+  .content-panel .panel-top,.directory .panel-top { padding: 20px 22px; gap: 16px; }
+  .content-panel .panel-top h2,.directory .panel-top h2 { font-size: 30px; }
+  .content-panel .panel-tabs,.directory-tabs { padding-inline: 22px; }
+  .content-panel .panel-scroll { padding: 24px 22px 8px; }
+  .content-panel .panel-footer,.directory .panel-footer { padding: 10px 22px; }
+  .content-panel .entry-heading { flex-wrap: wrap; gap: 4px 14px; }
+  .content-panel .panel-copy { font-size: 15px; }.content-panel .panel-intro { font-size: 17px; }
+  .content-panel .panel-copy h3 { font-size: 20px; }.content-panel .entry-heading > span { font-size: 12px; }
+  .directory-scroll { padding: 22px; }.chapter-grid button { gap: 12px; }.chapter-grid small { font-size: 12px; }
+  .travel-shortcuts { grid-template-columns: 1fr; }.travel-shortcuts button { min-height: 64px; }
+  .controls-reference dl > div { grid-template-columns: 116px 1fr; }.build-actions { grid-template-columns: 1fr; }
+  .directory .panel-footer span { max-width: 100px; line-height: 1.6; }
 }

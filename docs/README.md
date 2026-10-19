@@ -1,6 +1,6 @@
 # Documentation map
 
-Updated 2026-10-15. Start with the current guides below. Dated validation reports
+Updated 2026-10-19. Start with the current guides below. Dated validation reports
 and completed plans are evidence about earlier revisions, not competing product
 requirements or an unfinished backlog.
 
@@ -42,6 +42,7 @@ Important supersessions:
 
 | Record | Scope / current relevance |
 | --- | --- |
+| [Station curation / interfaces](STATION_INTERFACE_VALIDATION.md) | Current world screens, generic facade removal, curated street furniture, idle-work reduction and 2026-10-19 local checks; not deployed |
 | [World performance pass two](WORLD_PERFORMANCE_PASS_TWO.md) | Latest recorded release; compact CAD storage, state-preserving shadow blit, target disposal, measurements and browser parity |
 | [Portfolio-first/performance pass one](WORLD_PERFORMANCE_VALIDATION.md) | Entry split, static transforms, bounded detail, stationary shadow cache, intro-buffer lifecycle, frame pacing |
 | [Centred aim / publication](CENTRED_AIM_PUBLISH_CHECK.md) | Current aiming model; predates entry split and performance passes |
@@ -58,8 +59,8 @@ Important supersessions:
 Implementation decisions are also recorded under [`.agents/plans/`](../.agents/plans/).
 Read each plan's Progress and Completion Summary before treating it as active
 work. The cleanup plan's old ignored-file housekeeping item is not a dependency
-of a fresh checkout. No new application implementation is pending from this
-documentation request.
+of a fresh checkout. The current curation/interface pass has its own plan and
+validation record; older facade-console inventories are superseded.
 
 ## Keep the handoff current
 

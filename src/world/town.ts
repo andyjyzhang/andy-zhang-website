@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {BrickBatch,lamp,sign,bench} from './brick-kit';
+import {BrickBatch,sign,bench} from './brick-kit';
 import {landmarks} from '../config/world';
 import {WORLD_STYLE as style} from '../config/station';
 import {STUD as S,PLATE as H} from './part-catalog';
@@ -32,7 +32,6 @@ export function createTown() {
   }
   hardware.mold('dish','@cyan',0,6.144,-3.84);
   hardware.obstacle({x:0,z:-3.84,w:6.4,d:6.4,height:6.272,bottom:.512,label:'concourse reactor'});
-  for(const [x,z] of [[-10.88,-10.88],[10.88,-10.88],[-10.88,10.88],[10.88,10.88]])lamp(hardware,x,z,true);
   bench(hardware,8.96,6.4);
   sign(root,"ANDY'S ORBITAL STATION",0,2.56,0,7.68,.64,'#0a3463','#aee9ef');
   stages.push(hardware.build(root,'concourse-equipment'));

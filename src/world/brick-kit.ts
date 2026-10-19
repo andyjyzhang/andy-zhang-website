@@ -114,9 +114,3 @@ export function bench(b:BrickBatch,x:number,z:number) {
   b.obstacle({x,z:z-STUD/2,w:6*STUD,d:STUD,height:2.304,bottom:1.536,label:'bench back'});
   });
 }
-export function lamp(b:BrickBatch,x:number,z:number,space=false) {
-  x=snapStud(x);z=snapStud(z);b.mold('lampPost',palette.ink,x,.512+168*LDRAW_SCALE,z);
-  b.mold('roundBrick',space?'@cyan':'@amber',x,.512+168*LDRAW_SCALE+3*PLATE,z);
-  b.mold('dish',palette.ink,x,.512+168*LDRAW_SCALE+3*PLATE,z);
-  b.obstacle({x,z,w:.64,d:.64,radius:.3,height:6.656,bottom:.512,label:'streetlight'});
-}

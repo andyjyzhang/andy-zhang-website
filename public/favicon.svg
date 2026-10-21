@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#e9a53e"/><rect x="10" y="23" width="44" height="29" rx="5" fill="#f8df97"/><ellipse cx="22" cy="22" rx="8" ry="5" fill="#fff0bf"/><ellipse cx="42" cy="22" rx="8" ry="5" fill="#fff0bf"/><path d="M24 42l8-12 8 12m-13-4h10" stroke="#30494c" stroke-width="3" fill="none"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Yellow LEGO-style brick</title>
+  <g stroke="#80530d" stroke-width="1.4" stroke-linejoin="round">
+    <path d="M6 25 34 39V57L6 43Z" fill="#e7a91c"/>
+    <path d="m34 39 24-13v18L34 57Z" fill="#bd7b10"/>
+    <path d="m6 25 24-13 28 14-24 13Z" fill="#f2cd37"/>
+  </g>
+  <defs>
+    <g id="stud">
+      <path d="M-5.2 0v4c0 3.5 10.4 3.5 10.4 0V0" fill="#d9a51b" stroke="#80530d" stroke-width="1.1"/>
+      <ellipse rx="5.2" ry="2.6" fill="#ffe777" stroke="#80530d" stroke-width="1.1"/>
+    </g>
+  </defs>
+  <use href="#stud" x="31" y="14.75"/>
+  <use href="#stud" x="19" y="21.25"/>
+  <use href="#stud" x="45" y="21.75"/>
+  <use href="#stud" x="33" y="28.25"/>
+</svg>

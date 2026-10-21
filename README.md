@@ -32,7 +32,7 @@ npm run preview
 
 Vercel builds `dist/` using `vercel.json`. Existing project linkage and analytics
 are retained. No deployment is performed by local build commands.
-Production: https://andyzhang.vercel.app/ in the existing
+Production: https://www.andy-zhang.ca/ (also https://andyzhang.vercel.app/) in the existing
 `andy-zhang-s-projects2/personalweb` project. No `.env` file, account login,
 database, or backend service is needed for local development.
 

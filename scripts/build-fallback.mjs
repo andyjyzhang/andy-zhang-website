@@ -100,7 +100,7 @@ const html = `<!doctype html>
   <meta name="description" content="Andy Zhang, University of Waterloo Computer Science. Experience, projects, education, other work and hobbies."/>
   <title>Andy Zhang &mdash; Portfolio</title>
   <meta property="og:title" content="Andy Zhang — Portfolio"/>
-  <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=brick"/>
+  <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=red-brick"/>
   <style>${styles}</style>
   <script>if(!['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname)){window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};var analytics=document.createElement('script');analytics.src='/_vercel/insights/script.js';analytics.defer=true;document.head.append(analytics)}</script>
 </head>

@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <title>Yellow LEGO-style brick</title>
-  <g stroke="#80530d" stroke-width="1.4" stroke-linejoin="round">
-    <path d="M6 25 34 39V57L6 43Z" fill="#e7a91c"/>
-    <path d="m34 39 24-13v18L34 57Z" fill="#bd7b10"/>
-    <path d="m6 25 24-13 28 14-24 13Z" fill="#f2cd37"/>
+  <title>Red LEGO-style brick</title>
+  <g stroke="#67130b" stroke-width="1.4" stroke-linejoin="round">
+    <path d="M6 25 34 39V57L6 43Z" fill="#c91a09"/>
+    <path d="m34 39 24-13v18L34 57Z" fill="#99170b"/>
+    <path d="m6 25 24-13 28 14-24 13Z" fill="#e73320"/>
   </g>
   <defs>
     <g id="stud">
-      <path d="M-5.2 0v4c0 3.5 10.4 3.5 10.4 0V0" fill="#d9a51b" stroke="#80530d" stroke-width="1.1"/>
-      <ellipse rx="5.2" ry="2.6" fill="#ffe777" stroke="#80530d" stroke-width="1.1"/>
+      <path d="M-5.2 0v4c0 3.5 10.4 3.5 10.4 0V0" fill="#bd210f" stroke="#67130b" stroke-width="1.1"/>
+      <ellipse rx="5.2" ry="2.6" fill="#f94c38" stroke="#67130b" stroke-width="1.1"/>
     </g>
   </defs>
   <use href="#stud" x="31" y="14.75"/>

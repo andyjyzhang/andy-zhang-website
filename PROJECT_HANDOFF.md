@@ -1,6 +1,6 @@
 # Andy's World — project handoff
 
-Updated **2026-10-19** after the authorized station/interface production release. This is current continuation guidance,
+Updated **2026-10-21** after the red brick-favicon production release. This is current continuation guidance,
 not a backlog or a claim that every device has been tested. Read it with
 [AGENTS.md](AGENTS.md), [README.md](README.md), and the actual source. Use
 [new-laptop setup](docs/NEW_LAPTOP_SETUP.md) for migration, [testing](docs/TESTING.md)
@@ -14,15 +14,16 @@ for repeatable checks, and the [documentation map](docs/README.md) for history.
 | Branch | `main` |
 | Base HEAD for the interface pass | `418df4962244b329a2c09e8cb6016dc98e2ef03d` — `update docs` |
 | Base commit time | `2026-10-15T23:34:00-04:00` |
-| Released source | `d4d5a94f1febc72e32e9317304e3413d3aeb1834` — `feat: fixed up world assets` |
+| Released source | Workspace based on `084a310c166b6773e00c18052057da3e65b00764`, plus red-favicon changes |
 | Working tree when the pass began | Clean; local `origin/main` matched HEAD. The implementation was subsequently committed and pushed as `d4d5a94`; release notes are a documentation-only follow-up. |
 | Runtime inspected | Node `v24.16.0`, npm `11.13.0`; required Node major is 24 |
-| Last recorded production release | `dpl_aKhXnJUWArKudLmGpzdyTpz1JvgP`, 2026-10-19 |
+| Last recorded production release | `dpl_FsRr7uU1KdtpZusBr8wGkoGKK9zj`, 2026-10-21 |
 
-At publication, a live `git ls-remote origin refs/heads/main` matched the released
-source `d4d5a94`. The deployment and served files were checked separately; a Git
-push alone does not publish this project. Do not infer future Git/Vercel status
-from this snapshot or transfer account credentials between devices.
+At the initial yellow-icon publication, a live remote check matched source
+`084a310`. The subsequent red-icon release uploaded workspace changes before
+commit; its public bytes were verified separately. A Git commit identifier alone
+does not establish that release's exact contents. Do not infer future Git/Vercel
+status from this snapshot or transfer account credentials between devices.
 
 ## Product decisions to preserve
 
@@ -424,8 +425,9 @@ broader testing matrix, not a completed universal certification.
 
 ## Deployment and analytics
 
-Target is existing **`andy-zhang-s-projects2/personalweb`**, public alias
-**https://andyzhang.vercel.app/**. [New-laptop setup](docs/NEW_LAPTOP_SETUP.md)
+Target is existing **`andy-zhang-s-projects2/personalweb`**, production domain
+**https://www.andy-zhang.ca/**; **https://andyzhang.vercel.app/** also remains
+active. Both were confirmed as aliases of the October 21 release. [New-laptop setup](docs/NEW_LAPTOP_SETUP.md)
 records login/link/deploy commands and non-secret project identifiers. No account
 login or `.env` is needed locally. Never commit/copy old CLI auth/OIDC credentials
 or browser profiles. `.vercel/` and `.env*` are ignored; recreate linkage when
@@ -439,7 +441,29 @@ Both static reading routes retain inline Vercel analytics bootstrapping; world
 uses `src/analytics.ts`. Localhost is skipped; non-local deployment expects
 `/_vercel/insights/script.js`. No analytics token needed. Recheck if changing hosts.
 
-**Latest verified release — 2026-10-19**, explicitly requested by Andy:
+**Latest verified release — 2026-10-21**, explicitly requested by Andy:
+
+- Uploaded workspace changes based on `084a310` using Vercel CLI `64.7.0`
+  after verifying the existing project/organization IDs. The red SVG and
+  favicon-link changes were not committed at upload. Deployment
+  `dpl_FsRr7uU1KdtpZusBr8wGkoGKK9zj` is `production`, `READY`.
+- Immutable URL: `https://personalweb-5bn7sw7cy-andy-zhang-s-projects2.vercel.app/`.
+- Inspector: `https://vercel.com/andy-zhang-s-projects2/personalweb/FsRr7uU1KdtpZusBr8wGkoGKK9zj`.
+- The shared icon is now a red four-stud brick SVG. Reading/world entries use
+  `/favicon.svg?v=red-brick` to refresh cached favicons. Generated reading HTML was
+  rebuilt from `scripts/build-fallback.mjs`.
+- `check:build` passed against `https://www.andy-zhang.ca/`: five HTML documents
+  and linked JS/CSS/assets match local build bytes. On both this domain and
+  `https://andyzhang.vercel.app/`, the versioned favicon returns the exact red
+  source SVG with `image/svg+xml`; all three reading/world entry documents
+  reference it. Shape/sizing was reviewed at 16–128px before recoloring.
+  This asset-only release did not repeat the complete gameplay test matrix.
+- Earlier yellow-icon release: `dpl_BBPyfXCnQMXs2DZewHQ6mhn5uh8r`, based on
+  committed `084a310`. It also verified both legacy 308 redirects and analytics
+  on both domains. Its immutable URL is
+  `https://personalweb-cu4bt1rvd-andy-zhang-s-projects2.vercel.app/`.
+
+**Previous verified interface release — 2026-10-19**:
 
 - Source `d4d5a94f1febc72e32e9317304e3413d3aeb1834` was already committed/pushed.
   Deployed from a clean workspace using Vercel CLI `64.7.0`, with the existing

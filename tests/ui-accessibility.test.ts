@@ -20,12 +20,30 @@ function fixture() {
   dom.window.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
   dom.window.HTMLDialogElement.prototype.close=function(){this.open=false;};
   const ui=new Interface(document.querySelector('#app')!);
-  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),previewActivity:vi.fn(),flight:vi.fn(),motion:vi.fn(),graphics:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn()};
+  const actions:UIActions={openSection:vi.fn(),closePanel:vi.fn(),overview:vi.fn(),pov:vi.fn(),travel:vi.fn(),previewActivity:vi.fn(),flight:vi.fn(),motion:vi.fn(),graphics:vi.fn(),replay:vi.fn(),action:vi.fn(),returnToTown:vi.fn(),exportBuild:vi.fn(),activity:vi.fn(),sound:vi.fn(),volume:vi.fn(),emotes:vi.fn(),emote:vi.fn()};
   ui.connect(actions);return{ui,actions};
 }
 afterEach(()=>{dom?.window.close();vi.unstubAllGlobals();});
 
 describe('real interface keyboard and routing',()=>{
+  it('selects emotes with number keys, restores focus and does not stack dialogs',()=>{
+    const {ui,actions}=fixture(),canvas=document.querySelector<HTMLCanvasElement>('canvas')!;canvas.focus();
+    ui.root.querySelector<HTMLButtonElement>('[data-emotes]')!.click();expect(actions.emotes).toHaveBeenCalledOnce();
+    ui.openEmotes();expect(ui.paused).toBe(true);expect(document.activeElement?.getAttribute('data-emote')).toBe('wave');
+    ui.emotePicker.root.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'3',code:'Digit3',bubbles:true,cancelable:true}));
+    expect(actions.emote).toHaveBeenCalledWith('cheer');expect(ui.paused).toBe(false);expect(document.activeElement).toBe(canvas);
+    ui.openEmotes();ui.openPanel('about');expect(ui.emotePicker.open).toBe(false);ui.closePanel();
+    ui.setEmotesAvailable(false);expect(ui.root.querySelector<HTMLButtonElement>('[data-emotes]')!.disabled).toBe(true);
+  });
+  it('wraps emote focus and closes on Escape or G without selecting a pose',()=>{
+    const {ui,actions}=fixture();ui.openEmotes();const picker=ui.emotePicker.root;
+    picker.querySelector<HTMLButtonElement>('[data-emote="shrug"]')!.focus();
+    picker.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));
+    expect(document.activeElement).toBe(picker.querySelector('[data-close-emotes]'));
+    picker.dispatchEvent(new dom.window.Event('cancel',{cancelable:true}));expect(ui.paused).toBe(false);
+    ui.openEmotes();picker.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'g',code:'KeyG',bubbles:true,cancelable:true}));
+    expect(ui.paused).toBe(false);expect(actions.emote).not.toHaveBeenCalled();
+  });
   it('switches directory pages with arrow keys and opens settings directly',()=>{
     const {ui}=fixture();ui.openMenu();
     const tabs=ui.menu.querySelectorAll<HTMLButtonElement>('[role="tab"]');tabs[0].focus();
@@ -61,6 +79,21 @@ describe('real interface keyboard and routing',()=>{
     const back=vi.fn();hud.onReturn=back;hud.root.querySelector<HTMLButtonElement>('[data-flight-exit]')!.click();
     expect(back).toHaveBeenCalledOnce();expect(game.phase).toBe('briefing');
     hud.dispose();
+  });
+  it('shows objective-specific flight guidance and retries the selected level without exposing preview skips',()=>{
+    fixture();const game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game);
+    expect(hud.root.querySelector('[data-flight-level]')).toBeNull();
+    const objectives=['cargo','gates','relays','shuttle hull','generators'];
+    for(let level=1;level<=5;level++){
+      game.restart(level);hud.refresh();expect(hud.root.querySelector('[data-flight-progress]')!.textContent).toContain(objectives[level-1]);
+      hud.root.querySelector<HTMLButtonElement>('[data-flight-action="start"]')!.click();
+      game.phase='lost';game.lastEvent='Test interruption';hud.refresh();
+      const retry=hud.root.querySelector<HTMLButtonElement>('[data-flight-briefing] > [data-flight-action]')!;
+      expect(retry.textContent).toContain('Retry this level');retry.click();
+      expect(game.mission).toBe(level);expect(game.phase).toBe('briefing');expect(game.shields).toBe(3);
+    }
+    game.phase='won';hud.refresh();hud.root.querySelector<HTMLButtonElement>('[data-flight-briefing] > [data-flight-action]')!.click();
+    expect(game.mission).toBe(1);expect(game.score).toBe(0);hud.dispose();
   });
   it('provides labeled mute and volume controls and retains the saved setting when reopening',()=>{
     const {ui,actions}=fixture();ui.setSound(false,.25,'muted');ui.openMenu();
@@ -169,10 +202,14 @@ describe('structural accessibility',()=>{
     };
     for(const section of Object.keys(sectionLabels) as Section[]){ui.openPanel(section);await run();ui.closePanel();}
     for(const tab of ['portfolio','station','settings'] as const){ui.openMenu(tab);await run();ui.closeMenu();}
+    ui.openEmotes();await run();ui.emotePicker.close();
     const station=new StationActivities();ui.activityUI.showFeedback(station.command('noodles','order')!);await run();ui.activityUI.hideFeedback();
     for(const id of ['cube','poker-game']){ui.openGame(station.find(id)!);await run();ui.closeActivity();}
     const game=new SalvageRun(),hud=new FlightHUD(document.querySelector('#app')!,game);ui.setScene(true,true);
-    for(const phase of ['briefing','playing','won'] as const){game.phase=phase;hud.refresh();await run();}
+    for(let level=1;level<=5;level++){
+      game.restart(level);hud.refresh();await run();game.start();hud.refresh();await run();
+    }
+    for(const phase of ['lost','won'] as const){game.phase=phase;hud.refresh();await run();}
     hud.dispose();ui.setScene(false);
   },30000);
   it('keeps the concise static portfolio navigation and contact available without JavaScript',async()=>{

@@ -87,15 +87,14 @@ describe('crosshair ship steering',()=>{
 });
 describe('Salvage Run missions and combat',()=>{
   const still={x:0,y:0,z:0};
-  it('disables every patrol, recovers elevated cargo, delivers three missions and replays',()=>{
+  it('disables the first level patrols, recovers elevated cargo, advances and replays',()=>{
     const game=new SalvageRun();
     const travel=(target:FlightPoint)=>{
       for(let i=0;i<800&&game.phase==='playing'&&flightDistance(target,game.position)>1;i++){
         game.update(.05,{x:target.x-game.position.x,y:target.y-game.position.y,z:target.z-game.position.z},{boost:true});
       }
     };
-    for(let mission=1;mission<=3;mission++){
-      expect(game.mission).toBe(mission);game.start();game.invulnerable=1000;
+    game.start();game.invulnerable=1000;
       for(const pod of game.cargo){
         travel({x:pod.x,y:pod.y,z:pod.z+16});
         for(let i=0;i<200&&game.enemies[pod.guard].hp>0;i++){
@@ -105,9 +104,8 @@ describe('Salvage Run missions and combat',()=>{
         expect(game.locked(pod)).toBe(false);travel(pod);
       }
       expect(game.collected).toBe(3);travel(FLIGHT_DOCK);
-      expect(game.phase).toBe(mission===3?'won':'delivered');if(mission<3)game.next();
-    }
-    expect(game.kills).toBe(9);expect(game.shotsFired).toBeGreaterThanOrEqual(27);expect(game.score).toBeGreaterThan(2250);
+    expect(game.phase).toBe('delivered');expect(game.kills).toBe(3);expect(game.shotsFired).toBeGreaterThanOrEqual(9);expect(game.score).toBeGreaterThan(900);
+    game.next();expect(game.mission).toBe(2);expect(game.level.kind).toBe('course');
     game.restart();expect(game).toMatchObject({phase:'briefing',mission:1,score:0,shields:3,kills:0,shotsFired:0,heat:0});expect(game.bolts).toHaveLength(0);
   });
   it('requires a disabled guard and matching altitude for collection and delivery',()=>{

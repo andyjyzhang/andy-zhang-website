@@ -1,6 +1,6 @@
 # Documentation map
 
-Updated 2026-10-19. Start with the current guides below. Dated validation reports
+Updated 2026-10-29. Start with the current guides below. Dated validation reports
 and completed plans are evidence about earlier revisions, not competing product
 requirements or an unfinished backlog.
 
@@ -31,6 +31,10 @@ for checks that can be repeated with tracked files and a browser.
 
 Important supersessions:
 
+- Since 2026-10-29 right-hold uses pointer lock until release; G opens emotes.
+  Salvage Run has five different objectives/settings, replacing the repeated
+  three-cargo-mission progression. R retries the current level. The earlier
+  three-mission descriptions are historical.
 - Since 2026-10-15 `/` is static. Older world URLs such as `/?dev=ui`, `/?intro=1`,
   `/?debug=1`, `/?fallback=1`, and `/#about` should now use `/world.html` before
   the query/hash. Homepage `/#experience` and `/#projects` are static anchors.
@@ -42,6 +46,7 @@ Important supersessions:
 
 | Record | Scope / current relevance |
 | --- | --- |
+| [Captured look / emotes / five levels](CAPTURE_EMOTES_FLIGHT_VALIDATION.md) | Current input capture, five poses, authored flight objectives/settings, automated evidence and browser-review limit |
 | [Station curation / interfaces](STATION_INTERFACE_VALIDATION.md) | Current world screens, generic facade removal, curated street furniture, idle-work reduction, local checks and authorized 2026-10-19 production release |
 | [World performance pass two](WORLD_PERFORMANCE_PASS_TWO.md) | 2026-10-15 release; compact CAD storage, state-preserving shadow blit, target disposal, measurements and browser parity |
 | [Portfolio-first/performance pass one](WORLD_PERFORMANCE_VALIDATION.md) | Entry split, static transforms, bounded detail, stationary shadow cache, intro-buffer lifecycle, frame pacing |

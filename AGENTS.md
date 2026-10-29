@@ -129,11 +129,17 @@ Use these interaction conventions consistently:
 - `Shift` — Run
 - `Space` — Jump
 - `Esc` — Menu
+- `G` — On-foot emote picker; `1`–`5` select, movement/jump cancels
 
 Salvage Run uses different contextual controls: WASD fly, E rise, Q descend,
-Space fire, Shift boost, R restart. Mouse/touch drag or arrows aim through the
+Space fire, Shift boost, R retry current level. Right-hold, mouse/touch drag or arrows aim through the
 fixed screen-centre crosshair. No off-axis auto-aim or independent aim/look mode.
 There is no POV button; scroll into first person/cockpit view.
+Right-hold uses relative pointer lock until mouse-up; first-person capture is
+persistent. Intentional releases must not trigger the Escape/menu/return action.
+Salvage Run has five distinct levels defined in `src/config/flight-levels.ts`:
+salvage, ordered gates, ordered relays/recorder, convoy escort, shielded-core
+assault. Preserve objective-specific rules and current-level retry behavior.
 
 Contextual UI text should make the current action explicit.
 

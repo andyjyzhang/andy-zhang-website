@@ -6,6 +6,12 @@
 .flight-overlay.has-dev-rail .flight-hud { left: 220px; }
 .flight-heading { display: flex; justify-content: space-between; color: var(--yellow); font: 12px var(--mono); }
 .flight-objective { margin: 14px 0; font-size: 14px; line-height: 1.7; }
+.flight-level-name { display: block; font-size: 17px; font-weight: 600; margin-top: 13px; }
+.flight-progress { color: var(--blue); font: 11px/1.7 var(--mono); margin: -5px 0 14px; }
+.flight-campaign-reset { display: block; margin: 16px 0 0; font-size: 12px; }
+.flight-level-preview { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 14px; }
+.flight-level-preview button { width: 44px; padding: 8px; }
+.flight-level-preview button[aria-pressed="true"] { color: var(--ink); background: var(--blue); }
 .flight-stats { display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 11px; color: var(--muted); }
 .flight-stats b { display: block; color: var(--paper); font: 18px var(--mono); font-variant-numeric: tabular-nums; margin-top: 6px; }
 .flight-meters { display: flex; gap: 16px; margin-top: 16px; }.flight-meters label { display: flex; align-items: center; gap: 8px; width: 50%; color: var(--muted); font-size: 11px; }

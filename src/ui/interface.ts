@@ -7,23 +7,27 @@ import {directoryMarkup,type DirectoryTab} from './directory-markup';
 import {keepDialogFocus} from './dialog-focus';
 import {WORLD_STYLE} from '../config/station';
 import {STREETS,CITY_LOTS,TRANSIT} from '../world/city-layout';
+import {EmotePicker} from './emote-picker';
+import type {EmoteId} from '../player/emotes';
 
-export interface UIActions {openSection:(s:Section)=>void;closePanel:()=>void;overview:()=>void;pov:()=>void;travel:(id:string)=>void;previewActivity:(id:string)=>void;flight:()=>void;motion:(enabled:boolean)=>void;graphics:(enabled:boolean)=>void;replay:()=>void;action:(key:'E'|'F')=>void;returnToTown:()=>void;exportBuild:()=>void;activity:(id:string,command:string)=>void;sound:(enabled:boolean)=>void;volume:(volume:number)=>void}
+export interface UIActions {openSection:(s:Section)=>void;closePanel:()=>void;overview:()=>void;pov:()=>void;travel:(id:string)=>void;previewActivity:(id:string)=>void;flight:()=>void;motion:(enabled:boolean)=>void;graphics:(enabled:boolean)=>void;replay:()=>void;action:(key:'E'|'F')=>void;returnToTown:()=>void;exportBuild:()=>void;activity:(id:string,command:string)=>void;sound:(enabled:boolean)=>void;volume:(volume:number)=>void;emotes:()=>void;emote:(id:EmoteId)=>void}
 export class Interface {
   readonly root=document.createElement('div');readonly panel=document.createElement('dialog');readonly menu=document.createElement('dialog');readonly activity:HTMLDialogElement;readonly activityUI:ActivityUI;
   readonly prompt=document.createElement('button');readonly status=document.createElement('div');readonly toast=document.createElement('div');readonly touch=document.createElement('div');
   readonly devGallery=document.createElement('aside');
+  readonly emotePicker:EmotePicker;
   private extraStops:{id:string;name:string}[]=[];
   onSound:((cue:'open'|'close'|'select'|'signal-win'|'signal-miss')=>void)|null=null;
   private soundEnabled=true;private soundVolume=.45;private soundStatus='Sound starts with your first interaction.';private graphicsLow=document.documentElement.dataset.graphics==='low';
   private lastPrompt='';private lastView='';private lastFocus:HTMLElement|null=null;private toastTimer=0;private actions:UIActions|null=null;private devEnabled=false;
   private readonly playerDot:Element;private readonly locationLabel:HTMLElement;
+  private readonly emoteButton:HTMLButtonElement;
   constructor(parent:HTMLElement) {
     document.documentElement.dataset.world='orbital';this.root.className='interface';
     this.root.innerHTML=`<a class="skip-link" href="/">Read the portfolio without 3D</a>
       <header class="world-header"><a class="world-brand" href="/" aria-label="Andy's World home"><span class="brand-brick" aria-hidden="true"><i></i><i></i></span><span>ANDY’S WORLD<small>Andy's Orbital Station</small></span></a><nav class="quick-links" aria-label="Quick access"><button data-menu class="button directory-button">Directory <span aria-hidden="true">↗</span></button><button data-contact class="button icon-button" aria-label="Contact Andy">@</button></nav></header>
-      <div class="world-tools"><button class="button" data-overview aria-label="Toggle world view">⌖ World view</button><button class="button graphics-toggle" data-graphics-toggle aria-label="Enable low graphics" aria-pressed="false">▧ <span data-graphics-label>Low graphics</span></button><button class="button sound-toggle" data-sound-toggle aria-label="Mute sound" aria-pressed="true">♪ <span data-sound-label>Sound</span></button><button class="button" data-controls aria-label="Controls and settings">?</button></div>
-      <div class="control-guide"><span><kbd>W A S D</kbd> Move</span><span><kbd>⇧</kbd> Run</span><span><kbd>SPACE</kbd> Jump</span><span data-look-guide>Drag to look · Scroll for POV</span><span><kbd>ESC</kbd> Menu</span></div>
+      <div class="world-tools"><button class="button" data-overview aria-label="Toggle world view">⌖ World view</button><button class="button graphics-toggle" data-graphics-toggle aria-label="Enable low graphics" aria-pressed="false">▧ <span data-graphics-label>Low graphics</span></button><button class="button sound-toggle" data-sound-toggle aria-label="Mute sound" aria-pressed="true">♪ <span data-sound-label>Sound</span></button><button class="button" data-emotes aria-label="Emotes">Emotes <kbd>G</kbd></button><button class="button" data-controls aria-label="Controls and settings">?</button></div>
+      <div class="control-guide"><span><kbd>W A S D</kbd> Move</span><span><kbd>⇧</kbd> Run</span><span><kbd>SPACE</kbd> Jump</span><span data-look-guide>Right-hold to look · Scroll for POV</span><span><kbd>G</kbd> Emotes</span><span><kbd>ESC</kbd> Menu</span></div>
       <div class="map-widget"><div class="map-heading"><span>ANDY'S ORBITAL STATION</span><button data-menu aria-label="Open world directory">↗</button></div><svg class="mini-map" viewBox="0 0 100 88" aria-label="Spaceport map">${this.mapMarkup()}</svg><div class="map-legend"><i></i> Blue studs lead to Andy’s portfolio.</div></div>
       <a class="fallback-link" href="/">Read the portfolio ↗</a><button class="button space-return" hidden data-return>← Return to Andy’s World</button>`;
     this.prompt.className='interaction-prompt';this.prompt.hidden=true;this.prompt.setAttribute('aria-live','polite');
@@ -34,6 +38,8 @@ export class Interface {
     this.activityUI=new ActivityUI(this.root,()=>{this.mountDevGallery();this.actions?.closePanel();this.onSound?.('close');});this.activity=this.activityUI.game;this.activityUI.onCue=cue=>this.onSound?.(cue);this.activityUI.onRender=()=>this.mountDevGallery(this.activity);
     this.touch.className='touch-controls';this.touch.innerHTML='<div class="d-pad" aria-label="Touch movement"><button data-key="KeyW" aria-label="Move forward">↑</button><button data-key="KeyA" aria-label="Move left">←</button><button data-key="KeyS" aria-label="Move backward">↓</button><button data-key="KeyD" aria-label="Move right">→</button></div><div class="touch-actions"><button data-key="Space" aria-label="Jump">↑<small>Jump</small></button><button data-key="ShiftLeft" aria-label="Run">⇧<small>Run</small></button></div>';
     this.root.append(this.prompt,this.status,this.toast,this.touch,this.panel,this.menu,this.activity);parent.append(this.root);
+    this.emotePicker=new EmotePicker(this.root);this.emotePicker.onSelect=id=>{this.onSound?.('select');this.actions?.emote(id);};
+    this.emoteButton=this.root.querySelector<HTMLButtonElement>('[data-emotes]')!;
     this.playerDot=this.root.querySelector('[data-player-dot]')!;this.locationLabel=this.status.querySelector('strong')!;
     for(const dialog of [this.panel,this.menu]) {
       keepDialogFocus(dialog);
@@ -46,6 +52,7 @@ export class Interface {
       if(t.hasAttribute('data-graphics-toggle'))this.actions?.graphics(!this.graphicsLow);
       if(t.hasAttribute('data-menu'))this.openMenu();
       if(t.hasAttribute('data-controls'))this.openMenu('settings');
+      if(t.hasAttribute('data-emotes'))this.actions?.emotes();
       if(t.dataset.directoryTab)this.selectDirectoryTab(t.dataset.directoryTab as DirectoryTab);
       if(t.hasAttribute('data-contact'))this.actions?.openSection('about');
       if(t.hasAttribute('data-flight'))this.actions?.flight();
@@ -91,7 +98,10 @@ export class Interface {
     const output=this.menu.querySelector('[data-volume-label]');if(output)output.textContent=`${Math.round(volume*100)}%`;
     const state=this.menu.querySelector('[data-sound-status]');if(state&&state.textContent!==this.soundStatus)state.textContent=this.soundStatus;
   }
-  get paused(){return this.panel.open||this.menu.open||this.activity.open;}
+  get paused(){return this.panel.open||this.menu.open||this.activity.open||this.emotePicker.open;}
+  openEmotes(){this.closePanel();this.closeMenu();this.closeActivity();this.emotePicker.show();this.prompt.hidden=true;this.onSound?.('open');}
+  setEmotesAvailable(available:boolean){if(this.emoteButton.disabled!==!available)this.emoteButton.disabled=!available;}
+  setEmote(id:string){if(this.root.dataset.emote!==id)this.root.dataset.emote=id;}
   private mapMarkup() {
     const sx=100/WORLD_STYLE.size[0],sz=88/WORLD_STYLE.size[1];
     return `<rect x="1" y="1" width="98" height="86" rx="4" fill="#25394c"/>${STREETS.map(s=>`<rect x="${50+(s.x-s.w/2)*sx}" y="${44+(s.z-s.d/2)*sz}" width="${s.w*sx}" height="${s.d*sz}" fill="#708290"/>`).join('')}${TRANSIT.points.length?`<polyline points="${[...TRANSIT.points,TRANSIT.points[0]].map(([x,z])=>`${50+x*sx},${44+z*sz}`).join(' ')}" fill="none" stroke="#e6ba55" stroke-width="1" opacity=".8"/>`:""}${CITY_LOTS.map(l=>`<rect x="${50+(l.x-l.w*.32)*sx}" y="${44+(l.z-l.d*.32)*sz}" width="${l.w*.64*sx}" height="${l.d*.64*sz}" fill="#355c74"/>`).join('')}<path d="M39 12 Q50 2 61 12" fill="none" stroke="#559ab7" stroke-width="2"/>${landmarks.map(l=>`<rect x="${50+l.x*sx-3}" y="${44+l.z*sz-2.5}" width="6" height="5" fill="${l.color}"/><text x="${50+l.x*sx}" y="${44+l.z*sz+1}" text-anchor="middle">${l.number}</text>`).join('')}<circle data-player-dot cx="50" cy="${44+10*sz}" r="1.8" fill="#fe8a18" stroke="#faf5e5" stroke-width="1"/>`;
@@ -102,6 +112,7 @@ export class Interface {
     target?.focus({preventScroll:true});
   }
   openPanel(section:Section) {
+    this.emotePicker.close();
     this.activityUI.hideFeedback();
     this.mountDevGallery();
     this.closeMenu();this.closeActivity();if(!this.panel.open)this.lastFocus=document.activeElement as HTMLElement;
@@ -112,7 +123,7 @@ export class Interface {
     if(!this.panel.open){this.panel.showModal();this.onSound?.('open');}else this.onSound?.('select');this.panel.querySelector<HTMLElement>('[data-close-panel]')!.focus();this.prompt.hidden=true;
   }
   closePanel(){if(!this.panel.open)return;this.panel.close();this.mountDevGallery();this.actions?.closePanel();this.restoreFocus();this.onSound?.('close');}
-  openGame(d:ActivityDefinition) {this.mountDevGallery();this.closeMenu();this.closePanel();this.activityUI.openGame(d);this.mountDevGallery(this.activity);this.prompt.hidden=true;this.onSound?.('open');}
+  openGame(d:ActivityDefinition) {this.emotePicker.close();this.mountDevGallery();this.closeMenu();this.closePanel();this.activityUI.openGame(d);this.mountDevGallery(this.activity);this.prompt.hidden=true;this.onSound?.('open');}
   closeActivity(){this.activityUI.closeGame();this.mountDevGallery();}
   setStops(stops:{id:string;name:string}[]) {this.extraStops=stops.filter(s=>!['plaza','car-0','ship','gate','cargo','transit','noodles','repair','radio','cube','poker-game'].includes(s.id));}
   private selectDirectoryTab(tab:DirectoryTab,focus=false){
@@ -125,6 +136,7 @@ export class Interface {
     this.menu.querySelector('.directory-scroll')!.scrollTop=0;
   }
   openMenu(tab:DirectoryTab='portfolio') {
+    this.emotePicker.close();
     this.activityUI.hideFeedback();this.mountDevGallery();this.closePanel();this.closeActivity();
     if(this.menu.open){this.selectDirectoryTab(tab,true);return;}this.lastFocus=document.activeElement as HTMLElement;
     this.menu.innerHTML=directoryMarkup({motion:document.documentElement.dataset.motion==='reduced',graphics:this.graphicsLow,sound:this.soundEnabled,volume:this.soundVolume,status:this.soundStatus},this.extraStops);
@@ -145,7 +157,7 @@ export class Interface {
   setPOV(firstPerson:boolean,overview=false){
     const view=`${firstPerson}/${overview}`;if(view===this.lastView)return;this.lastView=view;
     this.root.querySelector('[data-overview]')!.setAttribute('aria-pressed',String(overview));
-    this.root.querySelector('[data-look-guide]')!.textContent=overview?'Drag to orbit · Scroll to zoom':firstPerson?'Mouse to look · Scroll to zoom out':'Drag to look · Scroll for POV';
+    this.root.querySelector('[data-look-guide]')!.textContent=overview?'Right-hold to orbit · Scroll to zoom':firstPerson?'Mouse to look · Scroll to zoom out':'Right-hold to look · Scroll for POV';
   }
   setPrompt(item:Interactable|null,driving=false) {
     if(this.root.classList.contains('in-space')){this.prompt.hidden=true;this.lastPrompt='';return;}
@@ -162,5 +174,5 @@ export class Interface {
     if(this.locationLabel.textContent!==label)this.locationLabel.textContent=label;
   }
   notify(message:string,duration=3800){clearTimeout(this.toastTimer);this.toast.textContent=message;this.toast.hidden=false;this.toastTimer=window.setTimeout(()=>this.toast.hidden=true,duration);}
-  setScene(space:boolean,playable=false){if(space)this.activityUI.hideFeedback();this.root.classList.toggle('in-space',space);this.root.classList.toggle('in-destination',space&&playable);this.root.querySelector<HTMLButtonElement>('[data-return]')!.hidden=!space;this.prompt.hidden=space;}
+  setScene(space:boolean,playable=false){if(space){this.activityUI.hideFeedback();this.emotePicker.close();}this.root.classList.toggle('in-space',space);this.root.classList.toggle('in-destination',space&&playable);this.root.querySelector<HTMLButtonElement>('[data-return]')!.hidden=!space;this.prompt.hidden=space;}
 }

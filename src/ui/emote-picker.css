@@ -1,0 +1,23 @@
+.emote-picker { width: min(400px,calc(100vw - 28px)); max-width: calc(100vw - 28px); max-height: calc(100dvh - 28px); padding: 22px; border-radius: 5px; overflow: auto; }
+.emote-picker header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.emote-picker h2 { font-size: 25px; font-weight: 600; margin: 0; letter-spacing: -.03em; }
+.emote-picker header p { color: var(--muted); font-size: 13px; margin: 8px 0 18px; }
+.emote-options { display: grid; gap: 5px; }
+.emote-options > button { display: flex; align-items: center; gap: 15px; min-height: 65px; text-align: left; border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; background: var(--raised); }
+.emote-options > button:hover { border-color: var(--yellow); background: #284050; }
+.emote-options kbd { width: 25px; height: 25px; color: var(--yellow); }
+.emote-options strong { display: block; font-size: 14px; font-weight: 600; }
+.emote-options small { display: block; color: var(--muted); font-size: 11px; margin-top: 5px; }
+.emote-picker footer { color: var(--muted); font-size: 12px; line-height: 1.8; margin-top: 18px; }
+.emote-pose { position: relative; flex: 0 0 30px; height: 32px; margin-left: auto; }
+.emote-pose i { position: absolute; left: 10px; top: 1px; width: 11px; height: 11px; border-radius: 4px; background: var(--yellow); }
+.emote-pose i::after { content: ''; position: absolute; top: 12px; left: -1px; width: 13px; height: 12px; border-radius: 2px; background: var(--blue); }
+.emote-pose::before,.emote-pose::after { content: ''; position: absolute; width: 5px; height: 14px; background: var(--yellow); border-radius: 2px; top: 14px; left: 3px; transform: rotate(18deg); }
+.emote-pose::after { left: 24px; }
+.emote-pose-wave::after,.emote-pose-salute::after { top: 3px; transform: rotate(-22deg); }
+.emote-pose-cheer::before,.emote-pose-cheer::after { top: 3px; }
+.emote-pose-robot::before { top: 7px; transform: rotate(90deg); }
+.emote-pose-shrug::before,.emote-pose-shrug::after { top: 11px; transform: rotate(70deg); }
+.in-space [data-emotes],.in-destination [data-emotes] { display: none; }
+.world-tools [data-emotes]:disabled { opacity: .5; cursor: default; }
+@media(max-width:760px) { .world-tools { flex-wrap: wrap; max-width: calc(100vw - 28px); }.world-tools [data-emotes] kbd { display: none; } }

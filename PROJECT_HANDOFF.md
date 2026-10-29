@@ -1,12 +1,28 @@
 # Andy's World — project handoff
 
-Updated **2026-10-21** after the red brick-favicon production release. This is current continuation guidance,
+Updated **2026-10-29** for captured right-look, emotes and five flight levels.
+These feature changes are local; this task does not publish a release.
+This is current continuation guidance,
 not a backlog or a claim that every device has been tested. Read it with
 [AGENTS.md](AGENTS.md), [README.md](README.md), and the actual source. Use
 [new-laptop setup](docs/NEW_LAPTOP_SETUP.md) for migration, [testing](docs/TESTING.md)
 for repeatable checks, and the [documentation map](docs/README.md) for history.
 
-## Current snapshot
+## Latest local feature pass
+
+Base HEAD `93387f4` (`fix: favicon`), clean when this pass began. Right-hold now
+uses relative pointer lock until mouse-up; explicit releases, delayed requests,
+rapid re-holds, blur and menus are separated from unexpected Escape unlock.
+First-person capture still persists without holding a button.
+
+G / Emotes opens five rigid-joint character poses; buttons or 1–5 choose, movement
+or jump cancels. Vehicles, flight, airborne and launch states cannot emote.
+Reduced motion uses held poses. Flight now has five mechanically and visually
+different levels; see the current controls/game sections below and
+[validation](docs/CAPTURE_EMOTES_FLIGHT_VALIDATION.md). The browser host was
+unavailable for this pass; automated checks are not a foreground gameplay audit.
+
+## Last recorded release snapshot (historical)
 
 | Item | Observed state at handoff inspection |
 | --- | --- |
@@ -136,14 +152,16 @@ directory; inspect them there, not at repository root.
 | `src/world/placement-store.ts`, `export-build.ts` | Compact full-precision CAD metadata and on-demand LDraw export |
 | `src/world/consolidate.ts`, `surface-grid.ts`, `collision.ts` | Compatible static batches, bounded detail, frozen transforms, non-overlapping paving, simple colliders |
 | `src/world/spaceport-props.ts`, `ambient.ts` | Machinery animation, five resident routines, three-car express |
-| `src/player/` | Input, WebGL-independent locomotion, controller, original gait, physical minifigure rig and custom clothing prints |
+| `src/player/` | Captured/drag input, WebGL-independent locomotion, controller, gait/emotes, physical rig and custom clothing prints |
 | `src/camera/follow-camera.ts`, `destination-camera.ts` | Station follow/overview/first person and flight camera |
 | `src/vehicles/vehicle.ts` | Rover models, driver, steering/speed and driveable specs |
 | `src/landmarks/` | Five professional buildings, unique entrances and props |
 | `src/interactions/detection.ts`, `activities.ts` | Nearest eligible interaction, activity definitions/commands/session state |
 | `src/interactions/minigames.ts`, `poker-draw.ts` | Cube Recall and Redshift Draw state machines |
 | `src/interactions/flight-game.ts`, `flight-aim.ts` | Deterministic XYZ missions/combat and centre-ray aiming helpers |
-| `src/scenes/space-game.ts`, `salvage-models.ts`, `salvage-environment.ts`, `spaceship.ts` | Lazy flight integration, original ship/scenery and launch sequence |
+| `src/config/flight-levels.ts` | Five flight settings/objectives, time windows, pools, routes, solid volumes and palettes |
+| `src/scenes/space-game.ts`, `salvage-models.ts`, `flight-objectives.ts`, `salvage-environment.ts`, `spaceship.ts` | Lazy flight integration, actor pools, selected-level scenery/disposal and launch sequence |
+| `src/ui/emote-picker.ts`, `emote-picker.css` | Compact keyboard/touch pose picker and native modal focus |
 | `src/scenes/build-intro.ts`, `build-timeline.ts`, `piece-assembly.ts` | Intro lifecycle, scheduling/camera, lazy instance-course animation/restoration |
 | `src/scenes/frame-pacer.ts`, `static-shadow-cache.ts`, `performance-monitor.ts` | Frame cadence, stationary shadow color/depth cache, debug measurements |
 | `src/ui/interface.ts`, `directory-markup.ts`, `content-markup.ts`, `activity-ui.ts`, `flight-hud.ts`, `dialog-focus.ts` | HUD/panels/gallery state, curated directory pages, content, compact games, flight UI, keyboard focus |
@@ -261,11 +279,11 @@ movement controls. See [validation](docs/STATION_INTERFACE_VALIDATION.md) and
 
 | Context | Controls |
 | --- | --- |
-| Station | WASD move, Shift run, Space jump, E Explore/Interact/Launch/Play, F drive/exit, Esc directory |
-| Station camera | Drag/arrows rotate; scroll zooms into hidden-cursor first person and out again; separate World view overview orbit/zoom |
+| Station | WASD move, Shift run, Space jump, E Explore/Interact/Launch/Play, F drive/exit, G emotes (then 1–5), Esc directory |
+| Station camera | Right-hold locks cursor to look; release restores it. Left/touch drag or arrows also rotate. Scroll first person; separate World view overview orbit/zoom |
 | Cube Recall | 1–4 named colors, H hide, N next, R retry; Start over button resets the score; Esc closes |
 | Redshift Draw | 1–5 select replacements, D draw, B bank, N next hand, R replay; native buttons and Esc |
-| Salvage Run | WASD fly, E rise, Q descend, Space fire, Shift boost, R restart, drag/arrows aim through centred crosshair, scroll cockpit/zoom, Return/Esc |
+| Salvage Run | WASD fly, E rise, Q descend, Space fire, Shift boost, R retry current level, right-hold/drag/arrows aim through centred crosshair, scroll cockpit/zoom, Return/Esc |
 
 Walk/run are 8.4/14.4 units/s, first-person sensitivity 0.0015, orbit 0.004 in
 `src/config/controls.ts`. Station third-person max distance 46; overview 240–540
@@ -287,11 +305,22 @@ each, combination/crew-contract scoring toward 150 chips, seeded no-duplicate
 deals and replay. Both are UI state machines, with no loop work while closed.
 Current game dialog is `.game-console` / `[data-close-game]`, not old arcade UI.
 
-Salvage Run is a lazy independent scene, three 120-second cargo missions, pods at
-differing altitudes, three shields, heat/cooling, rechargeable boost, guards,
-enemy bolts and destructible debris. Disable guards, collect cargo, return to
-the green dock at 8m; delivery restores shields and scores time/shields. Briefing
-must not consume the timer. Win/fail/next/replay and touch hold controls exist.
+Salvage Run is a lazy independent five-level scene: Cold orbit (three guarded
+pods / wreckfield), Dust run (six ordered gates / amber canyon), Signal spire
+(three ordered relays unlock a recorder / solid tower), Blue corridor (escort a
+moving eight-hull freight shuttle / loading port), Last light (two shield
+generators expose a reactor / cruiser assault). Each ends at the green dock at
+8m, with a 100–180s limit, three shields, heat/cooling, boost, enemy bolts and
+destructible debris where appropriate. Only the fifth extraction wins. R/Retry
+restores the current level's banked starting score, not free extra points;
+campaign restart is separate. Briefing does not consume the timer. Touch hold
+controls and immediate Return/Esc remain. The developer flight briefing has
+numbered previews; ordinary play has no level skip.
+
+The current environment alone is allocated and disposed on level changes.
+Actor pools are bounded; no renderer indexing assumes three cargo pods/enemies.
+Visible solid tower/support dimensions drive ship/camera/bolt collision.
+Static roots are frozen; moving ships, target/gate groups and actor pools are not.
 Ship and shots point toward the exact camera-centre ray target, with on-ray
 enemy/rock intersections for parallax correction, no aim cone/homing. Recompute
 projectile direction after movement. Preserve camera direction into cockpit.

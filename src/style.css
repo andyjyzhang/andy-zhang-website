@@ -2,6 +2,7 @@
 @import './ui/activity-ui.css';
 @import './ui/portfolio-panels.css';
 @import './ui/flight-game.css';
+@import './ui/emote-picker.css';
 
 :root { color-scheme: dark; --hull: #101d2a; --raised: #1b3040; --paper: #f5f2e9; --ink: #101d2a; --muted: #b9c8d3; --line: #486071; --blue: #9bdde7; --yellow: #efbd76; --mono: 'IBM Plex Mono',monospace; font-family: 'Manrope',system-ui,sans-serif; font-size: 15px; color: var(--paper); background: var(--hull); }
 * { box-sizing: border-box; }

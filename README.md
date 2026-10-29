@@ -67,9 +67,13 @@ database, or backend service is needed for local development.
 
 ## Controls and flows
 
-WASD move, Shift run, Space jump; drag mouse or use arrow keys to rotate the
-camera, scroll to zoom or enter first person. E explores blue-stud landmarks or launches the ship.
+WASD move, Shift run, Space jump; hold right-click to look with a locked hidden
+cursor, or use left/touch drag or arrow keys. Release right-click to restore the
+cursor. Scroll to zoom or enter first person. E explores blue-stud landmarks or launches the ship.
 F enters/exits driveable cars. Esc opens/closes the menu or returns from space.
+G or the Emotes button opens five poses: Wave, Salute, Cheer, Robot dance and
+Shrug. Choose a button or 1–5; movement/jump cancels. Emotes are available on
+foot, use the existing rigid minifigure rig and become held poses in reduced motion.
 The enlarged bottom-right portfolio link, directory and Contact control provide
 direct professional access.
 Small screens have movement/action buttons and responsive content panels.
@@ -79,7 +83,7 @@ and reflections, and starts future visits with a non-antialiased low-power canva
 
 Five landmarks: studio (about with contact links), workshop (experience/projects), campus
 (education), poker lounge, hobby hub. The launch bay beside the workshop leads
-to Salvage Run, an independent three-mission cargo-recovery flight game.
+to Salvage Run, an independent five-level flight campaign.
 
 ## Andy's Orbital Station
 
@@ -111,14 +115,23 @@ building/gate lighting remains. A three-car express follows a
 rounded rail loop over 600 world units long through several districts, with
 supports clear of streets and entrances. It offers a short ride.
 The orbital gate now toggles a navigation beacon; the observatory destination
-has been removed. Salvage Run is a three-sector space-combat salvage game with a
-brick-built foil-wing courier, patrol drones, hangar, capital-ship wreck, floating
-panels and a distant moon. Blasters disable cargo guards and destroy debris;
-patrols shoot back. Recover three pods at different heights, then return to the
-green dock at 8m. Each 120-second mission has three shields, rechargeable boost,
-weapon heat, altitude guidance, radar and scored deliveries. Delivery restores
-shields; win/failure offer replay. WASD flies, E rises, Q descends, Space fires,
-Shift boosts and R restarts. Mouse/touch drag or arrows aim through a fixed
+has been removed. Salvage Run has five authored settings and objectives:
+
+1. **Cold orbit:** disable patrols and recover three pods in a cruiser wreckfield.
+2. **Dust run:** fly six ordered gates through an amber asteroid canyon.
+3. **Signal spire:** shoot three numbered relays in order, then recover a recorder
+   behind a solid communications tower.
+4. **Blue corridor:** stay near a freight shuttle and defend its separate hull
+   from waves of interceptors through a loading port.
+5. **Last light:** destroy two shield generators and a cruiser reactor core,
+   then extract to finish the campaign.
+
+All routes end at the green dock at 8m. Each level has three shields, rechargeable
+boost, weapon heat, altitude guidance, radar, a 100–180s window and scored
+extraction. Delivery restores shields. Retry keeps the current level and restores
+its starting score; Fly again starts a new campaign. WASD flies, E rises,
+Q descends, Space fires, Shift boosts and R retries the current level.
+Right-hold, mouse/touch drag or arrows aim through a fixed
 screen-centre crosshair. Shots compensate for the trailing camera's offset and
 travel toward the crosshair, with no off-axis target snapping. There is no
 separate aim/look mode. Hold buttons cover fire/altitude/boost on touch.
@@ -132,6 +145,8 @@ and the express stop. About ends with plain email, github and linkedin links;
 legacy `#contact` opens that merged page. Game views can be deep-linked with
 `/world.html?dev=ui#game-cube`, `#game-poker-game` and `#flight`. The gallery is not
 rendered on the normal visitor URL.
+In the developer flight briefing only, numbered preview buttons open any of the
+five levels for testing; normal visitors progress through the campaign.
 
 Redshift Draw is a three-hand poker score challenge. Mark cards to replace,
 redraw up to twice, then bank the hand. Poker combinations and per-hand crew

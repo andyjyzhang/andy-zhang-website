@@ -1,6 +1,8 @@
 # Testing and release checks
 
-Current validation baseline: 2026-10-19, 176 Vitest tests in 22 files. Counts are an
+Current automated baseline: 2026-10-29, 206 Vitest tests in 25 files. The
+input/emote/five-level pass adds simulation, scene lifecycle and UI coverage;
+see [its report and browser limits](CAPTURE_EMOTES_FLIGHT_VALIDATION.md). Counts are an
 observation, not a reason to remove future tests. Run all commands from the
 repository root after `npm ci` with Node 24.x.
 
@@ -66,9 +68,18 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
    visitor. `/world.html?intro=1` forces replay. Reduced motion hands off without
    the animated sequence. Check geometry/shadows restored after replay/skip.
 3. **Movement/camera:** WASD/Shift/Space, diagonal speed, walls, curbs,
-   benches, overhead structures and hangar clearance. Drag/arrows rotate; scroll
+   benches, overhead structures and hangar clearance. Hold right-click: cursor
+   hides/stays stationary and relative motion rotates; release restores it
+   without opening a menu or leaving flight. Repeat quick clicks, right-up
+   outside canvas, blur, menus, refused/pending capture, Escape and rapid re-hold.
+   Left/touch drag and arrows remain. Scroll
    into first person, free-look with hidden cursor, scroll out without leaving
    the scene. Escape releases capture safely. Overview orbit/zoom exposes hull.
+   G / Emotes opens a compact native dialog; try all five buttons and 1–5,
+   Escape/G close, Tab/Shift+Tab and focus restoration. Walk/jump cancels each
+   pose. Vehicles, launch, flight and airborne states block emotes; selecting
+   from first person returns to a visible third-person figure. Reduced motion
+   uses still poses without bob/twist loops.
 4. **Professional access:** `/world.html?dev=ui` exposes all six chapters and
    games. Test each panel, links, workshop tabs, scrolling, Esc/close, Tab and
    Shift+Tab wrapping, focus restoration and resumed movement. About has contact
@@ -101,11 +112,21 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
 9. **Salvage Run:** `/world.html?dev=ui#flight` opens briefing; also test normal
    directory → launch bay → E Launch, including cancel/relaunch. Start timer
    only after briefing. WASD fly, E/Q change altitude, Shift boosts, Space fires,
-   drag/arrows aim at fixed screen-centre crosshair. Verify straight aimed
+   right-hold/drag/arrows aim at fixed screen-centre crosshair. Verify straight aimed
    shots/parallax, no off-axis auto-aim, guard kills, destructible debris, enemy
-   fire, shields, heat/cooling, cargo at differing heights, green dock at 8m,
-   delivery/next sector, failure/restart, three-sector success, Return/Escape,
-   cockpit scroll-out and responsive hold controls. No stuck input/hidden Andy.
+   fire, shields, heat/cooling, green dock at 8m, Return/Escape, cockpit scroll-out
+   and responsive hold controls. Test all five settings using the numbered
+   developer briefing previews, then normal campaign progression:
+   Cold orbit cargo/guards; Dust run six gates in order (wrong gate ignored);
+   Signal spire ordered relays/locked recorder and solid tower/decks blocking
+   flight/camera/bolts; Blue corridor rendezvous/wait at 24m, moving shuttle,
+   later interceptor waves, hull damage/failure and successful escort;
+   Last light generators protecting the core, core destruction and extraction.
+   Verify R/retry resets the current level and its unbanked score, Next advances,
+   final extraction alone wins, Fly again resets campaign. Briefings/radar/
+   progress must match each objective, including levels with no cargo/enemies.
+   No stuck input/hidden Andy. Switch levels repeatedly and exit/relaunch to
+   check that environments/materials/instance buffers do not accumulate.
 10. **Sound/accessibility/fallback:** unlock with gesture, mute during intro and
     flight, saved volume/zero volume, quiet reading, stopped-tab audio, quiet
     footsteps/jumps and distinct motor/rail cues. Touch movement/action/flight

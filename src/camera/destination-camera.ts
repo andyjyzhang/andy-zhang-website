@@ -13,8 +13,9 @@ export class DestinationCamera {
   constructor(readonly camera:T.PerspectiveCamera,options:{distance:number;yaw?:number;pitch?:number;aimView?:boolean},obstacles:Obstacle[]=[]) {
     this.distance=options.distance;this.yaw=options.yaw??0;this.pitch=options.pitch??.42;
     this.aimView=options.aimView??false;
-    this.boxes=obstacles.map(o=>new T.Box3(new T.Vector3(o.x-o.w/2-.35,o.bottom??0,o.z-o.d/2-.35),new T.Vector3(o.x+o.w/2+.35,o.height+.3,o.z+o.d/2+.35)));
+    this.boxes=[];this.setObstacles(obstacles);
   }
+  setObstacles(obstacles:Obstacle[]){this.boxes=obstacles.map(o=>new T.Box3(new T.Vector3(o.x-o.w/2-.35,o.bottom??0,o.z-o.d/2-.35),new T.Vector3(o.x+o.w/2+.35,o.height+.3,o.z+o.d/2+.35)));}
   togglePOV(){this.distance=this.firstPerson?19:0;if(!this.aimView)this.pitch=this.firstPerson?0:Math.max(.3,this.pitch);}
   update(dt:number,input:Input,anchor:T.Vector3,reduced:boolean,enabled:boolean) {
     const wasFirstPerson=this.firstPerson,mouse=input.consumeCamera();

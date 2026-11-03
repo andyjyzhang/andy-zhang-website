@@ -62,6 +62,18 @@ the previous ad-hoc Chrome/CDP harnesses are ignored local artifacts.
    reading still works. Network contains no Three.js/world/flight chunks or
    world stylesheet. At 390×844 and a short landscape viewport, check no
    horizontal overflow and reachable links. No public résumé links/download.
+   On a wide desktop, check the coloured ASCII flowers stay in both side margins
+   and leave the text and links clear. At compact widths they follow the content.
+   Toggle the bottom-right Pause animations control with pointer and keyboard;
+   all four stems, blossom heads, and the curved ASCII arrow should pause and
+   resume. Check the staggered blooms have space between their heads, and the
+   distinct flower motions remain. On wide screens, one shaded arrow curls in
+   from the right margin. Phones use an upward-curled version beside the name;
+   intermediate layouts hide it when the margin is too small. Header spacing
+   must stay unchanged. Its tip should point at World without covering contact
+   links or portfolio content.
+   World retains the same plain underlined style as its neighbouring links.
+   Reduced motion keeps flowers/arrows still and hides the pause control.
 2. **World entry/intro:** follow `world`; on a fresh browser get one clickable
    brick. Build, verify ordered assembly, hull/plumes, Andy landing, and control.
    Skip before/during build, replay from settings, then reload as a returning

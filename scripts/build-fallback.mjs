@@ -1,5 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { build } from 'esbuild';
+import { flowerGarden } from './ascii-flowers.mjs';
+import { worldArrow } from './ascii-arrows.mjs';
 
 // Build the static reading view from the same facts used by the in-world panels.
 const result = await build({
@@ -37,9 +39,54 @@ a:focus-visible { outline: 2px solid #111; outline-offset: 4px; }
 .skip-link { position: fixed; left: 16px; top: 12px; z-index: 2; padding: 8px 12px; background: #111; color: #fff; transform: translateY(-160%); }
 .skip-link:focus { transform: none; }
 .site-header { display: grid; grid-template-columns: minmax(220px, 1fr) auto; align-items: start; gap: 32px; padding-bottom: 26px; border-bottom: 1px solid #111; }
+.header-links { padding-top: 4px; }
+.ascii-gardens { position: fixed; inset: 0; pointer-events: none; user-select: none; }
+.garden-side { position: absolute; top: 48px; width: min(560px, calc((100vw - 760px) / 2 - 32px)); height: min(840px, calc(100svh - 96px)); overflow: clip; container-type: size; }
+.garden-side--left { left: calc((100vw - 760px) / 4); transform: translateX(-50%); }
+.garden-side--right { right: calc((100vw - 760px) / 4); transform: translateX(50%); }
+.ascii-plant { position: absolute; width: 68ch; height: 63.92em; margin: 0; font: 700 min(2.95cqw, 1.55cqh)/.94 Consolas, 'Liberation Mono', 'Courier New', monospace; font-variant-ligatures: none; transform-origin: 50% 98%; animation: flower-breeze 14s ease-in-out infinite; --stem: #3b763c; --stem-light: #61964c; --stem-dark: #27562e; }
+.ascii-stalk, .ascii-blossom { position: absolute; inset: 0; width: 68ch; margin: 0; font: inherit; white-space: pre; }
+.ascii-blossom { transform-origin: 50% 27%; }
+.ascii-plant--cosmos { left: -6%; top: 0; --petal: #d0347b; --petal-light: #e565a0; --petal-dark: #9e245e; --seed: #bc8319; --seed-light: #dca324; --seed-dark: #795219; }
+.ascii-plant--cosmos .ascii-blossom { animation: cosmos-turn 7.5s ease-in-out -1s infinite; }
+.ascii-plant--daisy { right: -5%; top: 56%; font-size: min(2.6cqw, 1.25cqh); animation-duration: 17s; animation-delay: -4s; animation-direction: reverse; --petal: #c68a08; --petal-light: #dfa923; --petal-dark: #a26805; --seed: #78501f; --seed-light: #a17428; --seed-dark: #51381c; }
+.ascii-plant--daisy .ascii-blossom { animation: daisy-roll 12s ease-in-out -4s infinite; }
+.ascii-plant--poppy { right: -6%; top: 4%; animation-duration: 15s; animation-delay: -3s; --petal: #dc4d37; --petal-light: #ed7957; --petal-dark: #ac342b; --seed: #543b5a; --seed-light: #805b81; --seed-dark: #39263f; }
+.ascii-plant--poppy .ascii-blossom { animation: poppy-nod 6.2s ease-in-out -2s infinite; }
+.ascii-plant--cornflower { left: -5%; top: 58%; font-size: min(2.6cqw, 1.25cqh); animation-duration: 18s; animation-delay: -7s; --petal: #3c70c8; --petal-light: #6c96dc; --petal-dark: #284d99; --seed: #4c4f86; --seed-light: #7277ac; --seed-dark: #333362; }
+.ascii-plant--cornflower .ascii-blossom { animation: cornflower-flutter 5.4s ease-in-out -3s infinite; }
+.ascii-stem { color: var(--stem); }
+.ascii-stem-light { color: var(--stem-light); }
+.ascii-stem-dark { color: var(--stem-dark); }
+.ascii-petal { color: var(--petal); }
+.ascii-petal-light { color: var(--petal-light); }
+.ascii-petal-dark { color: var(--petal-dark); }
+.ascii-seed { color: var(--seed); }
+.ascii-seed-light { color: var(--seed-light); }
+.ascii-seed-dark { color: var(--seed-dark); }
+.flower-pause { position: fixed; right: 24px; bottom: 24px; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); }
+.flower-control { position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 3; display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 10px; border: 1px solid #ccc; background: #fff; color: #444; font: 11px/1.4 Consolas, 'Liberation Mono', 'Courier New', monospace; cursor: pointer; }
+.flower-control::before { content: '[ ]'; }
+.flower-control:hover { border-color: #111; color: #111; }
+body:has(> .flower-pause:checked) :is(.ascii-plant, .ascii-blossom, .world-cue) { animation-play-state: paused; }
+.flower-pause:checked ~ .flower-control::before { content: '[x]'; }
+.flower-pause:focus-visible ~ .flower-control { outline: 2px solid #111; outline-offset: 3px; }
+@keyframes flower-breeze { 0%, 100% { transform: rotate(-1deg); } 18% { transform: rotate(.1deg); } 30% { transform: rotate(-.4deg); } 47% { transform: rotate(1.4deg); } 61% { transform: rotate(.8deg); } 74% { transform: rotate(1.8deg); } 88% { transform: rotate(-.6deg); } }
+@keyframes cosmos-turn { 0%, 100% { transform: rotate(-3deg) scaleX(.98); } 38% { transform: rotate(4deg) scaleX(1.02); } 68% { transform: rotate(1deg) scaleX(1); } }
+@keyframes daisy-roll { 0%, 100% { transform: rotate(-4deg); } 32% { transform: rotate(6deg); } 54% { transform: rotate(3deg); } 78% { transform: rotate(7deg); } }
+@keyframes poppy-nod { 0%, 100% { transform: rotate(2deg) scaleY(1); } 42% { transform: rotate(-4deg) scaleY(.96); } 72% { transform: rotate(-1deg) scaleY(1.015); } }
+@keyframes cornflower-flutter { 0%, 100% { transform: rotate(-2deg); } 25% { transform: rotate(3deg); } 45% { transform: rotate(-1deg); } 65% { transform: rotate(4deg); } 82% { transform: rotate(1deg); } }
 h1 { margin: 0 0 5px; font-size: 19px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; }
 .site-header p { margin: 0; color: #555; }
-.quick-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 18px; padding-top: 4px; }
+.quick-links { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: baseline; gap: 8px 18px; }
+.world-invite { position: relative; display: inline-block; white-space: nowrap; }
+.world-cue { position: absolute; display: block; width: 48ch; height: 21.6em; pointer-events: none; user-select: none; font: 700 clamp(4px, .43vw, 6px)/.9 Consolas, 'Liberation Mono', 'Courier New', monospace; font-variant-ligatures: none; --arrow-light: #7c9e6b; --arrow-mid: #47743e; --arrow-dark: #294c2c; }
+.world-cue--sweep { left: calc(100% + 10px); top: calc(10px - 7.1em); transform-origin: 1.5ch 7.1em; animation: arrow-curl 6.8s ease-in-out infinite; }
+.ascii-arrow-art { display: block; white-space: pre; font: inherit; }
+.ascii-arrow-light { color: var(--arrow-light); }
+.ascii-arrow-mid { color: var(--arrow-mid); }
+.ascii-arrow-dark { color: var(--arrow-dark); }
+@keyframes arrow-curl { 0%, 100% { transform: rotate(-2deg) scaleX(.98); } 38% { transform: rotate(3deg) scaleX(1.025); } 72% { transform: rotate(.5deg) scaleX(1); } }
 .portfolio-stack { width: 100%; padding-top: 24px; }
 section { margin: 0 0 20px; scroll-margin-top: 24px; }
 section:last-child { margin-bottom: 0; }
@@ -67,24 +114,37 @@ p { margin: 0; }
 .other-title { display: inline; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .other-description { display: block; margin-top: 4px; color: #666; }
 .hobby-list { color: #666; }
+@media (max-width: 1100px) {
+  .world-cue--sweep { display: none; }
+  .ascii-gardens { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; height: 400px; margin-top: 30px; overflow: clip; }
+  .garden-side { position: relative; inset: auto; transform: none; width: 100%; height: 100%; }
+  .ascii-plant { font-size: min(2.95cqw, 1.55cqh); }
+  .ascii-plant--daisy, .ascii-plant--cornflower { font-size: min(2.6cqw, 1.25cqh); }
+}
 @media (max-width: 720px) {
   body { width: min(100% - 32px, 560px); padding: 26px 0 40px; }
   .site-header { grid-template-columns: 1fr; gap: 18px; }
+  .world-cue--sweep { display: block; font-size: clamp(3px, .95vw, 4px); }
+  .world-cue--sweep .ascii-arrow-art { transform: scaleY(-1); transform-origin: 1.5ch 7.1em; }
   .quick-links { justify-content: flex-start; padding-top: 0; }
+  .header-links { padding-top: 0; }
   .portfolio-stack { width: 100%; padding-top: 26px; }
   section { margin-bottom: 30px; }
   .entry-line { flex-wrap: wrap; gap: 2px 12px; }
   .other-project { grid-template-columns: 180px 1fr; }
   .other-project img { width: 180px; }
+  .ascii-gardens { gap: 12px; height: 340px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .ascii-plant, .ascii-blossom, .world-cue { animation: none; transform: none; }
+  .flower-pause, .flower-control { display: none; }
 }
 
 @media print {
   body { width: 100%; padding: 0; }
-  .skip-link, .world-link { display: none; }
+  .skip-link, .world-invite, .ascii-gardens, .flower-pause, .flower-control { display: none; }
   .site-header { padding-bottom: 18px; }
   .portfolio-stack { padding-top: 20px; }
 }
@@ -98,8 +158,8 @@ const html = `<!doctype html>
   <meta name="theme-color" content="#ffffff"/>
   <meta name="color-scheme" content="light"/>
   <meta name="description" content="Andy Zhang, University of Waterloo Computer Science. Experience, projects, education, other work and hobbies."/>
-  <title>Andy Zhang &mdash; Portfolio</title>
-  <meta property="og:title" content="Andy Zhang — Portfolio"/>
+  <title>${escape(personalInfo.name)}</title>
+  <meta property="og:title" content="${escape(personalInfo.name)}"/>
   <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=red-brick"/>
   <style>${styles}</style>
   <script>if(!['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname)){window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};var analytics=document.createElement('script');analytics.src='/_vercel/insights/script.js';analytics.defer=true;document.head.append(analytics)}</script>
@@ -111,12 +171,14 @@ const html = `<!doctype html>
       <h1>${escape(personalInfo.name)}</h1>
       <p>cs @ uwaterloo</p>
     </div>
-    <nav class="quick-links" aria-label="Primary">
-      <a href="mailto:${escape(contact.email)}">email</a>
-      <a href="${escape(contact.github)}" target="_blank" rel="noopener noreferrer">github</a>
-      <a href="${escape(contact.linkedin)}" target="_blank" rel="noopener noreferrer">linkedin</a>
-      <a class="world-link" href="/world.html">world</a>
-    </nav>
+    <div class="header-links">
+      <nav class="quick-links" aria-label="Primary">
+        <a href="mailto:${escape(contact.email)}">email</a>
+        <a href="${escape(contact.github)}" target="_blank" rel="noopener noreferrer">github</a>
+        <a href="${escape(contact.linkedin)}" target="_blank" rel="noopener noreferrer">linkedin</a>
+        <span class="world-invite"><a class="world-link" href="/world.html">world</a>${worldArrow}</span>
+      </nav>
+    </div>
   </header>
   <main class="portfolio-stack">
     <section id="experience" aria-labelledby="title-experience">
@@ -144,6 +206,9 @@ const html = `<!doctype html>
       <p class="hobby-list">${[...hobbies.map(hobby => hobby.title.toLowerCase()), 'poker'].map(escape).join(', ')}</p>
     </section>
   </main>
+  <input class="flower-pause" id="pause-flowers" type="checkbox"/>
+  <label class="flower-control" for="pause-flowers">pause animations</label>
+  ${flowerGarden}
 </body>
 </html>`;
 
